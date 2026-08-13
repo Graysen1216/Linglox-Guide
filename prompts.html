@@ -108,6 +108,14 @@
             user-select: none;
         }
 
+        .tag {
+            display: inline-block;
+            background: #29454d;
+            padding: 5px 10px;
+            border-radius: 6px;
+            margin: 3px;
+        }
+
         .no-results {
             background: #17252b;
             border-radius: 12px;
@@ -133,7 +141,7 @@
             id="searchBox"
             class="search"
             type="text"
-            placeholder="Search prompts, answers, mechanics, areas..."
+            placeholder="Search prompts, answers, mechanics, areas, badges..."
         >
 
         <div class="database-header">
@@ -162,7 +170,6 @@
             })
             .then(data => {
                 prompts = data;
-
                 displayPrompts(prompts);
             })
             .catch(error => {
@@ -175,7 +182,6 @@
                         <h2>Something went wrong</h2>
                         <p>
                             The prompt database could not be loaded.
-                            Check that data/prompts.json exists.
                         </p>
                     </div>
                 `;
@@ -198,6 +204,7 @@
             }
 
             resultsBox.innerHTML = list.map(item => `
+
                 <div class="result">
 
                     <h2>${item.prompt}</h2>
@@ -219,7 +226,24 @@
 
                     <p>
                         <strong>Area:</strong>
-                        ${item.area}
+                        ${
+                            item.areas.length > 0
+                            ? item.areas.map(area =>
+                                `<span class="tag">${area}</span>`
+                              ).join("")
+                            : "None listed"
+                        }
+                    </p>
+
+                    <p>
+                        <strong>Badge:</strong>
+                        ${
+                            item.badges.length > 0
+                            ? item.badges.map(badge =>
+                                `<span class="tag">${badge}</span>`
+                              ).join("")
+                            : "None listed"
+                        }
                     </p>
 
                     <p>
@@ -242,7 +266,13 @@
                         ${item.verified ? "Yes" : "No"}
                     </p>
 
+                    <p>
+                        <strong>Notes:</strong>
+                        ${item.notes}
+                    </p>
+
                 </div>
+
             `).join("");
         }
 
@@ -254,10 +284,16 @@
                 item.prompt.toLowerCase().includes(search) ||
                 item.answer.toLowerCase().includes(search) ||
                 item.dimension.toLowerCase().includes(search) ||
-                item.area.toLowerCase().includes(search) ||
+                item.areas.some(area =>
+                    area.toLowerCase().includes(search)
+                ) ||
+                item.badges.some(badge =>
+                    badge.toLowerCase().includes(search)
+                ) ||
                 item.color.toLowerCase().includes(search) ||
                 item.height.toLowerCase().includes(search) ||
-                item.mechanic.toLowerCase().includes(search)
+                item.mechanic.toLowerCase().includes(search) ||
+                item.notes.toLowerCase().includes(search)
             );
 
             displayPrompts(filtered);
