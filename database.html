@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Prompt Database - Linglox Companion</title>
 
     <style>
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -30,14 +37,14 @@
         }
 
         main {
-            max-width: 1100px;
+            max-width: 1000px;
             margin: auto;
             padding: 40px 20px;
         }
 
         .back {
             display: inline-block;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             color: #8ed8e5;
             text-decoration: none;
         }
@@ -46,606 +53,269 @@
             text-decoration: underline;
         }
 
-        .search {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #29454d;
-            background: #17252b;
-            color: white;
-            font-size: 17px;
-            margin-bottom: 20px;
-        }
-
-        .search::placeholder {
-            color: #8da4aa;
-        }
-
-        .filters {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .filter {
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #29454d;
-            background: #17252b;
-            color: white;
-            font-size: 15px;
-        }
-
-        .clear-button {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 8px;
-            background: #29454d;
-            color: white;
-            cursor: pointer;
-            margin-bottom: 30px;
-        }
-
-        .clear-button:hover {
-            background: #3b5961;
-        }
-
-        .database-header {
-            margin-bottom: 20px;
-        }
-
-        .database-header h2 {
-            margin-bottom: 5px;
-        }
-
-        .database-header p {
-            color: #8da4aa;
-        }
-
-        /* PROMPT RESULT */
-
-        .result {
+        .search-box {
             background: #17252b;
             border: 1px solid #29454d;
             border-radius: 12px;
-            padding: 22px 25px;
-            margin-bottom: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
         }
 
-        .result h2 {
-            margin: 0 0 12px 0;
-            font-size: 25px;
-        }
-
-        .metadata {
-            color: #afc4c9;
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-
-        .metadata strong {
+        .search-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #29454d;
+            background: #101820;
             color: white;
+            font-size: 16px;
         }
 
-        .answer-row {
-            margin-top: 12px;
+        .prompt {
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 18px;
+        }
+
+        .prompt h2 {
+            margin-top: 0;
+            font-size: 28px;
         }
 
         .answer {
+            display: inline-block;
             background: #29454d;
-            padding: 7px 12px;
-            border-radius: 6px;
-            display: inline-block;
-            cursor: pointer;
-            margin-left: 5px;
+            border-radius: 7px;
+            padding: 7px 11px;
+            margin-bottom: 15px;
         }
 
-        .answer.hidden {
-            color: transparent;
-            user-select: none;
+        .metadata {
+            color: #b7c9cd;
+            line-height: 1.8;
         }
 
-        .view-button {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 9px 15px;
-            background: #2d6875;
+        .label {
             color: white;
-            text-decoration: none;
-            border-radius: 8px;
+            font-weight: bold;
         }
 
-        .view-button:hover {
-            background: #3b8190;
-        }
-
-        .no-results {
-            background: #17252b;
-            border-radius: 12px;
-            padding: 30px;
+        .loading {
             text-align: center;
-            color: #afc4c9;
+            padding: 40px;
+            color: #a8bcc1;
+        }
+
+        .error {
+            background: #3d2529;
+            border: 1px solid #70454b;
+            border-radius: 10px;
+            padding: 20px;
+            color: #ffb0b0;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #a8bcc1;
+        }
+
+        .count {
+            color: #a8bcc1;
+            margin-bottom: 20px;
         }
 
     </style>
+
 </head>
 
 
 <body>
 
+
 <header>
 
-    <h1>Prompt Database</h1>
+    <h1>
+        Prompt Database
+    </h1>
 
-    <p>Linglox Companion</p>
+    <p>
+        Linglox Companion
+    </p>
 
 </header>
 
 
 <main>
 
-    <a class="back" href="index.html">
+
+    <a
+        class="back"
+        href="index.html"
+    >
         ← Back to homepage
     </a>
 
 
-    <!-- SEARCH -->
+    <div class="search-box">
 
-    <input
-        id="searchBox"
-        class="search"
-        type="text"
-        placeholder="Search prompts, answers, mechanics, areas, badges..."
-    >
-
-
-    <!-- FILTERS -->
-
-    <div class="filters">
-
-        <select id="dimensionFilter" class="filter">
-            <option value="">All Dimensions</option>
-        </select>
-
-        <select id="areaFilter" class="filter">
-            <option value="">All Areas</option>
-        </select>
-
-        <select id="badgeFilter" class="filter">
-            <option value="">All Badges</option>
-        </select>
-
-        <select id="colorFilter" class="filter">
-            <option value="">All Colors</option>
-        </select>
-
-        <select id="heightFilter" class="filter">
-            <option value="">All Heights</option>
-        </select>
-
-        <select id="mechanicFilter" class="filter">
-            <option value="">All Mechanics</option>
-        </select>
-
-        <select id="verifiedFilter" class="filter">
-
-            <option value="">
-                All Verification
-            </option>
-
-            <option value="true">
-                Verified
-            </option>
-
-            <option value="false">
-                Unverified
-            </option>
-
-        </select>
+        <input
+            id="search"
+            type="text"
+            placeholder="Search prompts, answers, badges, areas..."
+            autocomplete="off"
+        >
 
     </div>
 
 
-    <button
-        class="clear-button"
-        onclick="clearFilters()"
+    <div
+        id="count"
+        class="count"
     >
-        Clear Filters
-    </button>
-
-
-    <!-- DATABASE HEADER -->
-
-    <div class="database-header">
-
-        <h2>Known Prompts</h2>
-
-        <p id="count">
-            Loading database...
-        </p>
-
+        Loading...
     </div>
 
 
-    <!-- RESULTS -->
+    <div id="results">
 
-    <div id="results"></div>
+        <div class="loading">
+            Loading prompts...
+        </div>
+
+    </div>
+
 
 </main>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
 
-    const searchBox =
-        document.getElementById("searchBox");
 
-    const dimensionFilter =
-        document.getElementById("dimensionFilter");
+    /* =========================================
+       SUPABASE
+       ========================================= */
 
-    const areaFilter =
-        document.getElementById("areaFilter");
 
-    const badgeFilter =
-        document.getElementById("badgeFilter");
+    const SUPABASE_URL =
+        "https://njjqjvsoydazatafclwc.supabase.co";
 
-    const colorFilter =
-        document.getElementById("colorFilter");
 
-    const heightFilter =
-        document.getElementById("heightFilter");
+    const SUPABASE_ANON_KEY =
+        "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
 
-    const mechanicFilter =
-        document.getElementById("mechanicFilter");
 
-    const verifiedFilter =
-        document.getElementById("verifiedFilter");
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
 
-    const resultsBox =
-        document.getElementById("results");
 
-    const countBox =
-        document.getElementById("count");
+    /* =========================================
+       ELEMENTS
+       ========================================= */
+
+
+    const results =
+        document.getElementById(
+            "results"
+        );
+
+
+    const search =
+        document.getElementById(
+            "search"
+        );
+
+
+    const count =
+        document.getElementById(
+            "count"
+        );
 
 
     let prompts = [];
 
 
-    /* LOAD DATABASE */
-
-    fetch("data/prompts.json")
-
-        .then(response => {
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Could not load prompts.json"
-                );
-
-            }
-
-            return response.json();
-
-        })
-
-        .then(data => {
-
-            prompts = data;
-
-            populateFilters();
-
-            displayPrompts(prompts);
-
-        })
-
-        .catch(error => {
-
-            console.error(error);
-
-            countBox.textContent =
-                "Database could not be loaded.";
-
-            resultsBox.innerHTML = `
-
-                <div class="no-results">
-
-                    <h2>
-                        Something went wrong
-                    </h2>
-
-                    <p>
-                        The prompt database could
-                        not be loaded.
-                    </p>
-
-                </div>
-
-            `;
-
-        });
+    /* =========================================
+       LOAD PROMPTS
+       ========================================= */
 
 
-    /* GET UNIQUE FILTER VALUES */
+    async function loadPrompts() {
 
-    function getUniqueValues(values) {
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
 
-        return [...new Set(
+            .from("prompts")
 
-            values
-                .filter(value => value)
-                .sort()
+            .select("*")
 
-        )];
-
-    }
-
-
-    /* CREATE FILTER OPTIONS */
-
-    function populateFilters() {
-
-        const dimensions =
-            getUniqueValues(
-                prompts.map(
-                    item => item.dimension
-                )
+            .order(
+                "id",
+                {
+                    ascending: true
+                }
             );
 
 
-        const areas =
-            getUniqueValues(
-                prompts.flatMap(
-                    item => item.areas || []
-                )
-            );
+        if (error) {
+
+            results.innerHTML =
+
+                `<div class="error">
+
+                    <strong>
+                        Could not load prompts.
+                    </strong>
+
+                    <br><br>
+
+                    ${escapeHTML(
+                        error.message
+                    )}
+
+                </div>`;
+
+            count.textContent =
+                "";
+
+            return;
+
+        }
 
 
-        const badges =
-            getUniqueValues(
-                prompts.flatMap(
-                    item => item.badges || []
-                )
-            );
+        prompts =
+            data || [];
 
 
-        const colors =
-            getUniqueValues(
-                prompts.map(
-                    item => item.color
-                )
-            );
-
-
-        const heights =
-            getUniqueValues(
-                prompts.map(
-                    item => item.height
-                )
-            );
-
-
-        const mechanics =
-            getUniqueValues(
-                prompts.map(
-                    item => item.mechanic
-                )
-            );
-
-
-        addOptions(
-            dimensionFilter,
-            dimensions
-        );
-
-        addOptions(
-            areaFilter,
-            areas
-        );
-
-        addOptions(
-            badgeFilter,
-            badges
-        );
-
-        addOptions(
-            colorFilter,
-            colors
-        );
-
-        addOptions(
-            heightFilter,
-            heights
-        );
-
-        addOptions(
-            mechanicFilter,
-            mechanics
+        displayPrompts(
+            prompts
         );
 
     }
 
 
-    function addOptions(select, values) {
+    /* =========================================
+       DISPLAY PROMPTS
+       ========================================= */
 
-        values.forEach(value => {
 
-            const option =
-                document.createElement("option");
+    function displayPrompts(
+        list
+    ) {
 
-            option.value = value;
-
-            option.textContent = value;
-
-            select.appendChild(option);
-
-        });
-
-    }
-
-
-    /* FILTER DATABASE */
-
-    function filterPrompts() {
-
-        const search =
-            searchBox.value
-                .toLowerCase()
-                .trim();
-
-
-        const dimension =
-            dimensionFilter.value;
-
-        const area =
-            areaFilter.value;
-
-        const badge =
-            badgeFilter.value;
-
-        const color =
-            colorFilter.value;
-
-        const height =
-            heightFilter.value;
-
-        const mechanic =
-            mechanicFilter.value;
-
-        const verified =
-            verifiedFilter.value;
-
-
-        const filtered =
-            prompts.filter(item => {
-
-
-                const matchesSearch =
-
-                    item.prompt
-                        .toLowerCase()
-                        .includes(search)
-
-                    ||
-
-                    item.answer
-                        .toLowerCase()
-                        .includes(search)
-
-                    ||
-
-                    item.dimension
-                        .toLowerCase()
-                        .includes(search)
-
-                    ||
-
-                    (item.areas || [])
-                        .some(area =>
-                            area
-                                .toLowerCase()
-                                .includes(search)
-                        )
-
-                    ||
-
-                    (item.badges || [])
-                        .some(badge =>
-                            badge
-                                .toLowerCase()
-                                .includes(search)
-                        )
-
-                    ||
-
-                    item.color
-                        .toLowerCase()
-                        .includes(search)
-
-                    ||
-
-                    item.height
-                        .toLowerCase()
-                        .includes(search)
-
-                    ||
-
-                    item.mechanic
-                        .toLowerCase()
-                        .includes(search)
-
-                    ||
-
-                    item.notes
-                        .toLowerCase()
-                        .includes(search);
-
-
-                const matchesDimension =
-                    !dimension ||
-                    item.dimension === dimension;
-
-
-                const matchesArea =
-                    !area ||
-                    (item.areas || [])
-                        .includes(area);
-
-
-                const matchesBadge =
-                    !badge ||
-                    (item.badges || [])
-                        .includes(badge);
-
-
-                const matchesColor =
-                    !color ||
-                    item.color === color;
-
-
-                const matchesHeight =
-                    !height ||
-                    item.height === height;
-
-
-                const matchesMechanic =
-                    !mechanic ||
-                    item.mechanic === mechanic;
-
-
-                const matchesVerified =
-                    verified === "" ||
-                    String(item.verified)
-                        === verified;
-
-
-                return (
-
-                    matchesSearch &&
-                    matchesDimension &&
-                    matchesArea &&
-                    matchesBadge &&
-                    matchesColor &&
-                    matchesHeight &&
-                    matchesMechanic &&
-                    matchesVerified
-
-                );
-
-            });
-
-
-        displayPrompts(filtered);
-
-    }
-
-
-    /* DISPLAY PROMPTS */
-
-    function displayPrompts(list) {
-
-        countBox.textContent =
+        count.textContent =
             list.length +
             (
                 list.length === 1
@@ -654,282 +324,357 @@
             );
 
 
-        if (list.length === 0) {
+        if (!list.length) {
 
-            resultsBox.innerHTML = `
+            results.innerHTML =
 
-                <div class="no-results">
+                `<div class="empty">
 
-                    <h2>
-                        No prompts found
-                    </h2>
+                    No prompts found.
 
-                    <p>
-                        Try changing your search
-                        or filters.
-                    </p>
-
-                </div>
-
-            `;
+                </div>`;
 
             return;
 
         }
 
 
-        resultsBox.innerHTML =
+        results.innerHTML =
 
-            list.map(item => {
+            list
+                .map(
+                    prompt =>
+                        createPromptCard(
+                            prompt
+                        )
+                )
+                .join("");
 
-
-                /*
-                    Build the first metadata line.
-                */
-
-                const locationParts = [];
-
-
-                if (item.dimension) {
-
-                    locationParts.push(
-                        item.dimension
-                    );
-
-                }
+    }
 
 
-                if (
-                    item.areas &&
-                    item.areas.length > 0
-                ) {
-
-                    locationParts.push(
-                        ...item.areas
-                    );
-
-                }
+    /* =========================================
+       PROMPT CARD
+       ========================================= */
 
 
-                if (
-                    item.badges &&
-                    item.badges.length > 0
-                ) {
+    function createPromptCard(
+        prompt
+    ) {
 
-                    locationParts.push(
-                        ...item.badges
-                    );
-
-                }
+        const areas =
+            (prompt.areas || [])
+                .join(", ") ||
+            "—";
 
 
-                /*
-                    Build the second metadata line.
-                */
-
-                const mechanicParts = [];
-
-
-                if (item.mechanic) {
-
-                    mechanicParts.push(
-                        item.mechanic
-                    );
-
-                }
+        const badges =
+            (prompt.badges || [])
+                .join(", ") ||
+            "—";
 
 
-                if (item.color) {
+        return `
 
-                    mechanicParts.push(
-                        item.color
-                    );
-
-                }
+            <div class="prompt">
 
 
-                if (item.height) {
-
-                    mechanicParts.push(
-                        item.height
-                    );
-
-                }
+                <h2>
+                    ${escapeHTML(
+                        prompt.prompt
+                    )}
+                </h2>
 
 
-                return `
+                <div>
 
-                    <div class="result">
+                    <strong>
+                        Answer
+                    </strong>
 
-                        <h2>
-                            ${item.prompt}
-                        </h2>
+                    <br>
 
+                    <span class="answer">
 
-                        ${
-                            locationParts.length > 0
+                        ${escapeHTML(
+                            prompt.answer
+                        )}
 
-                            ?
+                    </span>
 
-                            `
-                            <div class="metadata">
-
-                                ${locationParts.join(
-                                    " · "
-                                )}
-
-                            </div>
-                            `
-
-                            :
-
-                            ""
-                        }
+                </div>
 
 
-                        ${
-                            mechanicParts.length > 0
-
-                            ?
-
-                            `
-                            <div class="metadata">
-
-                                ${mechanicParts.join(
-                                    " · "
-                                )}
-
-                            </div>
-                            `
-
-                            :
-
-                            ""
-                        }
+                <div class="metadata">
 
 
-                        <div class="answer-row">
+                    <span class="label">
+                        Dimension:
+                    </span>
 
-                            <strong>
-                                Answer:
-                            </strong>
+                    ${escapeHTML(
+                        prompt.dimension || "—"
+                    )}
 
-                            <span
-                                class="answer hidden"
-                                onclick="
-                                    revealAnswer(this)
-                                "
-                            >
+                    <br>
 
-                                ${item.answer}
 
-                            </span>
+                    <span class="label">
+                        Area:
+                    </span>
 
-                        </div>
+                    ${escapeHTML(
+                        areas
+                    )}
 
+                    <br>
+
+
+                    <span class="label">
+                        Badge:
+                    </span>
+
+                    ${escapeHTML(
+                        badges
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Color:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.color || "—"
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Height:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.height || "—"
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Mechanic:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.mechanic || "—"
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Verified:
+                    </span>
+
+                    ${
+                        prompt.verified
+                        ? "✓"
+                        : "—"
+                    }
+
+
+                    <br>
+
+
+                    <span class="label">
+                        Source:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.source || "None listed"
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Notes:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.notes || "—"
+                    )}
+
+
+                </div>
+
+
+                ${
+                    prompt.evidence
+
+                    ?
+
+                    `
+
+                    <p>
 
                         <a
-                            class="view-button"
-                            href="prompt.html?id=${encodeURIComponent(
-                                item.id
+                            href="${escapeHTML(
+                                prompt.evidence
                             )}"
+                            target="_blank"
+                            rel="noopener noreferrer"
                         >
-
-                            View Prompt →
-
+                            View evidence
                         </a>
 
-                    </div>
+                    </p>
 
-                `;
+                    `
 
-            }).join("");
+                    :
+
+                    ""
+
+                }
+
+
+            </div>
+
+        `;
 
     }
 
 
-    /* SEARCH */
+    /* =========================================
+       SEARCH
+       ========================================= */
 
-    searchBox.addEventListener(
+
+    search.addEventListener(
         "input",
-        filterPrompts
+        function() {
+
+            const query =
+                search.value
+                    .trim()
+                    .toLowerCase();
+
+
+            if (!query) {
+
+                displayPrompts(
+                    prompts
+                );
+
+                return;
+
+            }
+
+
+            const filtered =
+                prompts.filter(
+                    prompt => {
+
+                        const text = [
+
+                            prompt.prompt,
+
+                            prompt.answer,
+
+                            prompt.dimension,
+
+                            ...(prompt.areas || []),
+
+                            ...(prompt.badges || []),
+
+                            prompt.color,
+
+                            prompt.height,
+
+                            prompt.mechanic,
+
+                            prompt.source,
+
+                            prompt.notes
+
+                        ]
+
+                            .filter(Boolean)
+
+                            .join(" ")
+
+                            .toLowerCase();
+
+
+                        return text.includes(
+                            query
+                        );
+
+                    }
+                );
+
+
+            displayPrompts(
+                filtered
+            );
+
+        }
     );
 
 
-    /* FILTER EVENTS */
-
-    dimensionFilter.addEventListener(
-        "change",
-        filterPrompts
-    );
+    /* =========================================
+       HTML ESCAPING
+       ========================================= */
 
 
-    areaFilter.addEventListener(
-        "change",
-        filterPrompts
-    );
+    function escapeHTML(
+        value
+    ) {
 
+        return String(value)
 
-    badgeFilter.addEventListener(
-        "change",
-        filterPrompts
-    );
+            .replace(
+                /&/g,
+                "&amp;"
+            )
 
+            .replace(
+                /</g,
+                "&lt;"
+            )
 
-    colorFilter.addEventListener(
-        "change",
-        filterPrompts
-    );
+            .replace(
+                />/g,
+                "&gt;"
+            )
 
+            .replace(
+                /"/g,
+                "&quot;"
+            )
 
-    heightFilter.addEventListener(
-        "change",
-        filterPrompts
-    );
-
-
-    mechanicFilter.addEventListener(
-        "change",
-        filterPrompts
-    );
-
-
-    verifiedFilter.addEventListener(
-        "change",
-        filterPrompts
-    );
-
-
-    /* CLEAR FILTERS */
-
-    function clearFilters() {
-
-        searchBox.value = "";
-
-        dimensionFilter.value = "";
-        areaFilter.value = "";
-        badgeFilter.value = "";
-        colorFilter.value = "";
-        heightFilter.value = "";
-        mechanicFilter.value = "";
-        verifiedFilter.value = "";
-
-        displayPrompts(prompts);
+            .replace(
+                /'/g,
+                "&#039;"
+            );
 
     }
 
 
-    /* SPOILER */
+    /* =========================================
+       START
+       ========================================= */
 
-    function revealAnswer(element) {
 
-        element.classList.remove(
-            "hidden"
-        );
+    loadPrompts();
 
-    }
 
 </script>
 
+
 </body>
+
 </html>
