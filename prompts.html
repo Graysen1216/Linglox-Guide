@@ -41,6 +41,10 @@
             text-decoration: none;
         }
 
+        .back:hover {
+            text-decoration: underline;
+        }
+
         .search {
             width: 100%;
             box-sizing: border-box;
@@ -50,26 +54,66 @@
             background: #17252b;
             color: white;
             font-size: 17px;
+            margin-bottom: 30px;
         }
 
         .search::placeholder {
             color: #8da4aa;
         }
 
-        .info {
-            margin-top: 30px;
+        .database-header {
+            margin-bottom: 20px;
+        }
+
+        .database-header h2 {
+            margin-bottom: 5px;
+        }
+
+        .database-header p {
+            color: #8da4aa;
+        }
+
+        .result {
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
             padding: 25px;
+            margin-bottom: 15px;
+        }
+
+        .result h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .result p {
+            color: #afc4c9;
+            margin: 8px 0;
+        }
+
+        .result strong {
+            color: white;
+        }
+
+        .answer {
+            background: #29454d;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .answer.hidden {
+            color: transparent;
+            user-select: none;
+        }
+
+        .no-results {
             background: #17252b;
             border-radius: 12px;
-        }
-
-        .info h2 {
-            margin-top: 0;
-        }
-
-        .info p {
+            padding: 30px;
+            text-align: center;
             color: #afc4c9;
-            line-height: 1.5;
         }
     </style>
 </head>
@@ -86,72 +130,143 @@
         <a class="back" href="index.html">← Back to homepage</a>
 
         <input
+            id="searchBox"
             class="search"
             type="text"
-            placeholder="Search prompts..."
+            placeholder="Search prompts, answers, mechanics, areas..."
         >
 
-        <div class="info">
-            <h2>Database</h2>
-            <p>
-                The Linglox prompt database will live here.
-            </p>
-
-            <p>
-                We're just getting started!
-            </p>
+        <div class="database-header">
+            <h2>Known Prompts</h2>
+            <p id="count">Loading database...</p>
         </div>
 
+        <div id="results"></div>
+
     </main>
-<script>
-    const searchBox = document.querySelector(".search");
-    const infoBox = document.querySelector(".info");
 
-    let prompts = [];
+    <script>
+        const searchBox = document.getElementById("searchBox");
+        const resultsBox = document.getElementById("results");
+        const countBox = document.getElementById("count");
 
-    fetch("data/prompts.json")
-        .then(response => response.json())
-        .then(data => {
-            prompts = data;
+        let prompts = [];
+
+        fetch("data/prompts.json")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Could not load prompts.json");
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                prompts = data;
+
+                displayPrompts(prompts);
+            })
+            .catch(error => {
+                console.error(error);
+
+                countBox.textContent = "Database could not be loaded.";
+
+                resultsBox.innerHTML = `
+                    <div class="no-results">
+                        <h2>Something went wrong</h2>
+                        <p>
+                            The prompt database could not be loaded.
+                            Check that data/prompts.json exists.
+                        </p>
+                    </div>
+                `;
+            });
+
+        function displayPrompts(list) {
+
+            countBox.textContent =
+                list.length + (list.length === 1 ? " prompt" : " prompts");
+
+            if (list.length === 0) {
+                resultsBox.innerHTML = `
+                    <div class="no-results">
+                        <h2>No prompts found</h2>
+                        <p>Try a different search.</p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            resultsBox.innerHTML = list.map(item => `
+                <div class="result">
+
+                    <h2>${item.prompt}</h2>
+
+                    <p>
+                        <strong>Answer:</strong>
+                        <span
+                            class="answer hidden"
+                            onclick="revealAnswer(this)"
+                        >
+                            ${item.answer}
+                        </span>
+                    </p>
+
+                    <p>
+                        <strong>Dimension:</strong>
+                        ${item.dimension}
+                    </p>
+
+                    <p>
+                        <strong>Area:</strong>
+                        ${item.area}
+                    </p>
+
+                    <p>
+                        <strong>Color:</strong>
+                        ${item.color}
+                    </p>
+
+                    <p>
+                        <strong>Height:</strong>
+                        ${item.height}
+                    </p>
+
+                    <p>
+                        <strong>Mechanic:</strong>
+                        ${item.mechanic}
+                    </p>
+
+                    <p>
+                        <strong>Verified:</strong>
+                        ${item.verified ? "Yes" : "No"}
+                    </p>
+
+                </div>
+            `).join("");
+        }
+
+        searchBox.addEventListener("input", function () {
+
+            const search = searchBox.value.toLowerCase().trim();
+
+            const filtered = prompts.filter(item =>
+                item.prompt.toLowerCase().includes(search) ||
+                item.answer.toLowerCase().includes(search) ||
+                item.dimension.toLowerCase().includes(search) ||
+                item.area.toLowerCase().includes(search) ||
+                item.color.toLowerCase().includes(search) ||
+                item.height.toLowerCase().includes(search) ||
+                item.mechanic.toLowerCase().includes(search)
+            );
+
+            displayPrompts(filtered);
         });
 
-    searchBox.addEventListener("input", function () {
-        const search = searchBox.value.toLowerCase();
-
-        const results = prompts.filter(item =>
-            item.prompt.toLowerCase().includes(search) ||
-            item.answer.toLowerCase().includes(search) ||
-            item.dimension.toLowerCase().includes(search) ||
-            item.area.toLowerCase().includes(search) ||
-            item.mechanic.toLowerCase().includes(search)
-        );
-
-        if (search === "") {
-            infoBox.innerHTML = `
-                <h2>Database</h2>
-                <p>Start typing to search the database.</p>
-            `;
-            return;
+        function revealAnswer(element) {
+            element.classList.remove("hidden");
         }
+    </script>
 
-        if (results.length === 0) {
-            infoBox.innerHTML = `
-                <h2>No results</h2>
-                <p>No prompts matched your search.</p>
-            `;
-            return;
-        }
-
-        infoBox.innerHTML = results.map(item => `
-            <div class="result">
-                <h2>${item.prompt}</h2>
-                <p><strong>Answer:</strong> ${item.answer}</p>
-                <p><strong>Dimension:</strong> ${item.dimension}</p>
-                <p><strong>Area:</strong> ${item.area}</p>
-                <p><strong>Mechanic:</strong> ${item.mechanic}</p>
-            </div>
-        `).join("");
-    });
-</script>
 </body>
 </html>
