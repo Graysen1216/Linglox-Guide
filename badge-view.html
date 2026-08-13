@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Badge - Linglox Companion</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+        }
+
+        header {
+            padding: 40px 20px;
+            background: #183b45;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        header p {
+            color: #c7d8dc;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #8ed8e5;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .intro {
+            margin-bottom: 30px;
+        }
+
+        .intro h2 {
+            margin-bottom: 8px;
+        }
+
+        .intro p {
+            color: #afc4c9;
+        }
+
+        .prompt {
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        .prompt h2 {
+            margin: 0 0 12px 0;
+            font-size: 22px;
+        }
+
+        .answer {
+            display: inline-block;
+            background: #29454d;
+            padding: 5px 9px;
+            border-radius: 5px;
+        }
+
+        .metadata {
+            color: #afc4c9;
+            line-height: 1.7;
+            margin-top: 15px;
+        }
+
+        .label {
+            color: white;
+            font-weight: bold;
+        }
+
+        .loading,
+        .empty,
+        .error {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading,
+        .empty {
+            color: #a8bcc1;
+        }
+
+        .error {
+            background: #3d2529;
+            border: 1px solid #70454d;
+            border-radius: 10px;
+            color: #ffb0b0;
+        }
+
+        .badge-title {
+            color: #8ed8e5;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1 id="title">
+        Badge
+    </h1>
+
+    <p>
+        Linglox Companion
+    </p>
+
+</header>
+
+
+<main>
+
+
+    <a
+        class="back"
+        href="badges.html"
+    >
+        ← Back to badges
+    </a>
+
+
+    <div class="intro">
+
+        <h2 id="badgeName">
+            Loading...
+        </h2>
+
+        <p id="description">
+            Loading prompts associated with this badge...
+        </p>
+
+    </div>
+
+
+    <div id="prompts">
+
+        <div class="loading">
+            Loading prompts...
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+    const SUPABASE_URL =
+        "https://njjqjvsoydazatafclwc.supabase.co";
+
+
+    const SUPABASE_ANON_KEY =
+        "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const badge =
+        params.get("name");
+
+
+    const badgeName =
+        document.getElementById(
+            "badgeName"
+        );
+
+
+    const title =
+        document.getElementById(
+            "title"
+        );
+
+
+    const description =
+        document.getElementById(
+            "description"
+        );
+
+
+    const box =
+        document.getElementById(
+            "prompts"
+        );
+
+
+    if (!badge) {
+
+        title.textContent =
+            "Badge Not Found";
+
+        badgeName.textContent =
+            "No badge specified";
+
+        description.textContent =
+            "Please return to the badges page and select a badge.";
+
+        box.innerHTML = "";
+
+    } else {
+
+        title.textContent =
+            badge;
+
+        badgeName.textContent =
+            badge;
+
+        description.textContent =
+            "Prompts associated with this badge.";
+
+        loadPrompts();
+
+    }
+
+
+    async function loadPrompts() {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+
+            .from("prompts")
+
+            .select("*")
+
+            .contains(
+                "badges",
+                [badge]
+            )
+
+            .order(
+                "id",
+                {
+                    ascending: true
+                }
+            );
+
+
+        if (error) {
+
+            box.innerHTML =
+
+                `<div class="error">
+
+                    Could not load prompts.
+
+                    <br><br>
+
+                    ${escapeHTML(
+                        error.message
+                    )}
+
+                </div>`;
+
+            return;
+
+        }
+
+
+        if (!data || !data.length) {
+
+            box.innerHTML =
+
+                `<div class="empty">
+
+                    No prompts are currently
+                    associated with this badge.
+
+                </div>`;
+
+            return;
+
+        }
+
+
+        box.innerHTML =
+
+            data
+                .map(
+                    prompt =>
+                        createPrompt(
+                            prompt
+                        )
+                )
+                .join("");
+
+    }
+
+
+    function createPrompt(
+        prompt
+    ) {
+
+        const areas =
+            (prompt.areas || [])
+                .join(", ") ||
+            "—";
+
+
+        return `
+
+            <div class="prompt">
+
+                <h2>
+                    ${escapeHTML(
+                        prompt.prompt
+                    )}
+                </h2>
+
+
+                <p>
+
+                    <strong>
+                        Answer:
+                    </strong>
+
+                    <span class="answer">
+
+                        ${escapeHTML(
+                            prompt.answer
+                        )}
+
+                    </span>
+
+                </p>
+
+
+                <div class="metadata">
+
+                    <span class="label">
+                        Dimension:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.dimension || "—"
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Area:
+                    </span>
+
+                    ${escapeHTML(
+                        areas
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Color:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.color || "—"
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Height:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.height || "—"
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Mechanic:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.mechanic || "—"
+                    )}
+
+                    <br>
+
+
+                    <span class="label">
+                        Source:
+                    </span>
+
+                    ${escapeHTML(
+                        prompt.source || "—"
+                    )}
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    function escapeHTML(
+        value
+    ) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
