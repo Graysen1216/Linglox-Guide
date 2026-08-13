@@ -124,11 +124,17 @@
             color: #9be7b0;
         }
 
+        a {
+            color: #8ed8e5;
+        }
+
     </style>
 
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -142,7 +148,11 @@
 
 </header>
 
+
 <main>
+
+
+    <!-- LOGIN -->
 
     <div
         class="box"
@@ -164,6 +174,8 @@
 
     </div>
 
+
+    <!-- ACCESS DENIED -->
 
     <div
         class="box hidden"
@@ -189,10 +201,13 @@
     </div>
 
 
+    <!-- ADMIN PANEL -->
+
     <div
         id="adminPanel"
         class="hidden"
     >
+
 
         <div class="box">
 
@@ -221,18 +236,32 @@
 
         </div>
 
+
     </div>
+
 
 </main>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
+
+
+    /* =========================================
+       SUPABASE CONFIGURATION
+       ========================================= */
+
 
     const SUPABASE_URL =
         "https://njjqjvsoydazatafclwc.supabase.co";
 
+
+    /*
+        KEEP YOUR EXISTING PUBLISHABLE KEY
+        BETWEEN THESE QUOTATION MARKS.
+    */
 
     const SUPABASE_ANON_KEY =
         "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
@@ -243,6 +272,11 @@
             SUPABASE_URL,
             SUPABASE_ANON_KEY
         );
+
+
+    /* =========================================
+       LOGIN
+       ========================================= */
 
 
     async function login() {
@@ -266,11 +300,18 @@
 
         if (error) {
 
-            alert(error.message);
+            alert(
+                error.message
+            );
 
         }
 
     }
+
+
+    /* =========================================
+       LOGOUT
+       ========================================= */
 
 
     async function logout() {
@@ -280,6 +321,11 @@
         window.location.reload();
 
     }
+
+
+    /* =========================================
+       CHECK ADMIN STATUS
+       ========================================= */
 
 
     async function checkAdmin() {
@@ -317,26 +363,7 @@
             .maybeSingle();
 
 
-        if (error) {
-
-            document
-                .getElementById("loginBox")
-                .classList
-                .add("hidden");
-
-
-            document
-                .getElementById("deniedBox")
-                .classList
-                .remove("hidden");
-
-
-            return;
-
-        }
-
-
-        if (!data) {
+        if (error || !data) {
 
             document
                 .getElementById("loginBox")
@@ -383,6 +410,11 @@
     }
 
 
+    /* =========================================
+       LOAD PENDING SUBMISSIONS
+       ========================================= */
+
+
     async function loadSubmissions() {
 
         const {
@@ -416,8 +448,11 @@
         if (error) {
 
             box.innerHTML =
+
                 `<p class="error">
-                    ${escapeHTML(error.message)}
+                    ${escapeHTML(
+                        error.message
+                    )}
                 </p>`;
 
             return;
@@ -425,7 +460,7 @@
         }
 
 
-        if (!data.length) {
+        if (!data || !data.length) {
 
             box.innerHTML =
 
@@ -443,6 +478,7 @@
 
 
         box.innerHTML =
+
             data
                 .map(
                     submission =>
@@ -453,6 +489,11 @@
                 .join("");
 
     }
+
+
+    /* =========================================
+       CREATE SUBMISSION CARD
+       ========================================= */
 
 
     function createSubmission(
@@ -472,6 +513,7 @@
                     )}
                 </h2>
 
+
                 <p>
 
                     <strong>
@@ -488,7 +530,9 @@
 
                 </p>
 
+
                 <div class="metadata">
+
 
                     <strong>
                         Dimension:
@@ -499,6 +543,7 @@
                     )}
 
                     <br>
+
 
                     <strong>
                         Area:
@@ -511,6 +556,7 @@
 
                     <br>
 
+
                     <strong>
                         Badge:
                     </strong>
@@ -522,6 +568,7 @@
 
                     <br>
 
+
                     <strong>
                         Color:
                     </strong>
@@ -531,6 +578,7 @@
                     )}
 
                     <br>
+
 
                     <strong>
                         Height:
@@ -542,6 +590,7 @@
 
                     <br>
 
+
                     <strong>
                         Mechanic:
                     </strong>
@@ -551,6 +600,7 @@
                     )}
 
                     <br>
+
 
                     <strong>
                         Source:
@@ -562,6 +612,7 @@
 
                     <br>
 
+
                     <strong>
                         Notes:
                     </strong>
@@ -569,6 +620,7 @@
                     ${escapeHTML(
                         submission.notes || "—"
                     )}
+
 
                 </div>
 
@@ -589,6 +641,7 @@
                                 submission.evidence
                             )}"
                             target="_blank"
+                            rel="noopener noreferrer"
                         >
                             View evidence
                         </a>
@@ -600,6 +653,9 @@
                     ""
 
                 }
+
+
+                <br>
 
 
                 <button
@@ -627,6 +683,7 @@
                     Reject
                 </button>
 
+
             </div>
 
         `;
@@ -634,20 +691,222 @@
     }
 
 
+    /* =========================================
+       APPROVE / REJECT SUBMISSION
+       ========================================= */
+
+
     async function updateSubmission(
         id,
         status
     ) {
 
+
+        /*
+            REJECTION
+
+            Simply mark the submission
+            as rejected.
+        */
+
+
+        if (status === "rejected") {
+
+
+            const {
+                error
+            } =
+
+            await supabaseClient
+
+                .from("submissions")
+
+                .update({
+
+                    status:
+                        "rejected"
+
+                })
+
+                .eq(
+                    "id",
+                    id
+                );
+
+
+            if (error) {
+
+                alert(
+                    "Could not reject submission: " +
+                    error.message
+                );
+
+                return;
+
+            }
+
+
+            alert(
+                "Submission rejected."
+            );
+
+
+            loadSubmissions();
+
+            return;
+
+        }
+
+
+        /*
+            APPROVAL
+
+            First retrieve the submission.
+        */
+
+
         const {
-            error
+            data: submission,
+            error: fetchError
         } =
+
+        await supabaseClient
+
+            .from("submissions")
+
+            .select("*")
+
+            .eq(
+                "id",
+                id
+            )
+
+            .single();
+
+
+        if (fetchError) {
+
+            alert(
+                "Could not load submission: " +
+                fetchError.message
+            );
+
+            return;
+
+        }
+
+
+        /*
+            Check that the submission
+            is still pending.
+        */
+
+
+        if (
+            submission.status !==
+            "pending"
+        ) {
+
+            alert(
+                "This submission has already been reviewed."
+            );
+
+            loadSubmissions();
+
+            return;
+
+        }
+
+
+        /*
+            Add it to the official
+            prompts table.
+        */
+
+
+        const {
+            error: insertError
+        } =
+
+        await supabaseClient
+
+            .from("prompts")
+
+            .insert({
+
+                prompt:
+                    submission.prompt,
+
+                answer:
+                    submission.answer,
+
+                dimension:
+                    submission.dimension,
+
+                areas:
+                    submission.areas || [],
+
+                badges:
+                    submission.badges || [],
+
+                color:
+                    submission.color,
+
+                height:
+                    submission.height,
+
+                mechanic:
+                    submission.mechanic,
+
+                verified:
+                    true,
+
+                source:
+                    submission.source,
+
+                notes:
+                    submission.notes,
+
+                evidence:
+                    submission.evidence
+
+            });
+
+
+        if (insertError) {
+
+            alert(
+                "Could not add prompt to official database:\n\n" +
+                insertError.message
+            );
+
+            return;
+
+        }
+
+
+        /*
+            The prompt was successfully
+            copied into the official database.
+
+            Now mark the submission
+            as approved.
+        */
+
+
+        const {
+            error: updateError
+        } =
+
         await supabaseClient
 
             .from("submissions")
 
             .update({
-                status: status
+
+                status:
+                    "approved"
+
             })
 
             .eq(
@@ -656,10 +915,12 @@
             );
 
 
-        if (error) {
+        if (updateError) {
 
             alert(
-                error.message
+                "The prompt was added to the official database, " +
+                "but the submission could not be marked approved.\n\n" +
+                updateError.message
             );
 
             return;
@@ -667,12 +928,24 @@
         }
 
 
+        alert(
+            "Prompt approved and added to the official database! 🎉"
+        );
+
+
         loadSubmissions();
 
     }
 
 
-    function escapeHTML(value) {
+    /* =========================================
+       HTML ESCAPING
+       ========================================= */
+
+
+    function escapeHTML(
+        value
+    ) {
 
         return String(value)
 
@@ -704,9 +977,16 @@
     }
 
 
+    /* =========================================
+       START
+       ========================================= */
+
+
     checkAdmin();
 
+
 </script>
+
 
 </body>
 
