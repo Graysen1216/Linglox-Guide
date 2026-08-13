@@ -3,20 +3,28 @@
         "prompt": "earth",
         "answer": "world",
         "dimension": "Unaffiliated",
-        "area": "Unknown",
-        "color": "Unknown",
-        "height": "Unknown",
+        "areas": [
+            "Example Area"
+        ],
+        "badges": [
+            "Example Badge"
+        ],
+        "color": "Institutional White",
+        "height": "Low",
         "mechanic": "Synonym",
-        "verified": true
+        "verified": true,
+        "notes": "Test entry for the database."
     },
     {
         "prompt": "example",
         "answer": "sample",
         "dimension": "Unknown",
-        "area": "Unknown",
+        "areas": [],
+        "badges": [],
         "color": "Unknown",
         "height": "Unknown",
         "mechanic": "Synonym",
-        "verified": false
+        "verified": false,
+        "notes": "Test entry."
     }
 ]
