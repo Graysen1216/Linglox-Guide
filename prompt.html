@@ -149,6 +149,22 @@
 
         }
 
+        .timestamps {
+
+            margin-top: 25px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #29454d;
+
+            color: #83999e;
+
+            font-size: 13px;
+
+            line-height: 1.8;
+
+        }
+
         .loading {
 
             text-align: center;
@@ -226,6 +242,11 @@
 <script>
 
 
+    /* =========================================
+       SUPABASE
+       ========================================= */
+
+
     const SUPABASE_URL =
         "https://njjqjvsoydazatafclwc.supabase.co";
 
@@ -262,6 +283,53 @@
         params.get(
             "id"
         );
+
+
+    /* =========================================
+       FORMAT DATE
+       ========================================= */
+
+
+    function formatDate(
+        value
+    ) {
+
+        if (!value) {
+
+            return "Unknown";
+
+        }
+
+
+        const date =
+            new Date(
+                value
+            );
+
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+
+            return "Unknown";
+
+        }
+
+
+        return date.toLocaleString(
+            undefined,
+            {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit"
+            }
+        );
+
+    }
 
 
     /* =========================================
@@ -535,6 +603,33 @@
 
             </div>
 
+
+            <div class="timestamps">
+
+
+                <strong>
+                    Created:
+                </strong>
+
+                ${formatDate(
+                    prompt.created_at
+                )}
+
+
+                <br>
+
+
+                <strong>
+                    Last updated:
+                </strong>
+
+                ${formatDate(
+                    prompt.updated_at
+                )}
+
+
+            </div>
+
         `;
 
 
@@ -625,6 +720,11 @@
             );
 
     }
+
+
+    /* =========================================
+       START
+       ========================================= */
 
 
     loadPrompt();
