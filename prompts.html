@@ -29,7 +29,7 @@
         }
 
         main {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: auto;
             padding: 40px 20px;
         }
@@ -54,11 +54,27 @@
             background: #17252b;
             color: white;
             font-size: 17px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .search::placeholder {
             color: #8da4aa;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .filter {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #29454d;
+            background: #17252b;
+            color: white;
+            font-size: 15px;
         }
 
         .database-header {
@@ -123,6 +139,20 @@
             text-align: center;
             color: #afc4c9;
         }
+
+        .clear-button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            background: #29454d;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .clear-button:hover {
+            background: #3b5961;
+        }
     </style>
 </head>
 
@@ -144,6 +174,44 @@
             placeholder="Search prompts, answers, mechanics, areas, badges..."
         >
 
+        <div class="filters">
+
+            <select id="dimensionFilter" class="filter">
+                <option value="">All Dimensions</option>
+            </select>
+
+            <select id="areaFilter" class="filter">
+                <option value="">All Areas</option>
+            </select>
+
+            <select id="badgeFilter" class="filter">
+                <option value="">All Badges</option>
+            </select>
+
+            <select id="colorFilter" class="filter">
+                <option value="">All Colors</option>
+            </select>
+
+            <select id="heightFilter" class="filter">
+                <option value="">All Heights</option>
+            </select>
+
+            <select id="mechanicFilter" class="filter">
+                <option value="">All Mechanics</option>
+            </select>
+
+            <select id="verifiedFilter" class="filter">
+                <option value="">All Verification</option>
+                <option value="true">Verified</option>
+                <option value="false">Unverified</option>
+            </select>
+
+        </div>
+
+        <button class="clear-button" onclick="clearFilters()">
+            Clear Filters
+        </button>
+
         <div class="database-header">
             <h2>Known Prompts</h2>
             <p id="count">Loading database...</p>
@@ -154,54 +222,322 @@
     </main>
 
     <script>
+
         const searchBox = document.getElementById("searchBox");
-        const resultsBox = document.getElementById("results");
-        const countBox = document.getElementById("count");
+
+        const dimensionFilter =
+            document.getElementById("dimensionFilter");
+
+        const areaFilter =
+            document.getElementById("areaFilter");
+
+        const badgeFilter =
+            document.getElementById("badgeFilter");
+
+        const colorFilter =
+            document.getElementById("colorFilter");
+
+        const heightFilter =
+            document.getElementById("heightFilter");
+
+        const mechanicFilter =
+            document.getElementById("mechanicFilter");
+
+        const verifiedFilter =
+            document.getElementById("verifiedFilter");
+
+        const resultsBox =
+            document.getElementById("results");
+
+        const countBox =
+            document.getElementById("count");
 
         let prompts = [];
 
+
         fetch("data/prompts.json")
+
             .then(response => {
+
                 if (!response.ok) {
                     throw new Error("Could not load prompts.json");
                 }
 
                 return response.json();
+
             })
+
             .then(data => {
+
                 prompts = data;
+
+                populateFilters();
+
                 displayPrompts(prompts);
+
             })
+
             .catch(error => {
+
                 console.error(error);
 
-                countBox.textContent = "Database could not be loaded.";
+                countBox.textContent =
+                    "Database could not be loaded.";
 
                 resultsBox.innerHTML = `
                     <div class="no-results">
+
                         <h2>Something went wrong</h2>
+
                         <p>
                             The prompt database could not be loaded.
                         </p>
+
                     </div>
                 `;
+
             });
+
+
+        function getUniqueValues(values) {
+
+            return [...new Set(
+                values
+                    .filter(value => value)
+                    .sort()
+            )];
+
+        }
+
+
+        function populateFilters() {
+
+            const dimensions =
+                getUniqueValues(
+                    prompts.map(item => item.dimension)
+                );
+
+            const areas =
+                getUniqueValues(
+                    prompts.flatMap(item => item.areas || [])
+                );
+
+            const badges =
+                getUniqueValues(
+                    prompts.flatMap(item => item.badges || [])
+                );
+
+            const colors =
+                getUniqueValues(
+                    prompts.map(item => item.color)
+                );
+
+            const heights =
+                getUniqueValues(
+                    prompts.map(item => item.height)
+                );
+
+            const mechanics =
+                getUniqueValues(
+                    prompts.map(item => item.mechanic)
+                );
+
+
+            addOptions(dimensionFilter, dimensions);
+            addOptions(areaFilter, areas);
+            addOptions(badgeFilter, badges);
+            addOptions(colorFilter, colors);
+            addOptions(heightFilter, heights);
+            addOptions(mechanicFilter, mechanics);
+
+        }
+
+
+        function addOptions(select, values) {
+
+            values.forEach(value => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = value;
+                option.textContent = value;
+
+                select.appendChild(option);
+
+            });
+
+        }
+
+
+        function filterPrompts() {
+
+            const search =
+                searchBox.value.toLowerCase().trim();
+
+            const dimension =
+                dimensionFilter.value;
+
+            const area =
+                areaFilter.value;
+
+            const badge =
+                badgeFilter.value;
+
+            const color =
+                colorFilter.value;
+
+            const height =
+                heightFilter.value;
+
+            const mechanic =
+                mechanicFilter.value;
+
+            const verified =
+                verifiedFilter.value;
+
+
+            const filtered =
+                prompts.filter(item => {
+
+                    const matchesSearch =
+
+                        item.prompt
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        item.answer
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        item.dimension
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        (item.areas || []).some(area =>
+                            area.toLowerCase().includes(search)
+                        )
+
+                        ||
+
+                        (item.badges || []).some(badge =>
+                            badge.toLowerCase().includes(search)
+                        )
+
+                        ||
+
+                        item.color
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        item.height
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        item.mechanic
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        item.notes
+                            .toLowerCase()
+                            .includes(search);
+
+
+                    const matchesDimension =
+                        !dimension ||
+                        item.dimension === dimension;
+
+
+                    const matchesArea =
+                        !area ||
+                        (item.areas || []).includes(area);
+
+
+                    const matchesBadge =
+                        !badge ||
+                        (item.badges || []).includes(badge);
+
+
+                    const matchesColor =
+                        !color ||
+                        item.color === color;
+
+
+                    const matchesHeight =
+                        !height ||
+                        item.height === height;
+
+
+                    const matchesMechanic =
+                        !mechanic ||
+                        item.mechanic === mechanic;
+
+
+                    const matchesVerified =
+                        verified === "" ||
+                        String(item.verified) === verified;
+
+
+                    return (
+
+                        matchesSearch &&
+                        matchesDimension &&
+                        matchesArea &&
+                        matchesBadge &&
+                        matchesColor &&
+                        matchesHeight &&
+                        matchesMechanic &&
+                        matchesVerified
+
+                    );
+
+                });
+
+
+            displayPrompts(filtered);
+
+        }
+
 
         function displayPrompts(list) {
 
             countBox.textContent =
-                list.length + (list.length === 1 ? " prompt" : " prompts");
+                list.length +
+                (list.length === 1 ? " prompt" : " prompts");
+
 
             if (list.length === 0) {
+
                 resultsBox.innerHTML = `
+
                     <div class="no-results">
+
                         <h2>No prompts found</h2>
-                        <p>Try a different search.</p>
+
+                        <p>
+                            Try changing your search or filters.
+                        </p>
+
                     </div>
+
                 `;
 
                 return;
+
             }
+
 
             resultsBox.innerHTML = list.map(item => `
 
@@ -209,99 +545,198 @@
 
                     <h2>${item.prompt}</h2>
 
+
                     <p>
+
                         <strong>Answer:</strong>
+
                         <span
                             class="answer hidden"
                             onclick="revealAnswer(this)"
                         >
+
                             ${item.answer}
+
                         </span>
+
                     </p>
 
+
                     <p>
+
                         <strong>Dimension:</strong>
+
                         ${item.dimension}
+
                     </p>
 
+
                     <p>
+
                         <strong>Area:</strong>
+
                         ${
+                            item.areas &&
                             item.areas.length > 0
-                            ? item.areas.map(area =>
+
+                            ?
+
+                            item.areas.map(area =>
                                 `<span class="tag">${area}</span>`
-                              ).join("")
-                            : "None listed"
+                            ).join("")
+
+                            :
+
+                            "None listed"
                         }
+
                     </p>
 
+
                     <p>
+
                         <strong>Badge:</strong>
+
                         ${
+                            item.badges &&
                             item.badges.length > 0
-                            ? item.badges.map(badge =>
+
+                            ?
+
+                            item.badges.map(badge =>
                                 `<span class="tag">${badge}</span>`
-                              ).join("")
-                            : "None listed"
+                            ).join("")
+
+                            :
+
+                            "None listed"
                         }
+
                     </p>
 
+
                     <p>
+
                         <strong>Color:</strong>
+
                         ${item.color}
+
                     </p>
 
+
                     <p>
+
                         <strong>Height:</strong>
+
                         ${item.height}
+
                     </p>
 
+
                     <p>
+
                         <strong>Mechanic:</strong>
+
                         ${item.mechanic}
+
                     </p>
 
+
                     <p>
+
                         <strong>Verified:</strong>
+
                         ${item.verified ? "Yes" : "No"}
+
                     </p>
 
+
                     <p>
+
                         <strong>Notes:</strong>
+
                         ${item.notes}
+
                     </p>
 
                 </div>
 
             `).join("");
+
         }
 
-        searchBox.addEventListener("input", function () {
 
-            const search = searchBox.value.toLowerCase().trim();
+        searchBox.addEventListener(
+            "input",
+            filterPrompts
+        );
 
-            const filtered = prompts.filter(item =>
-                item.prompt.toLowerCase().includes(search) ||
-                item.answer.toLowerCase().includes(search) ||
-                item.dimension.toLowerCase().includes(search) ||
-                item.areas.some(area =>
-                    area.toLowerCase().includes(search)
-                ) ||
-                item.badges.some(badge =>
-                    badge.toLowerCase().includes(search)
-                ) ||
-                item.color.toLowerCase().includes(search) ||
-                item.height.toLowerCase().includes(search) ||
-                item.mechanic.toLowerCase().includes(search) ||
-                item.notes.toLowerCase().includes(search)
-            );
 
-            displayPrompts(filtered);
-        });
+        dimensionFilter.addEventListener(
+            "change",
+            filterPrompts
+        );
+
+
+        areaFilter.addEventListener(
+            "change",
+            filterPrompts
+        );
+
+
+        badgeFilter.addEventListener(
+            "change",
+            filterPrompts
+        );
+
+
+        colorFilter.addEventListener(
+            "change",
+            filterPrompts
+        );
+
+
+        heightFilter.addEventListener(
+            "change",
+            filterPrompts
+        );
+
+
+        mechanicFilter.addEventListener(
+            "change",
+            filterPrompts
+        );
+
+
+        verifiedFilter.addEventListener(
+            "change",
+            filterPrompts
+        );
+
+
+        function clearFilters() {
+
+            searchBox.value = "";
+
+            dimensionFilter.value = "";
+            areaFilter.value = "";
+            badgeFilter.value = "";
+            colorFilter.value = "";
+            heightFilter.value = "";
+            mechanicFilter.value = "";
+            verifiedFilter.value = "";
+
+            displayPrompts(prompts);
+
+        }
+
 
         function revealAnswer(element) {
+
             element.classList.remove("hidden");
+
         }
+
     </script>
 
 </body>
