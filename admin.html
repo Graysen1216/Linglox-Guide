@@ -12,207 +12,123 @@
 
     <title>Admin - Linglox Companion</title>
 
-
     <style>
 
         body {
-
             margin: 0;
-
             font-family: Arial, sans-serif;
-
             background: #101820;
-
             color: white;
-
         }
-
 
         header {
-
             padding: 40px 20px;
-
             background: #183b45;
-
             text-align: center;
-
         }
-
 
         header h1 {
-
             margin: 0;
-
             font-size: 40px;
-
         }
 
+        header p {
+            color: #c7d8dc;
+        }
 
         main {
-
             max-width: 900px;
-
             margin: auto;
-
             padding: 40px 20px;
-
         }
-
 
         .box {
-
             background: #17252b;
-
             border: 1px solid #29454d;
-
             border-radius: 12px;
-
             padding: 30px;
-
             margin-bottom: 20px;
-
         }
-
 
         button {
-
             padding: 12px 18px;
-
             border: none;
-
             border-radius: 8px;
-
             background: #2d6875;
-
             color: white;
-
             font-size: 16px;
-
             cursor: pointer;
-
         }
-
 
         button:hover {
-
             background: #3b8190;
-
         }
-
 
         .logout {
-
             background: #543c42;
-
         }
-
 
         .logout:hover {
-
             background: #704c54;
-
         }
-
 
         .submission {
-
             background: #101820;
-
             border: 1px solid #29454d;
-
             border-radius: 10px;
-
             padding: 20px;
-
             margin-top: 15px;
-
         }
-
 
         .submission h2 {
-
             margin-top: 0;
-
         }
-
 
         .metadata {
-
             color: #afc4c9;
-
             line-height: 1.7;
-
         }
-
 
         .answer {
-
             background: #29454d;
-
             padding: 4px 8px;
-
             border-radius: 5px;
-
         }
-
 
         .approve {
-
             background: #28634c;
-
             margin-right: 10px;
-
         }
-
 
         .approve:hover {
-
             background: #34805f;
-
         }
-
 
         .reject {
-
             background: #673d45;
-
         }
-
 
         .reject:hover {
-
             background: #80505a;
-
         }
-
 
         .hidden {
-
             display: none;
-
         }
-
 
         .error {
-
             color: #ff9b9b;
-
         }
 
-
         .success {
-
             color: #9be7b0;
-
         }
 
     </style>
 
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -226,11 +142,7 @@
 
 </header>
 
-
 <main>
-
-
-    <!-- LOGIN -->
 
     <div
         class="box"
@@ -242,26 +154,45 @@
         </h2>
 
         <p>
-            Sign in with the GitHub account
-            authorized to manage the database.
+            Sign in with the authorized GitHub account
+            to manage submissions.
         </p>
 
-        <button
-            onclick="login()"
-        >
+        <button onclick="login()">
             Sign in with GitHub
         </button>
 
     </div>
 
 
-    <!-- ADMIN -->
+    <div
+        class="box hidden"
+        id="deniedBox"
+    >
+
+        <h2>
+            Access Denied
+        </h2>
+
+        <p>
+            This account does not have administrator
+            permissions.
+        </p>
+
+        <button
+            class="logout"
+            onclick="logout()"
+        >
+            Sign Out
+        </button>
+
+    </div>
+
 
     <div
         id="adminPanel"
         class="hidden"
     >
-
 
         <div class="box">
 
@@ -290,35 +221,21 @@
 
         </div>
 
-
     </div>
-
 
 </main>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
-
 
     const SUPABASE_URL =
         "https://njjqjvsoydazatafclwc.supabase.co";
 
 
-    /*
-        IMPORTANT:
-
-        This is the public Supabase key.
-
-        We will add it after creating the
-        Supabase project connection.
-
-    */
-
     const SUPABASE_ANON_KEY =
-        "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
+        "YOUR_SUPABASE_ANON_KEY";
 
 
     const supabaseClient =
@@ -349,9 +266,7 @@
 
         if (error) {
 
-            alert(
-                error.message
-            );
+            alert(error.message);
 
         }
 
@@ -362,12 +277,12 @@
 
         await supabaseClient.auth.signOut();
 
-        location.reload();
+        window.location.reload();
 
     }
 
 
-    async function loadAdmin() {
+    async function checkAdmin() {
 
         const {
             data: {
@@ -378,6 +293,62 @@
 
 
         if (!user) {
+
+            return;
+
+        }
+
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+
+            .from("admin_users")
+
+            .select("user_id")
+
+            .eq(
+                "user_id",
+                user.id
+            )
+
+            .maybeSingle();
+
+
+        if (error) {
+
+            document
+                .getElementById("loginBox")
+                .classList
+                .add("hidden");
+
+
+            document
+                .getElementById("deniedBox")
+                .classList
+                .remove("hidden");
+
+
+            return;
+
+        }
+
+
+        if (!data) {
+
+            document
+                .getElementById("loginBox")
+                .classList
+                .add("hidden");
+
+
+            document
+                .getElementById("deniedBox")
+                .classList
+                .remove("hidden");
+
 
             return;
 
@@ -445,9 +416,8 @@
         if (error) {
 
             box.innerHTML =
-
                 `<p class="error">
-                    ${error.message}
+                    ${escapeHTML(error.message)}
                 </p>`;
 
             return;
@@ -473,7 +443,6 @@
 
 
         box.innerHTML =
-
             data
                 .map(
                     submission =>
@@ -503,7 +472,6 @@
                     )}
                 </h2>
 
-
                 <p>
 
                     <strong>
@@ -520,7 +488,6 @@
 
                 </p>
 
-
                 <div class="metadata">
 
                     <strong>
@@ -533,7 +500,6 @@
 
                     <br>
 
-
                     <strong>
                         Area:
                     </strong>
@@ -544,7 +510,6 @@
                     )}
 
                     <br>
-
 
                     <strong>
                         Badge:
@@ -557,7 +522,6 @@
 
                     <br>
 
-
                     <strong>
                         Color:
                     </strong>
@@ -567,7 +531,6 @@
                     )}
 
                     <br>
-
 
                     <strong>
                         Height:
@@ -579,7 +542,6 @@
 
                     <br>
 
-
                     <strong>
                         Mechanic:
                     </strong>
@@ -590,7 +552,6 @@
 
                     <br>
 
-
                     <strong>
                         Source:
                     </strong>
@@ -600,7 +561,6 @@
                     )}
 
                     <br>
-
 
                     <strong>
                         Notes:
@@ -619,6 +579,7 @@
                     ?
 
                     `<p>
+
                         <strong>
                             Evidence:
                         </strong>
@@ -711,9 +672,7 @@
     }
 
 
-    function escapeHTML(
-        value
-    ) {
+    function escapeHTML(value) {
 
         return String(value)
 
@@ -745,10 +704,9 @@
     }
 
 
-    loadAdmin();
+    checkAdmin();
 
 </script>
-
 
 </body>
 
