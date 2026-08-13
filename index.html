@@ -11,34 +11,82 @@
             font-family: Arial, sans-serif;
             background: #101820;
             color: white;
-            text-align: center;
         }
 
         header {
-            padding: 80px 20px;
+            padding: 70px 20px;
             background: #183b45;
+            text-align: center;
         }
 
         h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
+            font-size: 52px;
+            margin: 0 0 10px;
         }
 
-        p {
+        header p {
             font-size: 20px;
             color: #c7d8dc;
+            margin: 0;
         }
 
         main {
+            max-width: 1100px;
+            margin: auto;
             padding: 50px 20px;
         }
 
-        .box {
-            max-width: 700px;
-            margin: auto;
-            padding: 30px;
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .intro p {
+            color: #c7d8dc;
+            font-size: 18px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
             background: #17252b;
+            padding: 25px;
             border-radius: 12px;
+            text-align: center;
+            border: 1px solid #29454d;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .card p {
+            color: #afc4c9;
+            line-height: 1.5;
+        }
+
+        .card button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #2d6875;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .card button:hover {
+            background: #3b8190;
         }
     </style>
 </head>
@@ -51,15 +99,55 @@
     </header>
 
     <main>
-        <div class="box">
-            <h2>Prompt Database</h2>
-            <p>
-                A complete database of Linglox prompts,
-                mechanics, answers, areas, badges, and more.
-            </p>
 
-            <p>Database coming soon.</p>
-        </div>
+        <section class="intro">
+            <h2>Explore Linglox</h2>
+            <p>
+                A growing database of prompts, mechanics, badges,
+                areas, dimensions, and more.
+            </p>
+        </section>
+
+        <section class="cards">
+
+            <div class="card">
+                <h3>🔎 Prompt Database</h3>
+                <p>
+                    Search through known Linglox prompts,
+                    answers, mechanics, and more.
+                </p>
+                <button>Coming Soon</button>
+            </div>
+
+            <div class="card">
+                <h3>🏆 Badges</h3>
+                <p>
+                    Find badge requirements, progression,
+                    and guides.
+                </p>
+                <button>Coming Soon</button>
+            </div>
+
+            <div class="card">
+                <h3>🧩 Mechanics</h3>
+                <p>
+                    Learn how Linglox's different prompt
+                    mechanics work.
+                </p>
+                <button>Coming Soon</button>
+            </div>
+
+            <div class="card">
+                <h3>🌎 Dimensions</h3>
+                <p>
+                    Explore Linglox's dimensions and
+                    the areas within them.
+                </p>
+                <button>Coming Soon</button>
+            </div>
+
+        </section>
+
     </main>
 
 </body>
