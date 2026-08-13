@@ -22,41 +22,67 @@
         }
 
         header {
-            padding: 40px 20px;
+            padding: 35px 20px;
             background: #183b45;
             text-align: center;
         }
 
         header h1 {
-            margin: 0;
-            font-size: 40px;
+            margin: 0 0 10px 0;
+            font-size: 38px;
         }
 
         header p {
+            margin: 0;
             color: #c7d8dc;
         }
 
+        nav {
+            margin-top: 20px;
+        }
+
+        nav a {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 15px;
+
+            background: #29454d;
+
+            color: white;
+            text-decoration: none;
+
+            border-radius: 7px;
+        }
+
+        nav a:hover {
+            background: #3b8190;
+        }
+
         main {
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
-            padding: 40px 20px;
+            padding: 35px 20px;
         }
 
         .box {
             background: #17252b;
             border: 1px solid #29454d;
             border-radius: 12px;
-            padding: 30px;
+            padding: 25px;
             margin-bottom: 20px;
         }
 
         button {
-            padding: 12px 18px;
+            padding: 10px 16px;
+
             border: none;
-            border-radius: 8px;
-            background: #2d6875;
+            border-radius: 7px;
+
             color: white;
-            font-size: 16px;
+            background: #2d6875;
+
+            font-size: 15px;
+
             cursor: pointer;
         }
 
@@ -72,32 +98,9 @@
             background: #704c54;
         }
 
-        .submission {
-            background: #101820;
-            border: 1px solid #29454d;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 15px;
-        }
-
-        .submission h2 {
-            margin-top: 0;
-        }
-
-        .metadata {
-            color: #afc4c9;
-            line-height: 1.7;
-        }
-
-        .answer {
-            background: #29454d;
-            padding: 4px 8px;
-            border-radius: 5px;
-        }
-
         .approve {
             background: #28634c;
-            margin-right: 10px;
+            margin-right: 8px;
         }
 
         .approve:hover {
@@ -112,6 +115,85 @@
             background: #80505a;
         }
 
+        .edit {
+            background: #53652d;
+            margin-right: 8px;
+        }
+
+        .edit:hover {
+            background: #6b8138;
+        }
+
+        .delete {
+            background: #673d45;
+        }
+
+        .delete:hover {
+            background: #80505a;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 11px;
+
+            margin-top: 6px;
+            margin-bottom: 15px;
+
+            border-radius: 7px;
+
+            border: 1px solid #29454d;
+
+            background: #101820;
+
+            color: white;
+
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .submission,
+        .official-prompt {
+            background: #101820;
+
+            border: 1px solid #29454d;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            margin-top: 15px;
+        }
+
+        .submission h2,
+        .official-prompt h2 {
+            margin-top: 0;
+        }
+
+        .metadata {
+            color: #afc4c9;
+            line-height: 1.7;
+        }
+
+        .answer {
+            background: #29454d;
+
+            padding: 4px 8px;
+
+            border-radius: 5px;
+        }
+
         .hidden {
             display: none;
         }
@@ -124,8 +206,47 @@
             color: #9be7b0;
         }
 
-        a {
-            color: #8ed8e5;
+        .empty {
+            color: #a8bcc1;
+            padding: 20px 0;
+        }
+
+        .section-title {
+            margin-top: 0;
+        }
+
+        .edit-form {
+            margin-top: 20px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #29454d;
+        }
+
+        .form-buttons {
+            margin-top: 10px;
+        }
+
+        .cancel {
+            background: #3d4549;
+            margin-left: 8px;
+        }
+
+        .cancel:hover {
+            background: #515b60;
+        }
+
+        .verified-row {
+            margin-bottom: 15px;
+        }
+
+        .verified-row input {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .danger {
+            color: #ffaaaa;
         }
 
     </style>
@@ -143,8 +264,21 @@
     </h1>
 
     <p>
-        Submission Review
+        Submission Review & Prompt Management
     </p>
+
+
+    <nav>
+
+        <a href="index.html">
+            🏠 Home
+        </a>
+
+        <a href="database.html">
+            📚 Prompt Database
+        </a>
+
+    </nav>
 
 </header>
 
@@ -165,7 +299,7 @@
 
         <p>
             Sign in with the authorized GitHub account
-            to manage submissions.
+            to manage prompts.
         </p>
 
         <button onclick="login()">
@@ -209,10 +343,12 @@
     >
 
 
+        <!-- ACCOUNT -->
+
         <div class="box">
 
             <h2>
-                Pending Submissions
+                Admin Panel
             </h2>
 
             <p id="userInfo"></p>
@@ -227,12 +363,61 @@
         </div>
 
 
-        <div
-            class="box"
-            id="submissions"
-        >
+        <!-- =====================================
+             PENDING SUBMISSIONS
+             ===================================== -->
 
-            Loading submissions...
+        <div class="box">
+
+            <h2 class="section-title">
+                Pending Submissions
+            </h2>
+
+            <div id="submissions">
+
+                Loading submissions...
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             OFFICIAL PROMPTS
+             ===================================== -->
+
+        <div class="box">
+
+            <h2 class="section-title">
+                Manage Official Prompts
+            </h2>
+
+            <p class="metadata">
+
+                Search the official database to
+                edit or delete prompts.
+
+            </p>
+
+
+            <input
+                id="officialSearch"
+                type="text"
+                placeholder="Search official prompts..."
+                autocomplete="off"
+            >
+
+
+            <div id="officialCount">
+                Loading...
+            </div>
+
+
+            <div id="officialPrompts">
+
+                Loading official prompts...
+
+            </div>
 
         </div>
 
@@ -250,18 +435,13 @@
 
 
     /* =========================================
-       SUPABASE CONFIGURATION
+       SUPABASE
        ========================================= */
 
 
     const SUPABASE_URL =
         "https://njjqjvsoydazatafclwc.supabase.co";
 
-
-    /*
-        KEEP YOUR EXISTING PUBLISHABLE KEY
-        BETWEEN THESE QUOTATION MARKS.
-    */
 
     const SUPABASE_ANON_KEY =
         "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
@@ -272,6 +452,9 @@
             SUPABASE_URL,
             SUPABASE_ANON_KEY
         );
+
+
+    let officialPrompts = [];
 
 
     /* =========================================
@@ -324,7 +507,7 @@
 
 
     /* =========================================
-       CHECK ADMIN STATUS
+       CHECK ADMIN
        ========================================= */
 
 
@@ -407,11 +590,13 @@
 
         loadSubmissions();
 
+        loadOfficialPrompts();
+
     }
 
 
     /* =========================================
-       LOAD PENDING SUBMISSIONS
+       PENDING SUBMISSIONS
        ========================================= */
 
 
@@ -441,8 +626,9 @@
 
 
         const box =
-            document
-                .getElementById("submissions");
+            document.getElementById(
+                "submissions"
+            );
 
 
         if (error) {
@@ -450,9 +636,11 @@
             box.innerHTML =
 
                 `<p class="error">
+
                     ${escapeHTML(
                         error.message
                     )}
+
                 </p>`;
 
             return;
@@ -464,13 +652,11 @@
 
             box.innerHTML =
 
-                `<h3>
-                    No pending submissions 🎉
-                </h3>
+                `<div class="empty">
 
-                <p>
-                    Your queue is empty.
-                </p>`;
+                    No pending submissions 🎉
+
+                </div>`;
 
             return;
 
@@ -492,7 +678,7 @@
 
 
     /* =========================================
-       CREATE SUBMISSION CARD
+       SUBMISSION CARD
        ========================================= */
 
 
@@ -508,9 +694,11 @@
             >
 
                 <h2>
+
                     ${escapeHTML(
                         submission.prompt
                     )}
+
                 </h2>
 
 
@@ -625,36 +813,6 @@
                 </div>
 
 
-                ${
-                    submission.evidence
-
-                    ?
-
-                    `<p>
-
-                        <strong>
-                            Evidence:
-                        </strong>
-
-                        <a
-                            href="${escapeHTML(
-                                submission.evidence
-                            )}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            View evidence
-                        </a>
-
-                    </p>`
-
-                    :
-
-                    ""
-
-                }
-
-
                 <br>
 
 
@@ -692,7 +850,7 @@
 
 
     /* =========================================
-       APPROVE / REJECT SUBMISSION
+       APPROVE / REJECT
        ========================================= */
 
 
@@ -700,14 +858,6 @@
         id,
         status
     ) {
-
-
-        /*
-            REJECTION
-
-            Simply mark the submission
-            as rejected.
-        */
 
 
         if (status === "rejected") {
@@ -737,7 +887,6 @@
             if (error) {
 
                 alert(
-                    "Could not reject submission: " +
                     error.message
                 );
 
@@ -746,23 +895,11 @@
             }
 
 
-            alert(
-                "Submission rejected."
-            );
-
-
             loadSubmissions();
 
             return;
 
         }
-
-
-        /*
-            APPROVAL
-
-            First retrieve the submission.
-        */
 
 
         const {
@@ -787,41 +924,12 @@
         if (fetchError) {
 
             alert(
-                "Could not load submission: " +
                 fetchError.message
             );
 
             return;
 
         }
-
-
-        /*
-            Check that the submission
-            is still pending.
-        */
-
-
-        if (
-            submission.status !==
-            "pending"
-        ) {
-
-            alert(
-                "This submission has already been reviewed."
-            );
-
-            loadSubmissions();
-
-            return;
-
-        }
-
-
-        /*
-            Add it to the official
-            prompts table.
-        */
 
 
         const {
@@ -876,22 +984,13 @@
         if (insertError) {
 
             alert(
-                "Could not add prompt to official database:\n\n" +
+                "Could not add prompt:\n\n" +
                 insertError.message
             );
 
             return;
 
         }
-
-
-        /*
-            The prompt was successfully
-            copied into the official database.
-
-            Now mark the submission
-            as approved.
-        */
 
 
         const {
@@ -918,8 +1017,8 @@
         if (updateError) {
 
             alert(
-                "The prompt was added to the official database, " +
-                "but the submission could not be marked approved.\n\n" +
+                "Prompt was added, but submission " +
+                "could not be marked approved:\n\n" +
                 updateError.message
             );
 
@@ -935,7 +1034,838 @@
 
         loadSubmissions();
 
+        loadOfficialPrompts();
+
     }
+
+
+    /* =========================================
+       LOAD OFFICIAL PROMPTS
+       ========================================= */
+
+
+    async function loadOfficialPrompts() {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+
+            .from("prompts")
+
+            .select("*")
+
+            .order(
+                "id",
+                {
+                    ascending: true
+                }
+            );
+
+
+        const box =
+            document.getElementById(
+                "officialPrompts"
+            );
+
+
+        if (error) {
+
+            box.innerHTML =
+
+                `<p class="error">
+
+                    ${escapeHTML(
+                        error.message
+                    )}
+
+                </p>`;
+
+            return;
+
+        }
+
+
+        officialPrompts =
+            data || [];
+
+
+        displayOfficialPrompts(
+            officialPrompts
+        );
+
+    }
+
+
+    /* =========================================
+       DISPLAY OFFICIAL PROMPTS
+       ========================================= */
+
+
+    function displayOfficialPrompts(
+        list
+    ) {
+
+        const count =
+            document.getElementById(
+                "officialCount"
+            );
+
+
+        count.textContent =
+            list.length +
+            (
+                list.length === 1
+                ? " prompt"
+                : " prompts"
+            );
+
+
+        const box =
+            document.getElementById(
+                "officialPrompts"
+            );
+
+
+        if (!list.length) {
+
+            box.innerHTML =
+
+                `<div class="empty">
+
+                    No prompts found.
+
+                </div>`;
+
+            return;
+
+        }
+
+
+        box.innerHTML =
+
+            list
+                .map(
+                    prompt =>
+                        createOfficialPrompt(
+                            prompt
+                        )
+                )
+                .join("");
+
+    }
+
+
+    /* =========================================
+       OFFICIAL PROMPT CARD
+       ========================================= */
+
+
+    function createOfficialPrompt(
+        prompt
+    ) {
+
+        const areas =
+            (prompt.areas || [])
+                .join(", ") ||
+            "—";
+
+
+        const badges =
+            (prompt.badges || [])
+                .join(", ") ||
+            "—";
+
+
+        return `
+
+            <div
+                class="official-prompt"
+                id="official-${prompt.id}"
+            >
+
+                <h2>
+
+                    ${escapeHTML(
+                        prompt.prompt
+                    )}
+
+                </h2>
+
+
+                <div class="metadata">
+
+                    Answer:
+                    <span class="answer">
+
+                        ${escapeHTML(
+                            prompt.answer
+                        )}
+
+                    </span>
+
+                    <br>
+
+                    ${escapeHTML(
+                        prompt.dimension || "—"
+                    )}
+
+                    ·
+
+                    ${escapeHTML(
+                        areas
+                    )}
+
+                    ·
+
+                    ${escapeHTML(
+                        badges
+                    )}
+
+                </div>
+
+
+                <br>
+
+
+                <button
+                    class="edit"
+                    onclick="
+                        showEditForm(
+                            ${prompt.id}
+                        )
+                    "
+                >
+                    ✏️ Edit
+                </button>
+
+
+                <button
+                    class="delete"
+                    onclick="
+                        deletePrompt(
+                            ${prompt.id}
+                        )
+                    "
+                >
+                    🗑️ Delete
+                </button>
+
+
+                <div
+                    id="edit-${prompt.id}"
+                    class="edit-form hidden"
+                >
+
+                    ${createEditForm(
+                        prompt
+                    )}
+
+                </div>
+
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =========================================
+       EDIT FORM
+       ========================================= */
+
+
+    function createEditForm(
+        prompt
+    ) {
+
+        const areas =
+            (prompt.areas || [])
+                .join(", ");
+
+
+        const badges =
+            (prompt.badges || [])
+                .join(", ");
+
+
+        return `
+
+            <label>
+                Prompt
+            </label>
+
+            <input
+                id="edit-prompt-${prompt.id}"
+                value="${escapeHTML(
+                    prompt.prompt || ""
+                )}"
+            >
+
+
+            <label>
+                Answer
+            </label>
+
+            <input
+                id="edit-answer-${prompt.id}"
+                value="${escapeHTML(
+                    prompt.answer || ""
+                )}"
+            >
+
+
+            <label>
+                Dimension
+            </label>
+
+            <input
+                id="edit-dimension-${prompt.id}"
+                value="${escapeHTML(
+                    prompt.dimension || ""
+                )}"
+            >
+
+
+            <label>
+                Areas
+            </label>
+
+            <input
+                id="edit-areas-${prompt.id}"
+                value="${escapeHTML(
+                    areas
+                )}"
+                placeholder="Separate multiple areas with commas"
+            >
+
+
+            <label>
+                Badges
+            </label>
+
+            <input
+                id="edit-badges-${prompt.id}"
+                value="${escapeHTML(
+                    badges
+                )}"
+                placeholder="Separate multiple badges with commas"
+            >
+
+
+            <label>
+                Color
+            </label>
+
+            <input
+                id="edit-color-${prompt.id}"
+                value="${escapeHTML(
+                    prompt.color || ""
+                )}"
+            >
+
+
+            <label>
+                Height
+            </label>
+
+            <input
+                id="edit-height-${prompt.id}"
+                value="${escapeHTML(
+                    prompt.height || ""
+                )}"
+            >
+
+
+            <label>
+                Mechanic
+            </label>
+
+            <input
+                id="edit-mechanic-${prompt.id}"
+                value="${escapeHTML(
+                    prompt.mechanic || ""
+                )}"
+            >
+
+
+            <div class="verified-row">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        id="edit-verified-${prompt.id}"
+                        ${
+                            prompt.verified
+                            ? "checked"
+                            : ""
+                        }
+                    >
+
+                    Verified
+
+                </label>
+
+            </div>
+
+
+            <label>
+                Source
+            </label>
+
+            <input
+                id="edit-source-${prompt.id}"
+                value="${escapeHTML(
+                    prompt.source || ""
+                )}"
+            >
+
+
+            <label>
+                Evidence
+            </label>
+
+            <input
+                id="edit-evidence-${prompt.id}"
+                value="${escapeHTML(
+                    prompt.evidence || ""
+                )}"
+            >
+
+
+            <label>
+                Notes
+            </label>
+
+            <textarea
+                id="edit-notes-${prompt.id}"
+            >${escapeHTML(
+                prompt.notes || ""
+            )}</textarea>
+
+
+            <div class="form-buttons">
+
+                <button
+                    onclick="
+                        savePrompt(
+                            ${prompt.id}
+                        )
+                    "
+                >
+                    Save Changes
+                </button>
+
+
+                <button
+                    class="cancel"
+                    onclick="
+                        hideEditForm(
+                            ${prompt.id}
+                        )
+                    "
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+
+    /* =========================================
+       SHOW EDIT FORM
+       ========================================= */
+
+
+    function showEditForm(
+        id
+    ) {
+
+        const form =
+            document.getElementById(
+                "edit-" + id
+            );
+
+
+        if (form) {
+
+            form.classList.remove(
+                "hidden"
+            );
+
+        }
+
+    }
+
+
+    /* =========================================
+       HIDE EDIT FORM
+       ========================================= */
+
+
+    function hideEditForm(
+        id
+    ) {
+
+        const form =
+            document.getElementById(
+                "edit-" + id
+            );
+
+
+        if (form) {
+
+            form.classList.add(
+                "hidden"
+            );
+
+        }
+
+    }
+
+
+    /* =========================================
+       SAVE EDITED PROMPT
+       ========================================= */
+
+
+    async function savePrompt(
+        id
+    ) {
+
+        const prompt =
+            document.getElementById(
+                "edit-prompt-" + id
+            ).value.trim();
+
+
+        const answer =
+            document.getElementById(
+                "edit-answer-" + id
+            ).value.trim();
+
+
+        if (!prompt || !answer) {
+
+            alert(
+                "Prompt and answer cannot be empty."
+            );
+
+            return;
+
+        }
+
+
+        const areas =
+            document.getElementById(
+                "edit-areas-" + id
+            ).value
+
+                .split(",")
+
+                .map(
+                    value =>
+                        value.trim()
+                )
+
+                .filter(Boolean);
+
+
+        const badges =
+            document.getElementById(
+                "edit-badges-" + id
+            ).value
+
+                .split(",")
+
+                .map(
+                    value =>
+                        value.trim()
+                )
+
+                .filter(Boolean);
+
+
+        const verified =
+            document.getElementById(
+                "edit-verified-" + id
+            ).checked;
+
+
+        const {
+            error
+        } =
+
+        await supabaseClient
+
+            .from("prompts")
+
+            .update({
+
+                prompt:
+
+                    prompt,
+
+                answer:
+
+                    answer,
+
+                dimension:
+
+                    document.getElementById(
+                        "edit-dimension-" + id
+                    ).value.trim(),
+
+                areas:
+
+                    areas,
+
+                badges:
+
+                    badges,
+
+                color:
+
+                    document.getElementById(
+                        "edit-color-" + id
+                    ).value.trim(),
+
+                height:
+
+                    document.getElementById(
+                        "edit-height-" + id
+                    ).value.trim(),
+
+                mechanic:
+
+                    document.getElementById(
+                        "edit-mechanic-" + id
+                    ).value.trim(),
+
+                verified:
+
+                    verified,
+
+                source:
+
+                    document.getElementById(
+                        "edit-source-" + id
+                    ).value.trim(),
+
+                evidence:
+
+                    document.getElementById(
+                        "edit-evidence-" + id
+                    ).value.trim(),
+
+                notes:
+
+                    document.getElementById(
+                        "edit-notes-" + id
+                    ).value.trim()
+
+            })
+
+            .eq(
+                "id",
+                id
+            );
+
+
+        if (error) {
+
+            alert(
+                "Could not save changes:\n\n" +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Prompt updated successfully! ✅"
+        );
+
+
+        loadOfficialPrompts();
+
+    }
+
+
+    /* =========================================
+       DELETE PROMPT
+       ========================================= */
+
+
+    async function deletePrompt(
+        id
+    ) {
+
+        const prompt =
+            officialPrompts.find(
+                item =>
+                    item.id === id
+            );
+
+
+        if (!prompt) {
+
+            return;
+
+        }
+
+
+        const confirmed =
+            confirm(
+
+                "Are you sure you want to permanently delete:\n\n" +
+
+                prompt.prompt +
+
+                " → " +
+
+                prompt.answer +
+
+                "\n\nThis cannot be undone."
+
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+        const {
+            error
+        } =
+
+        await supabaseClient
+
+            .from("prompts")
+
+            .delete()
+
+            .eq(
+                "id",
+                id
+            );
+
+
+        if (error) {
+
+            alert(
+                "Could not delete prompt:\n\n" +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Prompt deleted."
+        );
+
+
+        loadOfficialPrompts();
+
+    }
+
+
+    /* =========================================
+       SEARCH OFFICIAL PROMPTS
+       ========================================= */
+
+
+    document
+        .getElementById(
+            "officialSearch"
+        )
+        .addEventListener(
+            "input",
+            function() {
+
+
+                const query =
+                    this.value
+                        .trim()
+                        .toLowerCase();
+
+
+                if (!query) {
+
+                    displayOfficialPrompts(
+                        officialPrompts
+                    );
+
+                    return;
+
+                }
+
+
+                const filtered =
+                    officialPrompts.filter(
+                        prompt => {
+
+
+                            const searchable = [
+
+                                prompt.prompt,
+
+                                prompt.answer,
+
+                                prompt.dimension,
+
+                                ...(prompt.areas || []),
+
+                                ...(prompt.badges || []),
+
+                                prompt.color,
+
+                                prompt.height,
+
+                                prompt.mechanic,
+
+                                prompt.source,
+
+                                prompt.notes
+
+                            ]
+
+                                .filter(Boolean)
+
+                                .join(" ")
+
+                                .toLowerCase();
+
+
+                            return searchable.includes(
+                                query
+                            );
+
+                        }
+                    );
+
+
+                displayOfficialPrompts(
+                    filtered
+                );
+
+
+            }
+        );
 
 
     /* =========================================
