@@ -37,7 +37,7 @@
         }
 
         main {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: auto;
             padding: 40px 20px;
         }
@@ -126,14 +126,31 @@
 
         .color-preview {
             width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            margin-bottom: 16px;
+            height: 12px;
+
+            border-radius: 6px;
+
+            margin-bottom: 18px;
+
+            border: 1px solid rgba(
+                255,
+                255,
+                255,
+                0.2
+            );
+
+            box-sizing: border-box;
         }
 
         .mechanic h2 {
             margin: 0 0 8px 0;
             font-size: 22px;
+        }
+
+        .theme {
+            color: #8ed8e5;
+            margin-bottom: 12px;
+            font-size: 14px;
         }
 
         .mechanic p {
@@ -142,13 +159,11 @@
             line-height: 1.5;
         }
 
-        .hex {
-            margin-top: 10px;
+        .count {
             color: #8ed8e5;
-            font-size: 14px;
+            margin-bottom: 20px;
         }
 
-        .loading,
         .empty {
             text-align: center;
             padding: 40px;
@@ -170,7 +185,7 @@
     </h1>
 
     <p>
-        Explore the mechanics of Linglox blocks
+        Explore the mechanics of Linglox
     </p>
 
 </header>
@@ -190,12 +205,12 @@
     <div class="intro">
 
         <h2>
-            Block Mechanics
+            Linglox Mechanics
         </h2>
 
         <p>
             Browse the mechanics associated
-            with each Linglox block color.
+            with each block color.
         </p>
 
     </div>
@@ -206,10 +221,18 @@
         <input
             id="search"
             type="text"
-            placeholder="Search colors or mechanics..."
+            placeholder="Search mechanics..."
             autocomplete="off"
         >
 
+    </div>
+
+
+    <div
+        id="count"
+        class="count"
+    >
+        Loading...
     </div>
 
 
@@ -218,7 +241,7 @@
         class="mechanics"
     >
 
-        <div class="loading">
+        <div class="empty">
             Loading mechanics...
         </div>
 
@@ -228,15 +251,20 @@
 </main>
 
 
-<script src="mechanics-data.js"></script>
+<script src="js/mechanics.js"></script>
 
 
 <script>
 
-
     const box =
         document.getElementById(
             "mechanics"
+        );
+
+
+    const count =
+        document.getElementById(
+            "count"
         );
 
 
@@ -249,6 +277,15 @@
     function displayMechanics(
         list
     ) {
+
+        count.textContent =
+            list.length +
+            (
+                list.length === 1
+                ? " mechanic"
+                : " mechanics"
+            );
+
 
         if (!list.length) {
 
@@ -280,10 +317,7 @@
 
                             <div
                                 class="color-preview"
-                                style="background:${escapeHTML(
-                                    mechanic.hex ||
-                                    "#3b8190"
-                                )}"
+                                style="background:${mechanic.color};"
                             ></div>
 
                             <h2>
@@ -292,23 +326,17 @@
                                 )}
                             </h2>
 
-                            <p>
+                            <div class="theme">
                                 ${escapeHTML(
                                     mechanic.theme
                                 )}
-                            </p>
+                            </div>
 
-                            ${
-                                mechanic.hex
-                                ? `
-                                    <div class="hex">
-                                        ${escapeHTML(
-                                            mechanic.hex
-                                        )}
-                                    </div>
-                                `
-                                : ""
-                            }
+                            <p>
+                                View High, Middle,
+                                Low, and Checker
+                                mechanics →
+                            </p>
 
                         </a>
 
@@ -342,29 +370,26 @@
 
             const filtered =
                 mechanics.filter(
-                    mechanic => {
+                    mechanic =>
+                        mechanic.name
+                            .toLowerCase()
+                            .includes(query) ||
 
-                        const searchable =
-                            [
-                                mechanic.name,
-                                mechanic.hex,
-                                mechanic.theme,
-                                mechanic.high,
-                                mechanic.middle,
-                                mechanic.low,
-                                mechanic.checker,
-                                mechanic.notes
-                            ]
-                                .filter(Boolean)
-                                .join(" ")
-                                .toLowerCase();
+                        mechanic.theme
+                            .toLowerCase()
+                            .includes(query) ||
 
+                        mechanic.high
+                            .toLowerCase()
+                            .includes(query) ||
 
-                        return searchable.includes(
-                            query
-                        );
+                        mechanic.middle
+                            .toLowerCase()
+                            .includes(query) ||
 
-                    }
+                        mechanic.low
+                            .toLowerCase()
+                            .includes(query)
                 );
 
 
@@ -413,7 +438,6 @@
     displayMechanics(
         mechanics
     );
-
 
 </script>
 
