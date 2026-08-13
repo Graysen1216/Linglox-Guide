@@ -132,6 +132,14 @@
             background: #80505a;
         }
 
+        .add {
+            background: #28634c;
+        }
+
+        .add:hover {
+            background: #34805f;
+        }
+
         input,
         textarea,
         select {
@@ -215,7 +223,8 @@
             margin-top: 0;
         }
 
-        .edit-form {
+        .edit-form,
+        .add-form {
             margin-top: 20px;
 
             padding-top: 20px;
@@ -245,8 +254,11 @@
             margin-right: 8px;
         }
 
-        .danger {
-            color: #ffaaaa;
+        .help {
+            color: #83999e;
+            font-size: 13px;
+            margin-top: -8px;
+            margin-bottom: 15px;
         }
 
     </style>
@@ -359,6 +371,191 @@
             >
                 Sign Out
             </button>
+
+        </div>
+
+
+        <!-- =====================================
+             ADD PROMPT
+             ===================================== -->
+
+        <div class="box">
+
+            <h2 class="section-title">
+                Add Prompt
+            </h2>
+
+            <p class="metadata">
+
+                Add a prompt directly to the official
+                database. Admin-created prompts do not
+                require review.
+
+            </p>
+
+
+            <button
+                class="add"
+                onclick="toggleAddForm()"
+            >
+                ＋ Add New Prompt
+            </button>
+
+
+            <div
+                id="addForm"
+                class="add-form hidden"
+            >
+
+
+                <label>
+                    Prompt
+                </label>
+
+                <input
+                    id="add-prompt"
+                    placeholder="Prompt"
+                >
+
+
+                <label>
+                    Answer
+                </label>
+
+                <input
+                    id="add-answer"
+                    placeholder="Answer"
+                >
+
+
+                <label>
+                    Dimension
+                </label>
+
+                <input
+                    id="add-dimension"
+                    placeholder="Dimension"
+                >
+
+
+                <label>
+                    Areas
+                </label>
+
+                <input
+                    id="add-areas"
+                    placeholder="Separate multiple areas with commas"
+                >
+
+
+                <label>
+                    Badges
+                </label>
+
+                <input
+                    id="add-badges"
+                    placeholder="Separate multiple badges with commas"
+                >
+
+
+                <label>
+                    Color
+                </label>
+
+                <input
+                    id="add-color"
+                    placeholder="Color"
+                >
+
+
+                <label>
+                    Height
+                </label>
+
+                <input
+                    id="add-height"
+                    placeholder="Height"
+                >
+
+
+                <label>
+                    Mechanic
+                </label>
+
+                <input
+                    id="add-mechanic"
+                    placeholder="Mechanic"
+                >
+
+
+                <label>
+                    Source
+                </label>
+
+                <input
+                    id="add-source"
+                    placeholder="Source"
+                >
+
+
+                <label>
+                    Evidence
+                </label>
+
+                <input
+                    id="add-evidence"
+                    placeholder="Evidence URL (optional)"
+                >
+
+
+                <label>
+                    Notes
+                </label>
+
+                <textarea
+                    id="add-notes"
+                    placeholder="Notes"
+                ></textarea>
+
+
+                <div class="verified-row">
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            id="add-verified"
+                            checked
+                        >
+
+                        Verified
+
+                    </label>
+
+                </div>
+
+
+                <div class="form-buttons">
+
+                    <button
+                        class="add"
+                        onclick="addPrompt()"
+                    >
+                        Add to Official Database
+                    </button>
+
+
+                    <button
+                        class="cancel"
+                        onclick="toggleAddForm()"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+
+            </div>
 
         </div>
 
@@ -591,6 +788,239 @@
         loadSubmissions();
 
         loadOfficialPrompts();
+
+    }
+
+
+    /* =========================================
+       ADD FORM
+       ========================================= */
+
+
+    function toggleAddForm() {
+
+        const form =
+            document.getElementById(
+                "addForm"
+            );
+
+
+        form.classList.toggle(
+            "hidden"
+        );
+
+    }
+
+
+    /* =========================================
+       ADD PROMPT
+       ========================================= */
+
+
+    async function addPrompt() {
+
+        const prompt =
+            document.getElementById(
+                "add-prompt"
+            ).value.trim();
+
+
+        const answer =
+            document.getElementById(
+                "add-answer"
+            ).value.trim();
+
+
+        if (!prompt || !answer) {
+
+            alert(
+                "Prompt and answer are required."
+            );
+
+            return;
+
+        }
+
+
+        const areas =
+            document.getElementById(
+                "add-areas"
+            ).value
+
+                .split(",")
+
+                .map(
+                    value =>
+                        value.trim()
+                )
+
+                .filter(Boolean);
+
+
+        const badges =
+            document.getElementById(
+                "add-badges"
+            ).value
+
+                .split(",")
+
+                .map(
+                    value =>
+                        value.trim()
+                )
+
+                .filter(Boolean);
+
+
+        const verified =
+            document.getElementById(
+                "add-verified"
+            ).checked;
+
+
+        const {
+            error
+        } =
+
+        await supabaseClient
+
+            .from("prompts")
+
+            .insert({
+
+                prompt:
+                    prompt,
+
+                answer:
+                    answer,
+
+                dimension:
+                    document.getElementById(
+                        "add-dimension"
+                    ).value.trim(),
+
+                areas:
+                    areas,
+
+                badges:
+                    badges,
+
+                color:
+                    document.getElementById(
+                        "add-color"
+                    ).value.trim(),
+
+                height:
+                    document.getElementById(
+                        "add-height"
+                    ).value.trim(),
+
+                mechanic:
+                    document.getElementById(
+                        "add-mechanic"
+                    ).value.trim(),
+
+                verified:
+                    verified,
+
+                source:
+                    document.getElementById(
+                        "add-source"
+                    ).value.trim(),
+
+                evidence:
+                    document.getElementById(
+                        "add-evidence"
+                    ).value.trim(),
+
+                notes:
+                    document.getElementById(
+                        "add-notes"
+                    ).value.trim()
+
+            });
+
+
+        if (error) {
+
+            alert(
+                "Could not add prompt:\n\n" +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Prompt added to the official database! 🎉"
+        );
+
+
+        clearAddForm();
+
+        toggleAddForm();
+
+        loadOfficialPrompts();
+
+    }
+
+
+    /* =========================================
+       CLEAR ADD FORM
+       ========================================= */
+
+
+    function clearAddForm() {
+
+        document.getElementById(
+            "add-prompt"
+        ).value = "";
+
+        document.getElementById(
+            "add-answer"
+        ).value = "";
+
+        document.getElementById(
+            "add-dimension"
+        ).value = "";
+
+        document.getElementById(
+            "add-areas"
+        ).value = "";
+
+        document.getElementById(
+            "add-badges"
+        ).value = "";
+
+        document.getElementById(
+            "add-color"
+        ).value = "";
+
+        document.getElementById(
+            "add-height"
+        ).value = "";
+
+        document.getElementById(
+            "add-mechanic"
+        ).value = "";
+
+        document.getElementById(
+            "add-source"
+        ).value = "";
+
+        document.getElementById(
+            "add-evidence"
+        ).value = "";
+
+        document.getElementById(
+            "add-notes"
+        ).value = "";
+
+        document.getElementById(
+            "add-verified"
+        ).checked = true;
 
     }
 
