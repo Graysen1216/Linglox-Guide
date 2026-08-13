@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin - Linglox Companion</title>
+
+
+    <style>
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #101820;
+
+            color: white;
+
+        }
+
+
+        header {
+
+            padding: 40px 20px;
+
+            background: #183b45;
+
+            text-align: center;
+
+        }
+
+
+        header h1 {
+
+            margin: 0;
+
+            font-size: 40px;
+
+        }
+
+
+        main {
+
+            max-width: 900px;
+
+            margin: auto;
+
+            padding: 40px 20px;
+
+        }
+
+
+        .box {
+
+            background: #17252b;
+
+            border: 1px solid #29454d;
+
+            border-radius: 12px;
+
+            padding: 30px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        button {
+
+            padding: 12px 18px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #2d6875;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+        }
+
+
+        button:hover {
+
+            background: #3b8190;
+
+        }
+
+
+        .logout {
+
+            background: #543c42;
+
+        }
+
+
+        .logout:hover {
+
+            background: #704c54;
+
+        }
+
+
+        .submission {
+
+            background: #101820;
+
+            border: 1px solid #29454d;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .submission h2 {
+
+            margin-top: 0;
+
+        }
+
+
+        .metadata {
+
+            color: #afc4c9;
+
+            line-height: 1.7;
+
+        }
+
+
+        .answer {
+
+            background: #29454d;
+
+            padding: 4px 8px;
+
+            border-radius: 5px;
+
+        }
+
+
+        .approve {
+
+            background: #28634c;
+
+            margin-right: 10px;
+
+        }
+
+
+        .approve:hover {
+
+            background: #34805f;
+
+        }
+
+
+        .reject {
+
+            background: #673d45;
+
+        }
+
+
+        .reject:hover {
+
+            background: #80505a;
+
+        }
+
+
+        .hidden {
+
+            display: none;
+
+        }
+
+
+        .error {
+
+            color: #ff9b9b;
+
+        }
+
+
+        .success {
+
+            color: #9be7b0;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        Linglox Companion Admin
+    </h1>
+
+    <p>
+        Submission Review
+    </p>
+
+</header>
+
+
+<main>
+
+
+    <!-- LOGIN -->
+
+    <div
+        class="box"
+        id="loginBox"
+    >
+
+        <h2>
+            Admin Login
+        </h2>
+
+        <p>
+            Sign in with the GitHub account
+            authorized to manage the database.
+        </p>
+
+        <button
+            onclick="login()"
+        >
+            Sign in with GitHub
+        </button>
+
+    </div>
+
+
+    <!-- ADMIN -->
+
+    <div
+        id="adminPanel"
+        class="hidden"
+    >
+
+
+        <div class="box">
+
+            <h2>
+                Pending Submissions
+            </h2>
+
+            <p id="userInfo"></p>
+
+            <button
+                class="logout"
+                onclick="logout()"
+            >
+                Sign Out
+            </button>
+
+        </div>
+
+
+        <div
+            class="box"
+            id="submissions"
+        >
+
+            Loading submissions...
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+    const SUPABASE_URL =
+        "https://njjqjvsoydazatafclwc.supabase.co";
+
+
+    /*
+        IMPORTANT:
+
+        This is the public Supabase key.
+
+        We will add it after creating the
+        Supabase project connection.
+
+    */
+
+    const SUPABASE_ANON_KEY =
+        "YOUR_SUPABASE_ANON_KEY";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+
+
+    async function login() {
+
+        const {
+            error
+        } =
+        await supabaseClient.auth.signInWithOAuth({
+
+            provider: "github",
+
+            options: {
+
+                redirectTo:
+                    window.location.href
+
+            }
+
+        });
+
+
+        if (error) {
+
+            alert(
+                error.message
+            );
+
+        }
+
+    }
+
+
+    async function logout() {
+
+        await supabaseClient.auth.signOut();
+
+        location.reload();
+
+    }
+
+
+    async function loadAdmin() {
+
+        const {
+            data: {
+                user
+            }
+        } =
+        await supabaseClient.auth.getUser();
+
+
+        if (!user) {
+
+            return;
+
+        }
+
+
+        document
+            .getElementById("loginBox")
+            .classList
+            .add("hidden");
+
+
+        document
+            .getElementById("adminPanel")
+            .classList
+            .remove("hidden");
+
+
+        document
+            .getElementById("userInfo")
+            .textContent =
+            "Signed in as " +
+            (
+                user.email ||
+                user.user_metadata?.user_name ||
+                "GitHub user"
+            );
+
+
+        loadSubmissions();
+
+    }
+
+
+    async function loadSubmissions() {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+
+            .from("submissions")
+
+            .select("*")
+
+            .eq(
+                "status",
+                "pending"
+            )
+
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+        const box =
+            document
+                .getElementById("submissions");
+
+
+        if (error) {
+
+            box.innerHTML =
+
+                `<p class="error">
+                    ${error.message}
+                </p>`;
+
+            return;
+
+        }
+
+
+        if (!data.length) {
+
+            box.innerHTML =
+
+                `<h3>
+                    No pending submissions 🎉
+                </h3>
+
+                <p>
+                    Your queue is empty.
+                </p>`;
+
+            return;
+
+        }
+
+
+        box.innerHTML =
+
+            data
+                .map(
+                    submission =>
+                        createSubmission(
+                            submission
+                        )
+                )
+                .join("");
+
+    }
+
+
+    function createSubmission(
+        submission
+    ) {
+
+        return `
+
+            <div
+                class="submission"
+                id="submission-${submission.id}"
+            >
+
+                <h2>
+                    ${escapeHTML(
+                        submission.prompt
+                    )}
+                </h2>
+
+
+                <p>
+
+                    <strong>
+                        Answer:
+                    </strong>
+
+                    <span class="answer">
+
+                        ${escapeHTML(
+                            submission.answer
+                        )}
+
+                    </span>
+
+                </p>
+
+
+                <div class="metadata">
+
+                    <strong>
+                        Dimension:
+                    </strong>
+
+                    ${escapeHTML(
+                        submission.dimension || "—"
+                    )}
+
+                    <br>
+
+
+                    <strong>
+                        Area:
+                    </strong>
+
+                    ${escapeHTML(
+                        (submission.areas || [])
+                            .join(", ") || "—"
+                    )}
+
+                    <br>
+
+
+                    <strong>
+                        Badge:
+                    </strong>
+
+                    ${escapeHTML(
+                        (submission.badges || [])
+                            .join(", ") || "—"
+                    )}
+
+                    <br>
+
+
+                    <strong>
+                        Color:
+                    </strong>
+
+                    ${escapeHTML(
+                        submission.color || "—"
+                    )}
+
+                    <br>
+
+
+                    <strong>
+                        Height:
+                    </strong>
+
+                    ${escapeHTML(
+                        submission.height || "—"
+                    )}
+
+                    <br>
+
+
+                    <strong>
+                        Mechanic:
+                    </strong>
+
+                    ${escapeHTML(
+                        submission.mechanic || "—"
+                    )}
+
+                    <br>
+
+
+                    <strong>
+                        Source:
+                    </strong>
+
+                    ${escapeHTML(
+                        submission.source || "—"
+                    )}
+
+                    <br>
+
+
+                    <strong>
+                        Notes:
+                    </strong>
+
+                    ${escapeHTML(
+                        submission.notes || "—"
+                    )}
+
+                </div>
+
+
+                ${
+                    submission.evidence
+
+                    ?
+
+                    `<p>
+                        <strong>
+                            Evidence:
+                        </strong>
+
+                        <a
+                            href="${escapeHTML(
+                                submission.evidence
+                            )}"
+                            target="_blank"
+                        >
+                            View evidence
+                        </a>
+
+                    </p>`
+
+                    :
+
+                    ""
+
+                }
+
+
+                <button
+                    class="approve"
+                    onclick="
+                        updateSubmission(
+                            ${submission.id},
+                            'approved'
+                        )
+                    "
+                >
+                    Approve
+                </button>
+
+
+                <button
+                    class="reject"
+                    onclick="
+                        updateSubmission(
+                            ${submission.id},
+                            'rejected'
+                        )
+                    "
+                >
+                    Reject
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+
+    async function updateSubmission(
+        id,
+        status
+    ) {
+
+        const {
+            error
+        } =
+        await supabaseClient
+
+            .from("submissions")
+
+            .update({
+                status: status
+            })
+
+            .eq(
+                "id",
+                id
+            );
+
+
+        if (error) {
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        loadSubmissions();
+
+    }
+
+
+    function escapeHTML(
+        value
+    ) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    loadAdmin();
+
+</script>
+
+
+</body>
+
+</html>
