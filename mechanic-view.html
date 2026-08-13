@@ -53,36 +53,39 @@
             text-decoration: underline;
         }
 
-        .color-header {
+        .hero {
             background: #17252b;
             border: 1px solid #29454d;
             border-radius: 12px;
-            padding: 25px;
+            padding: 30px;
             margin-bottom: 25px;
         }
 
         .color-preview {
-            height: 14px;
-            border-radius: 7px;
-            margin-bottom: 20px;
+            width: 100%;
+            height: 18px;
+            border-radius: 9px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(
+                255,
+                255,
+                255,
+                0.2
+            );
+            box-sizing: border-box;
         }
 
-        .color-header h2 {
+        .hero h1 {
             margin: 0 0 10px 0;
-            font-size: 32px;
+            font-size: 34px;
         }
 
         .theme {
-            color: #afc4c9;
-            font-size: 18px;
-        }
-
-        .hex {
-            margin-top: 12px;
             color: #8ed8e5;
+            font-size: 16px;
         }
 
-        .height {
+        .section {
             background: #17252b;
             border: 1px solid #29454d;
             border-radius: 12px;
@@ -90,45 +93,15 @@
             margin-bottom: 18px;
         }
 
-        .height h3 {
+        .section h2 {
             margin-top: 0;
             color: #8ed8e5;
-            font-size: 23px;
         }
 
-        .mechanic-text {
+        .section p {
+            color: #d0dde0;
             line-height: 1.7;
-            color: #e1eaec;
-        }
-
-        .example {
-            margin-top: 15px;
-            padding: 14px;
-            background: #101820;
-            border-radius: 8px;
-            color: #c7d8dc;
-        }
-
-        .checker {
-            background: #24372c;
-            border: 1px solid #41664d;
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 25px;
-        }
-
-        .checker h3 {
-            margin-top: 0;
-            color: #9ed7a9;
-        }
-
-        .notes {
-            background: #2a2832;
-            border: 1px solid #514b60;
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 25px;
-            color: #d4cfe0;
+            margin-bottom: 0;
         }
 
         .error {
@@ -173,7 +146,7 @@
 
     <div id="content">
 
-        <div class="error">
+        <div class="section">
             Loading mechanic...
         </div>
 
@@ -183,21 +156,10 @@
 </main>
 
 
-<script src="mechanics-data.js"></script>
+<script src="js/mechanics.js"></script>
 
 
 <script>
-
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    const name =
-        params.get("name");
-
 
     const title =
         document.getElementById(
@@ -211,222 +173,14 @@
         );
 
 
-    const mechanic =
-        mechanics.find(
-            item =>
-                item.name === name
+    const params =
+        new URLSearchParams(
+            window.location.search
         );
 
 
-    if (!mechanic) {
-
-        title.textContent =
-            "Mechanic Not Found";
-
-
-        content.innerHTML =
-
-            `<div class="error">
-
-                No mechanic was found
-                for this color.
-
-            </div>`;
-
-    } else {
-
-        document.title =
-            mechanic.name +
-            " - Linglox Companion";
-
-
-        title.textContent =
-            mechanic.name;
-
-
-        content.innerHTML =
-            createPage(
-                mechanic
-            );
-
-    }
-
-
-    function createPage(
-        mechanic
-    ) {
-
-        return `
-
-            <div class="color-header">
-
-                <div
-                    class="color-preview"
-                    style="background:${
-                        escapeHTML(
-                            mechanic.hex ||
-                            "#3b8190"
-                        )
-                    }"
-                ></div>
-
-
-                <h2>
-                    ${escapeHTML(
-                        mechanic.name
-                    )}
-                </h2>
-
-
-                <div class="theme">
-
-                    Theme:
-
-                    ${escapeHTML(
-                        mechanic.theme
-                    )}
-
-                </div>
-
-
-                ${
-                    mechanic.hex
-                    ? `
-                        <div class="hex">
-                            ${escapeHTML(
-                                mechanic.hex
-                            )}
-                        </div>
-                    `
-                    : ""
-                }
-
-            </div>
-
-
-            ${createHeight(
-                "High",
-                mechanic.high,
-                mechanic.highExample
-            )}
-
-
-            ${createHeight(
-                "Middle",
-                mechanic.middle,
-                mechanic.middleExample
-            )}
-
-
-            ${createHeight(
-                "Low",
-                mechanic.low,
-                mechanic.lowExample
-            )}
-
-
-            ${
-                mechanic.checker
-                ? `
-
-                    <div class="checker">
-
-                        <h3>
-                            Checker
-                        </h3>
-
-                        <div class="mechanic-text">
-
-                            ${escapeHTML(
-                                mechanic.checker
-                            )}
-
-                        </div>
-
-                    </div>
-
-                `
-                : ""
-            }
-
-
-            ${
-                mechanic.notes
-                ? `
-
-                    <div class="notes">
-
-                        <strong>
-                            Notes:
-                        </strong>
-
-                        <br><br>
-
-                        ${escapeHTML(
-                            mechanic.notes
-                        )}
-
-                    </div>
-
-                `
-                : ""
-            }
-
-        `;
-
-    }
-
-
-    function createHeight(
-        name,
-        mechanic,
-        example
-    ) {
-
-        return `
-
-            <div class="height">
-
-                <h3>
-                    ${name}
-                </h3>
-
-
-                <div class="mechanic-text">
-
-                    ${escapeHTML(
-                        mechanic ||
-                        "N/A."
-                    )}
-
-                </div>
-
-
-                ${
-                    example
-                    ? `
-
-                        <div class="example">
-
-                            <strong>
-                                Example:
-                            </strong>
-
-                            ${escapeHTML(
-                                example
-                            )}
-
-                        </div>
-
-                    `
-                    : ""
-                }
-
-            </div>
-
-        `;
-
-    }
+    const name =
+        params.get("name");
 
 
     function escapeHTML(
@@ -462,6 +216,147 @@
 
     }
 
+
+    if (!name) {
+
+        title.textContent =
+            "Mechanic Not Found";
+
+        content.innerHTML =
+
+            `<div class="error">
+
+                No mechanic was specified.
+
+            </div>`;
+
+    } else {
+
+        const mechanic =
+            mechanics.find(
+                item =>
+                    item.name === name
+            );
+
+
+        if (!mechanic) {
+
+            title.textContent =
+                "Mechanic Not Found";
+
+            content.innerHTML =
+
+                `<div class="error">
+
+                    Could not find the mechanic:
+
+                    <br><br>
+
+                    <strong>
+                        ${escapeHTML(
+                            name
+                        )}
+                    </strong>
+
+                </div>`;
+
+        } else {
+
+            title.textContent =
+                mechanic.name;
+
+
+            content.innerHTML = `
+
+                <div class="hero">
+
+                    <div
+                        class="color-preview"
+                        style="background:${mechanic.color};"
+                    ></div>
+
+                    <h1>
+                        ${escapeHTML(
+                            mechanic.name
+                        )}
+                    </h1>
+
+                    <div class="theme">
+
+                        Theme:
+                        ${escapeHTML(
+                            mechanic.theme
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="section">
+
+                    <h2>
+                        High
+                    </h2>
+
+                    <p>
+                        ${escapeHTML(
+                            mechanic.high
+                        )}
+                    </p>
+
+                </div>
+
+
+                <div class="section">
+
+                    <h2>
+                        Middle
+                    </h2>
+
+                    <p>
+                        ${escapeHTML(
+                            mechanic.middle
+                        )}
+                    </p>
+
+                </div>
+
+
+                <div class="section">
+
+                    <h2>
+                        Low
+                    </h2>
+
+                    <p>
+                        ${escapeHTML(
+                            mechanic.low
+                        )}
+                    </p>
+
+                </div>
+
+
+                <div class="section">
+
+                    <h2>
+                        Checker
+                    </h2>
+
+                    <p>
+                        ${escapeHTML(
+                            mechanic.checker
+                        )}
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
 
 </script>
 
