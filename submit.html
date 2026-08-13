@@ -12,227 +12,133 @@
 
     <title>Submit a Prompt - Linglox Companion</title>
 
-
     <style>
 
         body {
-
             margin: 0;
-
             font-family: Arial, sans-serif;
-
             background: #101820;
-
             color: white;
-
         }
-
 
         header {
-
             padding: 40px 20px;
-
             background: #183b45;
-
             text-align: center;
-
         }
-
 
         header h1 {
-
             margin: 0;
-
             font-size: 40px;
-
         }
-
 
         header p {
-
             color: #c7d8dc;
-
         }
-
 
         main {
-
             max-width: 800px;
-
             margin: auto;
-
             padding: 40px 20px;
-
         }
-
 
         .back {
-
             display: inline-block;
-
             margin-bottom: 30px;
-
             color: #8ed8e5;
-
             text-decoration: none;
-
         }
-
 
         .back:hover {
-
             text-decoration: underline;
-
         }
-
 
         .box {
-
             background: #17252b;
-
             border: 1px solid #29454d;
-
             border-radius: 12px;
-
             padding: 30px;
-
             margin-bottom: 20px;
-
         }
-
 
         .box h2 {
-
             margin-top: 0;
-
         }
-
 
         label {
-
             display: block;
-
             margin-top: 20px;
-
             margin-bottom: 7px;
-
             font-weight: bold;
-
         }
-
 
         input,
         select,
         textarea {
-
             width: 100%;
-
             box-sizing: border-box;
-
             padding: 12px;
-
             border-radius: 8px;
-
             border: 1px solid #29454d;
-
             background: #101820;
-
             color: white;
-
             font-size: 15px;
-
         }
-
 
         textarea {
-
             min-height: 120px;
-
             resize: vertical;
-
         }
-
-
-        .help {
-
-            color: #8da4aa;
-
-            font-size: 14px;
-
-            margin-top: 5px;
-
-        }
-
 
         button {
-
             margin-top: 25px;
-
             padding: 13px 20px;
-
             border: none;
-
             border-radius: 8px;
-
             background: #2d6875;
-
             color: white;
-
             font-size: 16px;
-
             cursor: pointer;
-
         }
-
 
         button:hover {
-
             background: #3b8190;
-
         }
 
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
-        #output {
+        .help {
+            color: #8da4aa;
+            font-size: 14px;
+            margin-top: 5px;
+        }
 
+        .success {
+            color: #9be7b0;
+        }
+
+        .error {
+            color: #ff9b9b;
+        }
+
+        .hidden {
             display: none;
-
-        }
-
-
-        #output textarea {
-
-            min-height: 250px;
-
-            font-family: monospace;
-
-        }
-
-
-        .warning {
-
-            background: #29333a;
-
-            border-left: 4px solid #8ed8e5;
-
-            padding: 15px;
-
-            margin-bottom: 20px;
-
-            color: #c7d8dc;
-
         }
 
     </style>
 
 </head>
 
-
 <body>
-
 
 <header>
 
-    <h1>Submit a Prompt</h1>
+    <h1>
+        Submit a Prompt
+    </h1>
 
     <p>
         Help expand the Linglox Companion database.
@@ -243,7 +149,6 @@
 
 <main>
 
-
     <a
         class="back"
         href="index.html"
@@ -252,26 +157,16 @@
     </a>
 
 
-    <div class="warning">
-
-        <strong>
-            Important:
-        </strong>
-
-        Submissions are reviewed before they
-        become part of the official database.
-
-        Please provide evidence whenever possible.
-
-    </div>
-
-
     <div class="box">
-
 
         <h2>
             Prompt Information
         </h2>
+
+        <p>
+            Submissions are reviewed before they become
+            part of the official database.
+        </p>
 
 
         <form id="promptForm">
@@ -405,14 +300,16 @@
 
             <p class="help">
 
-                If you have a screenshot or other
-                evidence, provide it here.
+                If you have evidence, provide a link to it here.
 
             </p>
 
 
-            <button type="submit">
-                Prepare Submission
+            <button
+                id="submitButton"
+                type="submit"
+            >
+                Submit for Review
             </button>
 
 
@@ -422,34 +319,13 @@
 
 
     <div
-        class="box"
-        id="output"
+        class="box hidden"
+        id="resultBox"
     >
 
-        <h2>
-            Submission Prepared
-        </h2>
+        <h2 id="resultTitle"></h2>
 
-
-        <p>
-
-            This is the information that will be
-            submitted for review.
-
-        </p>
-
-
-        <textarea
-            id="jsonOutput"
-            readonly
-        ></textarea>
-
-
-        <button
-            onclick="copySubmission()"
-        >
-            Copy Submission
-        </button>
+        <p id="resultMessage"></p>
 
     </div>
 
@@ -457,178 +333,276 @@
 </main>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
 
 
-    document
-        .getElementById("promptForm")
-        .addEventListener(
-            "submit",
-            function(event) {
-
-                event.preventDefault();
+    const SUPABASE_URL =
+        "https://njjqjvsoydazatafclwc.supabase.co";
 
 
-                const prompt =
-                    document
-                        .getElementById("prompt")
-                        .value
-                        .trim();
+    const SUPABASE_ANON_KEY =
+        "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
 
 
-                const answer =
-                    document
-                        .getElementById("answer")
-                        .value
-                        .trim();
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
 
 
-                const dimension =
-                    document
-                        .getElementById("dimension")
-                        .value
-                        .trim();
+    const form =
+        document.getElementById(
+            "promptForm"
+        );
 
 
-                const area =
-                    document
-                        .getElementById("area")
-                        .value
-                        .trim();
+    const submitButton =
+        document.getElementById(
+            "submitButton"
+        );
 
 
-                const badge =
-                    document
-                        .getElementById("badge")
-                        .value
-                        .trim();
+    const resultBox =
+        document.getElementById(
+            "resultBox"
+        );
 
 
-                const color =
-                    document
-                        .getElementById("color")
-                        .value
-                        .trim();
+    const resultTitle =
+        document.getElementById(
+            "resultTitle"
+        );
 
 
-                const height =
-                    document
-                        .getElementById("height")
-                        .value
-                        .trim();
+    const resultMessage =
+        document.getElementById(
+            "resultMessage"
+        );
 
 
-                const mechanic =
-                    document
-                        .getElementById("mechanic")
-                        .value
-                        .trim();
+    form.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
 
 
-                const source =
-                    document
-                        .getElementById("source")
-                        .value;
+            submitButton.disabled = true;
+
+            submitButton.textContent =
+                "Submitting...";
 
 
-                const notes =
-                    document
-                        .getElementById("notes")
-                        .value
-                        .trim();
-
-
-                const evidence =
-                    document
-                        .getElementById("evidence")
-                        .value
-                        .trim();
-
-
-                const submission = {
-
-                    prompt: prompt,
-
-                    answer: answer,
-
-                    dimension: dimension,
-
-                    areas:
-                        area
-                        ? [area]
-                        : [],
-
-                    badges:
-                        badge
-                        ? [badge]
-                        : [],
-
-                    color: color,
-
-                    height: height,
-
-                    mechanic: mechanic,
-
-                    verified: false,
-
-                    source: source,
-
-                    notes: notes,
-
-                    evidence: evidence
-
-                };
-
-
+            const prompt =
                 document
-                    .getElementById("jsonOutput")
-                    .value =
-                    JSON.stringify(
-                        submission,
-                        null,
-                        4
-                    );
+                    .getElementById("prompt")
+                    .value
+                    .trim();
 
 
+            const answer =
                 document
-                    .getElementById("output")
-                    .style.display =
-                    "block";
+                    .getElementById("answer")
+                    .value
+                    .trim();
 
 
+            const dimension =
                 document
-                    .getElementById("output")
-                    .scrollIntoView({
-                        behavior: "smooth"
-                    });
+                    .getElementById("dimension")
+                    .value
+                    .trim();
+
+
+            const area =
+                document
+                    .getElementById("area")
+                    .value
+                    .trim();
+
+
+            const badge =
+                document
+                    .getElementById("badge")
+                    .value
+                    .trim();
+
+
+            const color =
+                document
+                    .getElementById("color")
+                    .value
+                    .trim();
+
+
+            const height =
+                document
+                    .getElementById("height")
+                    .value
+                    .trim();
+
+
+            const mechanic =
+                document
+                    .getElementById("mechanic")
+                    .value
+                    .trim();
+
+
+            const source =
+                document
+                    .getElementById("source")
+                    .value;
+
+
+            const notes =
+                document
+                    .getElementById("notes")
+                    .value
+                    .trim();
+
+
+            const evidence =
+                document
+                    .getElementById("evidence")
+                    .value
+                    .trim();
+
+
+            const submission = {
+
+                prompt: prompt,
+
+                answer: answer,
+
+                dimension:
+                    dimension || null,
+
+                areas:
+                    area
+                    ? [area]
+                    : [],
+
+                badges:
+                    badge
+                    ? [badge]
+                    : [],
+
+                color:
+                    color || null,
+
+                height:
+                    height || null,
+
+                mechanic:
+                    mechanic || null,
+
+                source:
+                    source,
+
+                notes:
+                    notes || null,
+
+                evidence:
+                    evidence || null,
+
+                status:
+                    "pending"
+
+            };
+
+
+            const {
+                error
+            } =
+            await supabaseClient
+
+                .from("submissions")
+
+                .insert(
+                    submission
+                );
+
+
+            if (error) {
+
+                console.error(
+                    error
+                );
+
+
+                resultBox.classList
+                    .remove("hidden");
+
+
+                resultTitle
+                    .textContent =
+                    "Submission failed";
+
+
+                resultTitle.className =
+                    "error";
+
+
+                resultMessage
+                    .textContent =
+                    error.message;
+
+
+                submitButton.disabled =
+                    false;
+
+
+                submitButton.textContent =
+                    "Submit for Review";
+
+
+                return;
 
             }
-        );
 
 
-    function copySubmission() {
-
-        const output =
-            document
-                .getElementById("jsonOutput");
+            form.reset();
 
 
-        navigator
-            .clipboard
-            .writeText(
-                output.value
-            );
+            resultBox.classList
+                .remove("hidden");
 
 
-        alert(
-            "Submission copied!"
-        );
+            resultTitle
+                .textContent =
+                "Submission received! 🎉";
 
-    }
 
+            resultTitle.className =
+                "success";
+
+
+            resultMessage
+                .textContent =
+                "Thanks! Your submission has been sent for review. If it is approved, it will be added to the official database.";
+
+
+            submitButton.disabled =
+                false;
+
+
+            submitButton.textContent =
+                "Submit for Review";
+
+
+            resultBox.scrollIntoView({
+                behavior: "smooth"
+            });
+
+        }
+    );
 
 </script>
-
 
 </body>
 
