@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,6 +35,25 @@
 
         header p {
             color: #c7d8dc;
+        }
+
+        .admin-link {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .admin-link a {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 8px;
+            background: #29454d;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .admin-link a:hover {
+            background: #3b8190;
         }
 
         main {
@@ -150,6 +170,17 @@
         Linglox Companion
     </p>
 
+    <div
+        id="adminLink"
+        class="admin-link"
+    >
+
+        <a href="admin.html">
+            ⚙ Admin Panel
+        </a>
+
+    </div>
+
 </header>
 
 
@@ -236,6 +267,49 @@
 
 
     let prompts = [];
+
+
+    async function checkAdmin() {
+
+        const {
+            data: {
+                user
+            }
+        } =
+        await supabaseClient.auth.getUser();
+
+
+        if (!user) {
+            return;
+        }
+
+
+        const {
+            data
+        } =
+        await supabaseClient
+
+            .from("admin_users")
+
+            .select("user_id")
+
+            .eq(
+                "user_id",
+                user.id
+            )
+
+            .maybeSingle();
+
+
+        if (data) {
+
+            document
+                .getElementById("adminLink")
+                .style.display = "block";
+
+        }
+
+    }
 
 
     async function loadPrompts() {
@@ -522,6 +596,8 @@
     }
 
 
+    checkAdmin();
+
     loadPrompts();
 
 
@@ -531,3 +607,4 @@
 </body>
 
 </html>
+```
