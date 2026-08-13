@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prompt - Linglox Companion</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+        }
+
+        header {
+            padding: 40px 20px;
+            background: #183b45;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        header p {
+            color: #c7d8dc;
+        }
+
+        main {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #8ed8e5;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .prompt-card {
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .prompt-card h1 {
+            margin-top: 0;
+            font-size: 36px;
+        }
+
+        .field {
+            margin: 20px 0;
+        }
+
+        .field-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .answer {
+            display: inline-block;
+            background: #29454d;
+            padding: 10px 15px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .answer.hidden {
+            color: transparent;
+            user-select: none;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #29454d;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin: 3px;
+        }
+
+        .verified {
+            color: #8ed8a0;
+        }
+
+        .unverified {
+            color: #e0b878;
+        }
+
+        .not-found {
+            text-align: center;
+            background: #17252b;
+            padding: 40px;
+            border-radius: 12px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <h1>Linglox Companion</h1>
+
+        <p>Prompt Database</p>
+
+    </header>
+
+
+    <main>
+
+        <a class="back" href="prompts.html">
+            ← Back to Prompt Database
+        </a>
+
+
+        <div id="content">
+
+            <div class="not-found">
+                Loading prompt...
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        const content =
+            document.getElementById("content");
+
+
+        /*
+            Get the ID from the URL.
+
+            Example:
+
+            prompt.html?id=earth-example
+        */
+
+        const params =
+            new URLSearchParams(window.location.search);
+
+        const id =
+            params.get("id");
+
+
+        fetch("data/prompts.json")
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Database could not be loaded.");
+                }
+
+                return response.json();
+
+            })
+
+            .then(prompts => {
+
+                const prompt =
+                    prompts.find(item => item.id === id);
+
+
+                if (!prompt) {
+
+                    content.innerHTML = `
+
+                        <div class="not-found">
+
+                            <h2>Prompt not found</h2>
+
+                            <p>
+                                We couldn't find that prompt
+                                in the database.
+                            </p>
+
+                        </div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                document.title =
+                    prompt.prompt +
+                    " - Linglox Companion";
+
+
+                content.innerHTML = `
+
+                    <div class="prompt-card">
+
+                        <h1>
+                            ${prompt.prompt}
+                        </h1>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Answer
+                            </div>
+
+                            <span
+                                class="answer hidden"
+                                onclick="revealAnswer(this)"
+                            >
+                                ${prompt.answer}
+                            </span>
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Dimension
+                            </div>
+
+                            ${prompt.dimension}
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Areas
+                            </div>
+
+                            ${
+                                prompt.areas &&
+                                prompt.areas.length > 0
+
+                                ?
+
+                                prompt.areas.map(area =>
+                                    `<span class="tag">${area}</span>`
+                                ).join("")
+
+                                :
+
+                                "None listed"
+                            }
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Badges
+                            </div>
+
+                            ${
+                                prompt.badges &&
+                                prompt.badges.length > 0
+
+                                ?
+
+                                prompt.badges.map(badge =>
+                                    `<span class="tag">${badge}</span>`
+                                ).join("")
+
+                                :
+
+                                "None listed"
+                            }
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Color
+                            </div>
+
+                            ${prompt.color}
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Height
+                            </div>
+
+                            ${prompt.height}
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Mechanic
+                            </div>
+
+                            ${prompt.mechanic}
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Verification
+                            </div>
+
+                            <span class="${
+                                prompt.verified
+                                ? "verified"
+                                : "unverified"
+                            }">
+
+                                ${
+                                    prompt.verified
+                                    ? "✓ Verified"
+                                    : "? Unverified"
+                                }
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Sources
+                            </div>
+
+                            ${
+                                prompt.sources &&
+                                prompt.sources.length > 0
+
+                                ?
+
+                                prompt.sources.map(source =>
+                                    `<span class="tag">${source}</span>`
+                                ).join("")
+
+                                :
+
+                                "None listed"
+                            }
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <div class="field-title">
+                                Notes
+                            </div>
+
+                            ${prompt.notes}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+                content.innerHTML = `
+
+                    <div class="not-found">
+
+                        <h2>Error</h2>
+
+                        <p>
+                            The prompt database could not
+                            be loaded.
+                        </p>
+
+                    </div>
+
+                `;
+
+            });
+
+
+        function revealAnswer(element) {
+
+            element.classList.remove("hidden");
+
+        }
+
+    </script>
+
+</body>
+</html>
