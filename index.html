@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Linglox Companion</title>
 
+
     <style>
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -13,16 +22,19 @@
             color: white;
         }
 
+
         header {
             padding: 70px 20px;
             background: #183b45;
             text-align: center;
         }
 
+
         h1 {
             font-size: 52px;
             margin: 0 0 10px;
         }
+
 
         header p {
             font-size: 20px;
@@ -30,32 +42,120 @@
             margin: 0;
         }
 
+
         main {
             max-width: 1100px;
             margin: auto;
             padding: 50px 20px;
         }
 
+
         .intro {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
+
 
         .intro h2 {
             font-size: 32px;
             margin-bottom: 10px;
         }
 
+
         .intro p {
             color: #c7d8dc;
             font-size: 18px;
         }
 
+
+        .homepage-search {
+            max-width: 700px;
+            margin: 0 auto 45px;
+        }
+
+
+        .homepage-search input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 16px 18px;
+            border-radius: 10px;
+            border: 1px solid #29454d;
+            background: #17252b;
+            color: white;
+            font-size: 17px;
+            outline: none;
+        }
+
+
+        .homepage-search input:focus {
+            border-color: #3b8190;
+        }
+
+
+        .homepage-search input::placeholder {
+            color: #8fa7ad;
+        }
+
+
+        .search-results {
+            margin-top: 12px;
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+
+        .search-result {
+            display: block;
+            padding: 15px 18px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid #29454d;
+        }
+
+
+        .search-result:last-child {
+            border-bottom: none;
+        }
+
+
+        .search-result:hover {
+            background: #1b3037;
+        }
+
+
+        .search-result-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+
+        .search-result-meta {
+            color: #9fb5ba;
+            font-size: 14px;
+        }
+
+
+        .search-empty {
+            padding: 18px;
+            color: #9fb5ba;
+            text-align: center;
+        }
+
+
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+
             gap: 20px;
         }
+
 
         .card {
             background: #17252b;
@@ -65,15 +165,18 @@
             border: 1px solid #29454d;
         }
 
+
         .card h3 {
             margin-top: 0;
             font-size: 22px;
         }
 
+
         .card p {
             color: #afc4c9;
             line-height: 1.5;
         }
+
 
         .card button {
             padding: 10px 18px;
@@ -85,14 +188,17 @@
             cursor: pointer;
         }
 
+
         .card button:hover {
             background: #3b8190;
         }
+
 
         .admin-link {
             display: none;
             margin-top: 30px;
         }
+
 
         .admin-link a {
             display: inline-block;
@@ -104,156 +210,516 @@
             font-size: 15px;
         }
 
+
         .admin-link a:hover {
             background: #3b8190;
         }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <header>
-        <h1>Linglox Companion</h1>
-        <p>The ultimate companion guide to Linglox.</p>
+
+<header>
+
+    <h1>
+        Linglox Companion
+    </h1>
+
+    <p>
+        The ultimate companion guide to Linglox.
+    </p>
+
+
+    <div
+        id="adminLink"
+        class="admin-link"
+    >
+
+        <a href="admin.html">
+            ⚙ Admin Panel
+        </a>
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+    <section class="intro">
+
+        <h2>
+            Explore Linglox
+        </h2>
+
+        <p>
+            A growing database of prompts, mechanics,
+            areas, dimensions, and more.
+        </p>
+
+    </section>
+
+
+    <section class="homepage-search">
+
+        <input
+            id="homepageSearch"
+            type="text"
+            placeholder="Search Linglox..."
+            autocomplete="off"
+        >
+
 
         <div
-            id="adminLink"
-            class="admin-link"
-        >
-            <a href="admin.html">
-                ⚙ Admin Panel
-            </a>
-        </div>
-    </header>
+            id="searchResults"
+            class="search-results"
+            style="display: none;"
+        ></div>
 
-    <main>
+    </section>
 
-        <section class="intro">
-            <h2>Explore Linglox</h2>
+
+    <section class="cards">
+
+
+        <div class="card">
+
+            <h3>
+                🔎 Prompt Database
+            </h3>
+
             <p>
-                A growing database of prompts, mechanics, s,
-                areas, dimensions, and more.
+                Search through known Linglox prompts,
+                answers, mechanics, and more.
             </p>
-        </section>
 
-        <section class="cards">
+            <a href="database.html">
 
-            <div class="card">
-                <h3>🔎 Prompt Database</h3>
-                <p>
-                    Search through known Linglox prompts,
-                    answers, mechanics, and more.
-                </p>
-                <a href="database.html">
-                    <button>Open Database</button>
-                </a>
-            </div>
+                <button>
+                    Open Database
+                </button>
 
-         <div class="card">
-    <h3>🏆 Badges</h3>
-    <p>
-        Find badge requirements, progression,
-        and guides.
-    </p>
+            </a>
 
-    <a href="badges.html">
-        <button>Explore Badges</button>
-    </a>
-</div>
-            
-            <div class="card">
-                <h3>🧩 Mechanics</h3>
-                <p>
-                    Learn how Linglox's different prompt
-                    mechanics work.
-                </p>
-             
-                
-        <a href="mechanics.html">
-            <button>Explore Mechanics</button>
-        </a>
-     </div>
-
-           <div class="card">
-    <h3>🌎 Dimensions</h3>
-    <p>
-        Explore Linglox's dimensions and
-        the areas within them.
-    </p>
-
-    <a href="dimensions.html">
-        <button>Explore Dimensions</button>
-    </a>
-</div>
-
-        </section>
-
-    </main>
+        </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <script>
+        <div class="card">
 
-        const SUPABASE_URL =
-            "https://njjqjvsoydazatafclwc.supabase.co";
+            <h3>
+                🏆 Badges
+            </h3>
 
-        const SUPABASE_ANON_KEY =
-            "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
+            <p>
+                Find badge requirements, progression,
+                and guides.
+            </p>
 
-        const supabaseClient =
-            supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_ANON_KEY
+            <a href="badges.html">
+
+                <button>
+                    Explore Badges
+                </button>
+
+            </a>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <h3>
+                🧩 Mechanics
+            </h3>
+
+            <p>
+                Learn how Linglox's different prompt
+                mechanics work.
+            </p>
+
+            <a href="mechanics.html">
+
+                <button>
+                    Explore Mechanics
+                </button>
+
+            </a>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <h3>
+                🌎 Dimensions
+            </h3>
+
+            <p>
+                Explore Linglox's dimensions and
+                the areas within them.
+            </p>
+
+            <a href="dimensions.html">
+
+                <button>
+                    Explore Dimensions
+                </button>
+
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+    const SUPABASE_URL =
+        "https://njjqjvsoydazatafclwc.supabase.co";
+
+
+    const SUPABASE_ANON_KEY =
+        "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+
+
+
+    const searchInput =
+        document.getElementById(
+            "homepageSearch"
+        );
+
+
+    const searchResults =
+        document.getElementById(
+            "searchResults"
+        );
+
+
+
+    let allPrompts = [];
+
+
+
+    async function loadSearchData() {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+
+            .from("prompts")
+
+            .select(
+                "id, prompt, answer, mechanic, color, height, dimension, areas, badges"
             );
 
 
-        async function checkAdmin() {
+        if (error) {
 
-            const {
-                data: {
-                    user
-                }
-            } =
-            await supabaseClient.auth.getUser();
+            console.error(
+                "Could not load search data:",
+                error.message
+            );
 
-
-            if (!user) {
-                return;
-            }
-
-
-            const {
-                data
-            } =
-            await supabaseClient
-
-                .from("admin_users")
-
-                .select("user_id")
-
-                .eq(
-                    "user_id",
-                    user.id
-                )
-
-                .maybeSingle();
-
-
-            if (data) {
-
-                document
-                    .getElementById("adminLink")
-                    .style.display = "block";
-
-            }
+            return;
 
         }
 
 
-        checkAdmin();
+        allPrompts =
+            data || [];
 
-    </script>
+    }
+
+
+
+    searchInput.addEventListener(
+        "input",
+        function() {
+
+            const query =
+                this.value
+                    .trim()
+                    .toLowerCase();
+
+
+            if (!query) {
+
+                searchResults.style.display =
+                    "none";
+
+                searchResults.innerHTML =
+                    "";
+
+                return;
+
+            }
+
+
+            const matches =
+                allPrompts
+                    .filter(
+                        prompt =>
+                            searchableText(
+                                prompt
+                            )
+                            .includes(
+                                query
+                            )
+                    )
+                    .slice(
+                        0,
+                        10
+                    );
+
+
+            displaySearchResults(
+                matches
+            );
+
+        }
+    );
+
+
+
+    function searchableText(
+        prompt
+    ) {
+
+        return [
+
+            prompt.prompt,
+
+            prompt.answer,
+
+            prompt.mechanic,
+
+            prompt.color,
+
+            prompt.height,
+
+            prompt.dimension,
+
+            ...(prompt.areas || []),
+
+            ...(prompt.badges || [])
+
+        ]
+
+            .filter(
+                value =>
+                    value !== null &&
+                    value !== undefined
+            )
+
+            .join(" ")
+
+            .toLowerCase();
+
+    }
+
+
+
+    function displaySearchResults(
+        matches
+    ) {
+
+        searchResults.style.display =
+            "block";
+
+
+        if (!matches.length) {
+
+            searchResults.innerHTML =
+
+                `<div class="search-empty">
+
+                    No matching prompts found.
+
+                </div>`;
+
+            return;
+
+        }
+
+
+        searchResults.innerHTML =
+
+            matches
+
+                .map(
+                    prompt => `
+
+                        <a
+                            class="search-result"
+                            href="prompt.html?id=${encodeURIComponent(
+                                prompt.id
+                            )}"
+                        >
+
+                            <div
+                                class="search-result-title"
+                            >
+
+                                ${escapeHTML(
+                                    prompt.prompt ||
+                                    "Unnamed Prompt"
+                                )}
+
+                            </div>
+
+
+                            <div
+                                class="search-result-meta"
+                            >
+
+                                ${escapeHTML(
+                                    prompt.answer ||
+                                    "Unknown Answer"
+                                )}
+
+                                ·
+
+                                ${escapeHTML(
+                                    prompt.mechanic ||
+                                    "Unknown Mechanic"
+                                )}
+
+                                ·
+
+                                ${escapeHTML(
+                                    prompt.dimension ||
+                                    "Unknown Dimension"
+                                )}
+
+                            </div>
+
+                        </a>
+
+                    `
+                )
+
+                .join("");
+
+    }
+
+
+
+    function escapeHTML(
+        value
+    ) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+
+    async function checkAdmin() {
+
+        const {
+            data: {
+                user
+            }
+        } =
+        await supabaseClient.auth.getUser();
+
+
+        if (!user) {
+            return;
+        }
+
+
+        const {
+            data
+        } =
+        await supabaseClient
+
+            .from("admin_users")
+
+            .select("user_id")
+
+            .eq(
+                "user_id",
+                user.id
+            )
+
+            .maybeSingle();
+
+
+        if (data) {
+
+            document
+                .getElementById(
+                    "adminLink"
+                )
+                .style.display =
+                    "block";
+
+        }
+
+    }
+
+
+
+    loadSearchData();
+
+    checkAdmin();
+
+
+</script>
+
 
 </body>
+
 </html>
