@@ -1,0 +1,22 @@
+[
+    {
+        "prompt": "earth",
+        "answer": "world",
+        "dimension": "Unaffiliated",
+        "area": "Unknown",
+        "color": "Unknown",
+        "height": "Unknown",
+        "mechanic": "Synonym",
+        "verified": true
+    },
+    {
+        "prompt": "example",
+        "answer": "sample",
+        "dimension": "Unknown",
+        "area": "Unknown",
+        "color": "Unknown",
+        "height": "Unknown",
+        "mechanic": "Synonym",
+        "verified": false
+    }
+]
