@@ -103,6 +103,55 @@
         </div>
 
     </main>
+<script>
+    const searchBox = document.querySelector(".search");
+    const infoBox = document.querySelector(".info");
 
+    let prompts = [];
+
+    fetch("data/prompts.json")
+        .then(response => response.json())
+        .then(data => {
+            prompts = data;
+        });
+
+    searchBox.addEventListener("input", function () {
+        const search = searchBox.value.toLowerCase();
+
+        const results = prompts.filter(item =>
+            item.prompt.toLowerCase().includes(search) ||
+            item.answer.toLowerCase().includes(search) ||
+            item.dimension.toLowerCase().includes(search) ||
+            item.area.toLowerCase().includes(search) ||
+            item.mechanic.toLowerCase().includes(search)
+        );
+
+        if (search === "") {
+            infoBox.innerHTML = `
+                <h2>Database</h2>
+                <p>Start typing to search the database.</p>
+            `;
+            return;
+        }
+
+        if (results.length === 0) {
+            infoBox.innerHTML = `
+                <h2>No results</h2>
+                <p>No prompts matched your search.</p>
+            `;
+            return;
+        }
+
+        infoBox.innerHTML = results.map(item => `
+            <div class="result">
+                <h2>${item.prompt}</h2>
+                <p><strong>Answer:</strong> ${item.answer}</p>
+                <p><strong>Dimension:</strong> ${item.dimension}</p>
+                <p><strong>Area:</strong> ${item.area}</p>
+                <p><strong>Mechanic:</strong> ${item.mechanic}</p>
+            </div>
+        `).join("");
+    });
+</script>
 </body>
 </html>
