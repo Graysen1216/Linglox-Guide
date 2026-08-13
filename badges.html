@@ -134,12 +134,6 @@
             color: #afc4c9;
         }
 
-        .count {
-            color: #8ed8e5;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
         .loading,
         .empty,
         .error {
@@ -546,7 +540,6 @@
         "The Colorful",
         "The Second Part",
         "The Onion",
-        "The Easter Valley",
         "The Pronounceable",
         "TWOTW?",
         "The Condor",
@@ -560,6 +553,29 @@
         "The Bypass?"
 
     ];
+
+
+    /* =========================================
+       ALPHABETICAL ORDER
+       ========================================= */
+
+
+    const sortedBadges =
+        [...badges].sort(
+            (a, b) =>
+                a.localeCompare(
+                    b,
+                    undefined,
+                    {
+                        sensitivity: "base"
+                    }
+                )
+        );
+
+
+    /* =========================================
+       LOAD BADGES
+       ========================================= */
 
 
     async function loadBadges() {
@@ -604,47 +620,16 @@
         }
 
 
-        const counts = {};
-
-
-        badges.forEach(
-            badge => {
-
-                counts[badge] = 0;
-
-            }
-        );
-
-
-        (data || []).forEach(
-            prompt => {
-
-                (prompt.badges || [])
-                    .forEach(
-                        badge => {
-
-                            if (
-                                badges.includes(
-                                    badge
-                                )
-                            ) {
-
-                                counts[badge]++;
-
-                            }
-
-                        }
-                    );
-
-            }
-        );
-
-
         displayBadges(
-            badges
+            sortedBadges
         );
 
     }
+
+
+    /* =========================================
+       DISPLAY BADGES
+       ========================================= */
 
 
     function displayBadges(
@@ -706,6 +691,11 @@
     }
 
 
+    /* =========================================
+       SEARCH
+       ========================================= */
+
+
     document
         .getElementById(
             "search"
@@ -723,7 +713,7 @@
                 if (!query) {
 
                     displayBadges(
-                        badges
+                        sortedBadges
                     );
 
                     return;
@@ -732,7 +722,7 @@
 
 
                 const filtered =
-                    badges.filter(
+                    sortedBadges.filter(
                         badge =>
                             badge
                                 .toLowerCase()
@@ -748,6 +738,11 @@
 
             }
         );
+
+
+    /* =========================================
+       HTML ESCAPING
+       ========================================= */
 
 
     function escapeHTML(
@@ -782,6 +777,11 @@
             );
 
     }
+
+
+    /* =========================================
+       START
+       ========================================= */
 
 
     loadBadges();
