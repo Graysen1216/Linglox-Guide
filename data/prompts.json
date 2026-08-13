@@ -1,5 +1,6 @@
 [
     {
+        "id": "earth-example",
         "prompt": "earth",
         "answer": "world",
         "dimension": "Unaffiliated",
@@ -13,9 +14,13 @@
         "height": "Low",
         "mechanic": "Synonym",
         "verified": true,
+        "sources": [
+            "In-game verification"
+        ],
         "notes": "Test entry for the database."
     },
     {
+        "id": "example-test",
         "prompt": "example",
         "answer": "sample",
         "dimension": "Unknown",
@@ -25,6 +30,7 @@
         "height": "Unknown",
         "mechanic": "Synonym",
         "verified": false,
+        "sources": [],
         "notes": "Test entry."
     }
 ]
