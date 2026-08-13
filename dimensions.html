@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dimensions - Linglox Companion</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+        }
+
+        header {
+            padding: 40px 20px;
+            background: #183b45;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        header p {
+            color: #c7d8dc;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #8ed8e5;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .intro {
+            margin-bottom: 30px;
+        }
+
+        .intro h2 {
+            margin-bottom: 8px;
+        }
+
+        .intro p {
+            color: #afc4c9;
+        }
+
+        .dimensions {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(240px, 1fr)
+                );
+
+            gap: 18px;
+        }
+
+        .dimension {
+            display: block;
+
+            background: #17252b;
+
+            border: 1px solid #29454d;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            color: white;
+
+            text-decoration: none;
+
+            transition:
+                transform 0.15s,
+                border-color 0.15s,
+                background 0.15s;
+        }
+
+        .dimension:hover {
+            transform: translateY(-2px);
+
+            border-color: #3b8190;
+
+            background: #1b3037;
+        }
+
+        .dimension h2 {
+            margin: 0 0 10px 0;
+            font-size: 22px;
+        }
+
+        .dimension p {
+            margin: 0;
+            color: #afc4c9;
+        }
+
+        .count {
+            color: #8ed8e5;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .loading,
+        .empty,
+        .error {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading,
+        .empty {
+            color: #a8bcc1;
+        }
+
+        .error {
+            background: #3d2529;
+            border: 1px solid #70454b;
+            border-radius: 10px;
+            color: #ffb0b0;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        Dimensions
+    </h1>
+
+    <p>
+        Explore the worlds of Linglox
+    </p>
+
+</header>
+
+
+<main>
+
+
+    <a
+        class="back"
+        href="index.html"
+    >
+        ← Back to homepage
+    </a>
+
+
+    <div class="intro">
+
+        <h2>
+            Linglox Dimensions
+        </h2>
+
+        <p>
+            Browse prompts organized by the
+            dimension they belong to.
+        </p>
+
+    </div>
+
+
+    <div
+        id="dimensions"
+        class="dimensions"
+    >
+
+        <div class="loading">
+            Loading dimensions...
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+    const SUPABASE_URL =
+        "https://njjqjvsoydazatafclwc.supabase.co";
+
+
+    const SUPABASE_ANON_KEY =
+        "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+
+
+    const dimensions = [
+
+        "The Unaffiliated",
+
+        "The Communal Space",
+
+        "The Graveyard",
+
+        "The Null Palace",
+
+        "The Edge of Reality",
+
+        "The Eventfgul",
+
+        "The Found",
+
+        "The Infinite Stairway",
+
+        "The Scrapyard",
+
+        "Terra",
+
+        "The Outer Space",
+
+        "Icarus",
+
+        "The Nil Zone",
+
+        "The Coding: Mega Edition",
+
+        "TPODAD",
+
+        "Teal",
+
+        "The Green Zone"
+
+    ];
+
+
+    async function loadDimensions() {
+
+        const box =
+            document.getElementById(
+                "dimensions"
+            );
+
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+
+            .from("prompts")
+
+            .select(
+                "dimension"
+            );
+
+
+        if (error) {
+
+            box.innerHTML =
+
+                `<div class="error">
+
+                    Could not load dimensions.
+
+                    <br><br>
+
+                    ${escapeHTML(
+                        error.message
+                    )}
+
+                </div>`;
+
+            return;
+
+        }
+
+
+        const counts = {};
+
+
+        dimensions.forEach(
+            dimension => {
+
+                counts[dimension] = 0;
+
+            }
+        );
+
+
+        (data || []).forEach(
+            prompt => {
+
+                const dimension =
+                    prompt.dimension;
+
+
+                if (
+                    dimensions.includes(
+                        dimension
+                    )
+                ) {
+
+                    counts[dimension]++;
+
+                }
+
+            }
+        );
+
+
+        box.innerHTML =
+
+            dimensions
+                .map(
+                    dimension => `
+
+                        <a
+                            class="dimension"
+                            href="dimension.html?name=${encodeURIComponent(
+                                dimension
+                            )}"
+                        >
+
+                            <h2>
+                                ${escapeHTML(
+                                    dimension
+                                )}
+                            </h2>
+
+                            <p>
+                                Browse prompts
+                                from this dimension.
+                            </p>
+
+                            <div class="count">
+
+                                ${counts[dimension]}
+
+                                ${
+                                    counts[dimension] === 1
+                                    ? "prompt"
+                                    : "prompts"
+                                }
+
+                            </div>
+
+                        </a>
+
+                    `
+                )
+                .join("");
+
+    }
+
+
+    function escapeHTML(
+        value
+    ) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    loadDimensions();
+
+
+</script>
+
+
+</body>
+
+</html>
