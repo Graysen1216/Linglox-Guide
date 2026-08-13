@@ -37,7 +37,7 @@
         }
 
         main {
-            max-width: 1000px;
+            max-width: 900px;
             margin: auto;
             padding: 40px 20px;
         }
@@ -72,38 +72,53 @@
             font-size: 16px;
         }
 
-        .prompt {
+        .count {
+            color: #a8bcc1;
+            margin-bottom: 20px;
+        }
+
+        .prompt-card {
+            display: block;
+            text-decoration: none;
+            color: white;
+
             background: #17252b;
             border: 1px solid #29454d;
             border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 18px;
-        }
 
-        .prompt h2 {
-            margin-top: 0;
-            font-size: 28px;
-        }
-
-        .answer {
-            display: inline-block;
-            background: #29454d;
-            border-radius: 7px;
-            padding: 7px 11px;
+            padding: 22px;
             margin-bottom: 15px;
+
+            transition:
+                transform 0.15s,
+                border-color 0.15s,
+                background 0.15s;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-2px);
+            border-color: #3b8190;
+            background: #1b3037;
+        }
+
+        .prompt-card h2 {
+            margin: 0 0 12px 0;
+            font-size: 25px;
         }
 
         .metadata {
-            color: #b7c9cd;
-            line-height: 1.8;
+            color: #afc4c9;
+            line-height: 1.7;
         }
 
-        .label {
-            color: white;
-            font-weight: bold;
+        .arrow {
+            float: right;
+            color: #8ed8e5;
+            font-size: 20px;
         }
 
-        .loading {
+        .loading,
+        .empty {
             text-align: center;
             padding: 40px;
             color: #a8bcc1;
@@ -115,17 +130,6 @@
             border-radius: 10px;
             padding: 20px;
             color: #ffb0b0;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 40px;
-            color: #a8bcc1;
-        }
-
-        .count {
-            color: #a8bcc1;
-            margin-bottom: 20px;
         }
 
     </style>
@@ -198,11 +202,6 @@
 <script>
 
 
-    /* =========================================
-       SUPABASE
-       ========================================= */
-
-
     const SUPABASE_URL =
         "https://njjqjvsoydazatafclwc.supabase.co";
 
@@ -218,20 +217,15 @@
         );
 
 
-    /* =========================================
-       ELEMENTS
-       ========================================= */
+    const search =
+        document.getElementById(
+            "search"
+        );
 
 
     const results =
         document.getElementById(
             "results"
-        );
-
-
-    const search =
-        document.getElementById(
-            "search"
         );
 
 
@@ -242,11 +236,6 @@
 
 
     let prompts = [];
-
-
-    /* =========================================
-       LOAD PROMPTS
-       ========================================= */
 
 
     async function loadPrompts() {
@@ -275,9 +264,7 @@
 
                 `<div class="error">
 
-                    <strong>
-                        Could not load prompts.
-                    </strong>
+                    Could not load prompts.
 
                     <br><br>
 
@@ -287,8 +274,7 @@
 
                 </div>`;
 
-            count.textContent =
-                "";
+            count.textContent = "";
 
             return;
 
@@ -304,11 +290,6 @@
         );
 
     }
-
-
-    /* =========================================
-       DISPLAY PROMPTS
-       ========================================= */
 
 
     function displayPrompts(
@@ -329,9 +310,7 @@
             results.innerHTML =
 
                 `<div class="empty">
-
                     No prompts found.
-
                 </div>`;
 
             return;
@@ -344,7 +323,7 @@
             list
                 .map(
                     prompt =>
-                        createPromptCard(
+                        createCard(
                             prompt
                         )
                 )
@@ -353,30 +332,34 @@
     }
 
 
-    /* =========================================
-       PROMPT CARD
-       ========================================= */
-
-
-    function createPromptCard(
+    function createCard(
         prompt
     ) {
 
         const areas =
             (prompt.areas || [])
                 .join(", ") ||
-            "—";
+            "Unknown Area";
 
 
         const badges =
             (prompt.badges || [])
                 .join(", ") ||
-            "—";
+            "No Badge";
 
 
         return `
 
-            <div class="prompt">
+            <a
+                class="prompt-card"
+                href="prompt.html?id=${encodeURIComponent(
+                    prompt.id
+                )}"
+            >
+
+                <span class="arrow">
+                    →
+                </span>
 
 
                 <h2>
@@ -386,53 +369,20 @@
                 </h2>
 
 
-                <div>
-
-                    <strong>
-                        Answer
-                    </strong>
-
-                    <br>
-
-                    <span class="answer">
-
-                        ${escapeHTML(
-                            prompt.answer
-                        )}
-
-                    </span>
-
-                </div>
-
-
                 <div class="metadata">
 
-
-                    <span class="label">
-                        Dimension:
-                    </span>
-
                     ${escapeHTML(
-                        prompt.dimension || "—"
+                        prompt.dimension ||
+                        "Unknown Dimension"
                     )}
 
-                    <br>
-
-
-                    <span class="label">
-                        Area:
-                    </span>
+                    ·
 
                     ${escapeHTML(
                         areas
                     )}
 
-                    <br>
-
-
-                    <span class="label">
-                        Badge:
-                    </span>
+                    ·
 
                     ${escapeHTML(
                         badges
@@ -440,117 +390,33 @@
 
                     <br>
 
-
-                    <span class="label">
-                        Color:
-                    </span>
-
                     ${escapeHTML(
-                        prompt.color || "—"
+                        prompt.mechanic ||
+                        "Unknown Mechanic"
                     )}
 
-                    <br>
-
-
-                    <span class="label">
-                        Height:
-                    </span>
+                    ·
 
                     ${escapeHTML(
-                        prompt.height || "—"
+                        prompt.color ||
+                        "Unknown Color"
                     )}
 
-                    <br>
-
-
-                    <span class="label">
-                        Mechanic:
-                    </span>
+                    ·
 
                     ${escapeHTML(
-                        prompt.mechanic || "—"
+                        prompt.height ||
+                        "Unknown Height"
                     )}
-
-                    <br>
-
-
-                    <span class="label">
-                        Verified:
-                    </span>
-
-                    ${
-                        prompt.verified
-                        ? "✓"
-                        : "—"
-                    }
-
-
-                    <br>
-
-
-                    <span class="label">
-                        Source:
-                    </span>
-
-                    ${escapeHTML(
-                        prompt.source || "None listed"
-                    )}
-
-                    <br>
-
-
-                    <span class="label">
-                        Notes:
-                    </span>
-
-                    ${escapeHTML(
-                        prompt.notes || "—"
-                    )}
-
 
                 </div>
 
 
-                ${
-                    prompt.evidence
-
-                    ?
-
-                    `
-
-                    <p>
-
-                        <a
-                            href="${escapeHTML(
-                                prompt.evidence
-                            )}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            View evidence
-                        </a>
-
-                    </p>
-
-                    `
-
-                    :
-
-                    ""
-
-                }
-
-
-            </div>
+            </a>
 
         `;
 
     }
-
-
-    /* =========================================
-       SEARCH
-       ========================================= */
 
 
     search.addEventListener(
@@ -578,7 +444,7 @@
                 prompts.filter(
                     prompt => {
 
-                        const text = [
+                        const searchable = [
 
                             prompt.prompt,
 
@@ -601,15 +467,12 @@
                             prompt.notes
 
                         ]
-
                             .filter(Boolean)
-
                             .join(" ")
-
                             .toLowerCase();
 
 
-                        return text.includes(
+                        return searchable.includes(
                             query
                         );
 
@@ -623,11 +486,6 @@
 
         }
     );
-
-
-    /* =========================================
-       HTML ESCAPING
-       ========================================= */
 
 
     function escapeHTML(
@@ -662,11 +520,6 @@
             );
 
     }
-
-
-    /* =========================================
-       START
-       ========================================= */
 
 
     loadPrompts();
