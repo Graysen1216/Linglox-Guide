@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Mechanic - Linglox Companion</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+        }
+
+        header {
+            padding: 40px 20px;
+            background: #183b45;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        header p {
+            color: #c7d8dc;
+        }
+
+        main {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #8ed8e5;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .color-header {
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .color-preview {
+            height: 14px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+        }
+
+        .color-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 32px;
+        }
+
+        .theme {
+            color: #afc4c9;
+            font-size: 18px;
+        }
+
+        .hex {
+            margin-top: 12px;
+            color: #8ed8e5;
+        }
+
+        .height {
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 18px;
+        }
+
+        .height h3 {
+            margin-top: 0;
+            color: #8ed8e5;
+            font-size: 23px;
+        }
+
+        .mechanic-text {
+            line-height: 1.7;
+            color: #e1eaec;
+        }
+
+        .example {
+            margin-top: 15px;
+            padding: 14px;
+            background: #101820;
+            border-radius: 8px;
+            color: #c7d8dc;
+        }
+
+        .checker {
+            background: #24372c;
+            border: 1px solid #41664d;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+
+        .checker h3 {
+            margin-top: 0;
+            color: #9ed7a9;
+        }
+
+        .notes {
+            background: #2a2832;
+            border: 1px solid #514b60;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 25px;
+            color: #d4cfe0;
+        }
+
+        .error {
+            background: #3d2529;
+            border: 1px solid #70454b;
+            border-radius: 10px;
+            padding: 20px;
+            color: #ffb0b0;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1 id="title">
+        Loading...
+    </h1>
+
+    <p>
+        Linglox Companion
+    </p>
+
+</header>
+
+
+<main>
+
+
+    <a
+        class="back"
+        href="mechanics.html"
+    >
+        ← Back to mechanics
+    </a>
+
+
+    <div id="content">
+
+        <div class="error">
+            Loading mechanic...
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<script src="mechanics-data.js"></script>
+
+
+<script>
+
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const name =
+        params.get("name");
+
+
+    const title =
+        document.getElementById(
+            "title"
+        );
+
+
+    const content =
+        document.getElementById(
+            "content"
+        );
+
+
+    const mechanic =
+        mechanics.find(
+            item =>
+                item.name === name
+        );
+
+
+    if (!mechanic) {
+
+        title.textContent =
+            "Mechanic Not Found";
+
+
+        content.innerHTML =
+
+            `<div class="error">
+
+                No mechanic was found
+                for this color.
+
+            </div>`;
+
+    } else {
+
+        document.title =
+            mechanic.name +
+            " - Linglox Companion";
+
+
+        title.textContent =
+            mechanic.name;
+
+
+        content.innerHTML =
+            createPage(
+                mechanic
+            );
+
+    }
+
+
+    function createPage(
+        mechanic
+    ) {
+
+        return `
+
+            <div class="color-header">
+
+                <div
+                    class="color-preview"
+                    style="background:${
+                        escapeHTML(
+                            mechanic.hex ||
+                            "#3b8190"
+                        )
+                    }"
+                ></div>
+
+
+                <h2>
+                    ${escapeHTML(
+                        mechanic.name
+                    )}
+                </h2>
+
+
+                <div class="theme">
+
+                    Theme:
+
+                    ${escapeHTML(
+                        mechanic.theme
+                    )}
+
+                </div>
+
+
+                ${
+                    mechanic.hex
+                    ? `
+                        <div class="hex">
+                            ${escapeHTML(
+                                mechanic.hex
+                            )}
+                        </div>
+                    `
+                    : ""
+                }
+
+            </div>
+
+
+            ${createHeight(
+                "High",
+                mechanic.high,
+                mechanic.highExample
+            )}
+
+
+            ${createHeight(
+                "Middle",
+                mechanic.middle,
+                mechanic.middleExample
+            )}
+
+
+            ${createHeight(
+                "Low",
+                mechanic.low,
+                mechanic.lowExample
+            )}
+
+
+            ${
+                mechanic.checker
+                ? `
+
+                    <div class="checker">
+
+                        <h3>
+                            Checker
+                        </h3>
+
+                        <div class="mechanic-text">
+
+                            ${escapeHTML(
+                                mechanic.checker
+                            )}
+
+                        </div>
+
+                    </div>
+
+                `
+                : ""
+            }
+
+
+            ${
+                mechanic.notes
+                ? `
+
+                    <div class="notes">
+
+                        <strong>
+                            Notes:
+                        </strong>
+
+                        <br><br>
+
+                        ${escapeHTML(
+                            mechanic.notes
+                        )}
+
+                    </div>
+
+                `
+                : ""
+            }
+
+        `;
+
+    }
+
+
+    function createHeight(
+        name,
+        mechanic,
+        example
+    ) {
+
+        return `
+
+            <div class="height">
+
+                <h3>
+                    ${name}
+                </h3>
+
+
+                <div class="mechanic-text">
+
+                    ${escapeHTML(
+                        mechanic ||
+                        "N/A."
+                    )}
+
+                </div>
+
+
+                ${
+                    example
+                    ? `
+
+                        <div class="example">
+
+                            <strong>
+                                Example:
+                            </strong>
+
+                            ${escapeHTML(
+                                example
+                            )}
+
+                        </div>
+
+                    `
+                    : ""
+                }
+
+            </div>
+
+        `;
+
+    }
+
+
+    function escapeHTML(
+        value
+    ) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
