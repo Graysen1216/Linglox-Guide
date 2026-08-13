@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Badges - Linglox Companion</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+        }
+
+        header {
+            padding: 40px 20px;
+            background: #183b45;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        header p {
+            color: #c7d8dc;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #8ed8e5;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .intro {
+            margin-bottom: 30px;
+        }
+
+        .intro h2 {
+            margin-bottom: 8px;
+        }
+
+        .intro p {
+            color: #afc4c9;
+        }
+
+        .search-box {
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .search-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px;
+            border-radius: 8px;
+            border: 1px solid #29454d;
+            background: #101820;
+            color: white;
+            font-size: 16px;
+        }
+
+        .badges {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(240px, 1fr)
+                );
+
+            gap: 18px;
+        }
+
+        .badge {
+            display: block;
+
+            background: #17252b;
+
+            border: 1px solid #29454d;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            color: white;
+
+            text-decoration: none;
+
+            transition:
+                transform 0.15s,
+                border-color 0.15s,
+                background 0.15s;
+        }
+
+        .badge:hover {
+            transform: translateY(-2px);
+
+            border-color: #3b8190;
+
+            background: #1b3037;
+        }
+
+        .badge h2 {
+            margin: 0 0 10px 0;
+            font-size: 22px;
+        }
+
+        .badge p {
+            margin: 0;
+            color: #afc4c9;
+        }
+
+        .count {
+            color: #8ed8e5;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .loading,
+        .empty,
+        .error {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading,
+        .empty {
+            color: #a8bcc1;
+        }
+
+        .error {
+            background: #3d2529;
+            border: 1px solid #70454d;
+            border-radius: 10px;
+            color: #ffb0b0;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        Badges
+    </h1>
+
+    <p>
+        Explore the badges of Linglox
+    </p>
+
+</header>
+
+
+<main>
+
+
+    <a
+        class="back"
+        href="index.html"
+    >
+        ← Back to homepage
+    </a>
+
+
+    <div class="intro">
+
+        <h2>
+            Linglox Badges
+        </h2>
+
+        <p>
+            Browse prompts associated with
+            each badge.
+        </p>
+
+    </div>
+
+
+    <div class="search-box">
+
+        <input
+            id="search"
+            type="text"
+            placeholder="Search badges..."
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <div
+        id="badges"
+        class="badges"
+    >
+
+        <div class="loading">
+            Loading badges...
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+    const SUPABASE_URL =
+        "https://njjqjvsoydazatafclwc.supabase.co";
+
+
+    const SUPABASE_ANON_KEY =
+        "sb_publishable_-ro-MLRQ47X2bYtPRZtrng_Kp17EZfi";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+
+
+    const badges = [
+
+        "The BEEP BEEP BOOP BOOP?",
+
+        "The Unchanging",
+        "The Underrated",
+        "The Characteristic",
+        "The Solver: Tin",
+        "The Luck-eeh",
+        "oh no",
+        "The Purple Fruit?",
+        "The Catastrophic",
+        "The Holy Bible",
+        "The \"Mental\"",
+        "The Tetrachromat",
+        "The Unrivaled",
+        "The Pagoda",
+        "The Unforeseen",
+        "The Jolly",
+        "The Keychain",
+        "The Thermometer",
+        "The Mastermind",
+        "The Honestly...",
+        "The grilled fish and fried chips with iced lemonad",
+        "The Infinite Staircase",
+        "The AAPA Secret?",
+        "The Time",
+        "The \"Grey\"",
+        "The Crimson: Minor Expansion",
+        "The Holy Bible: Material Edition",
+        "The Genderswap",
+        "The Ball Game?",
+        "The \"False Greenhouse\"",
+        "The Rougher",
+        "The Observant",
+        "The Game of Checkers",
+        "TBOTB?",
+        "The Mine Craft",
+        "The Lovers",
+        "The Schism",
+        "The Rough",
+        "The Scrambled Joey",
+        "The Chainbreaker",
+        "The Solver: Pearl",
+        "The Tower",
+        "The Pastel Blue: Green?",
+        "The Uninvited",
+        "The Tireless",
+        "The Alternative's Alternative?",
+        "The Bend",
+        "The Knowledgeable",
+        "The Waddling Secret",
+        "The Seasick",
+        "The Grave",
+        "The Guesser",
+        "The Min",
+        "The Carnation",
+        "The Florist",
+        "The Amazing",
+        "The Highlighted",
+        "The Painted",
+        "The Additive",
+        "The Multiverse Specialist (TCS) (two years!)",
+        "The Horoscope Secret?",
+        "The Sinful",
+        "The Universe",
+        "The Field",
+        "THE ENDURANCE HALL",
+        "The Solver: Coral",
+        "The Deepity",
+        "The Archangel",
+        "The Green Watch?",
+        "The Wit 2?",
+        "The Linglox Area?",
+        "The Sky",
+        "THE \"ACCLIMATIZED\"?",
+        "The Plum",
+        "The Foremost",
+        "The Looking Never Speak...?",
+        "Open Up the World",
+        "The Hasty",
+        "The Water Area?",
+        "The Insane",
+        "The Banana",
+        "The Pun Master",
+        "The \"Soundless\"",
+        "The Unchained",
+        "The Shades",
+        "The Chained",
+        "The Combiner",
+        "The Perceived",
+        "The Pixel Secret?",
+        "The Ethereal",
+        "The Irish",
+        "The Devil",
+        "The Counter",
+        "The Tiny Warehouse?",
+        "The Lily White: Mega Edition",
+        "The Missing Meet The Discovered",
+        "The Bedroom",
+        "The Cathedral",
+        "The Beginner",
+        "The Crimson",
+        "The Grapefruit",
+        "The Hamster",
+        "The Harbinger",
+        "The Snakes and Ladders",
+        "The Searcher",
+        "The Proton",
+        "The Fool",
+        "The Mathematical",
+        "The Wit",
+        "The Solver: Crystal",
+        "The Classic Gears",
+        "The Irrelevant",
+        "The \"Cutter\"",
+        "The One Hundred Thousand",
+        "The DJ",
+        "The \"Giving Up Now\"",
+        "The Contour",
+        "The Garden",
+        "The Equivalent..?",
+        "The Cryptic",
+        "The Rich",
+        "placeholder badge",
+        "The Complex",
+        "The Homonym",
+        "The Jump Up Superstar",
+        "The Oscillating",
+        "The Gullible",
+        "The Creator",
+        "The Eyes They Lie",
+        "The Secret",
+        "The Dead",
+        "The Leprechaun",
+        "The Splitter",
+        "The Tea Drinker",
+        "The Lucky",
+        "The Fixer?",
+        "The Ancient Dialect",
+        "THETA?",
+        "The Learner",
+        "The Virtuous",
+        "The Adaptable",
+        "The Butterfly",
+        "The blue dwarf",
+        "The Trivia",
+        "The Tourist",
+        "The Fortunate",
+        "The Electron",
+        "The Wavetapper",
+        "The Secretive",
+        "The Memer",
+        "The ...watcher?",
+        "The \"Ridiculous\"?",
+        "The Colloquial",
+        "The Nostalgic",
+        "The Galleria",
+        "The Copyrighted",
+        "The Glass Area?",
+        "The Opposites",
+        "The \"Chain Indicator\"",
+        "The Gems",
+        "The Lobotomy Secret?",
+        "The Xenial",
+        "The Purrfect",
+        "The Equivalent",
+        "The Emotional",
+        "The Defuser",
+        "The Intricate",
+        "The Horoscope",
+        "The Uhh May Sing",
+        "The Hamster 2.0?",
+        "The Same",
+        "The Rosary",
+        "The Interested",
+        "The Blockchain",
+        "The Solver: Porcelain",
+        "The Animal's Home?",
+        "The Holy Bible Secret",
+        "Time for Community Maps!",
+        "The Criminal",
+        "The Baker",
+        "The Beekeeper",
+        "The Buzzword",
+        "The Neutron",
+        "The Composer",
+        "The Memory",
+        "The Movies",
+        "The Green",
+        "The Cursed Mega Edition",
+        "The Casin-uh",
+        "The Instructions",
+        "The 3rd Dimension",
+        "The D",
+        "The Flip-flop",
+        "The Compiler",
+        "The Crimson: Moderate Expansion",
+        "The Double",
+        "The Greenhouse?",
+        "The Mathematical: Minor Expansion",
+        "The Waddling",
+        "The Pastel Blue: Blue?",
+        "The Maker",
+        "The while, repeat and for",
+        "The Storm",
+        "The Alpha",
+        "The Soundtracks",
+        "The Hyssop",
+        "The Similar",
+        "The Presence Of Despair",
+        "The Four Spires",
+        "The Cursed",
+        "The Ladder",
+        "The Calm Pink Zone?",
+        "The Jealous?",
+        "The Sweet",
+        "The Periodic",
+        "The Hired",
+        "The Alternative",
+        "The Lucky Number 7",
+        "The Thorough",
+        "The Thunderer",
+        "The Speaker",
+        "The Sunrise",
+        "The Bank",
+        "The Player",
+        "The Skillful",
+        "The Lobotomy",
+        "The Solver: Silver",
+        "The Dynamic",
+        "The Division",
+        "The AAPA?",
+        "The Omniscient Secret",
+        "The Misfit",
+        "The Foley",
+        "The Flawed",
+        "The Eclectic",
+        "The Finder",
+        "The Compounder",
+        "The Fusion",
+        "The Beach",
+        "The Pillar with Four Islands?",
+        "The Solver: Wood",
+        "The Master",
+        "The Cheese",
+        "Neptune",
+        "The Gold",
+        "The Gramogram",
+        "The Angel",
+        "The Lily White",
+        "The Fruits on the Tree?",
+        "The Red and the Blue?",
+        "The Vicious",
+        "The Tennis Court?",
+        "The Swirly",
+        "The British",
+        "The moon",
+        "The Bunny?",
+        "The Shamrock",
+        "The Seraphim",
+        "The Bible",
+        "The Interpreter",
+        "THE LOST FIND THE FOUND",
+        "The Rubber Room",
+        "The Omniscient",
+        "The Belt in the Sky Secret?",
+        "The Coding",
+        "The Mirror",
+        "The Graceful",
+        "The Belt in the Sky?",
+        "The Two Hundred Thousand",
+        "The Global",
+        "The Pipe Land?",
+        "The Forcefields",
+        "The Apostles",
+        "The Cryptid",
+        "The Remover",
+        "The Pixel",
+        "The Scrambler",
+        "The Punderful",
+        "The Hint Please",
+        "The Soulful",
+        "The Null Palace",
+        "The Rhythmic",
+        "The Confined",
+        "The Axes",
+        "The Lucky Day",
+        "The Scientific Method",
+        "The Placeholder",
+        "The Colorful",
+        "The Second Part",
+        "The Onion",
+        "The Easter Valley",
+        "The Pronounceable",
+        "TWOTW?",
+        "The Condor",
+        "The Metaverse",
+        "The Solver: Ruby",
+        "The Aquarium",
+        "The Ancients?",
+        "The Literal",
+        "The Sour",
+        "FIRE IS HOT",
+        "The Bypass?"
+
+    ];
+
+
+    async function loadBadges() {
+
+        const box =
+            document.getElementById(
+                "badges"
+            );
+
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+
+            .from("prompts")
+
+            .select(
+                "badges"
+            );
+
+
+        if (error) {
+
+            box.innerHTML =
+
+                `<div class="error">
+
+                    Could not load badges.
+
+                    <br><br>
+
+                    ${escapeHTML(
+                        error.message
+                    )}
+
+                </div>`;
+
+            return;
+
+        }
+
+
+        const counts = {};
+
+
+        badges.forEach(
+            badge => {
+
+                counts[badge] = 0;
+
+            }
+        );
+
+
+        (data || []).forEach(
+            prompt => {
+
+                (prompt.badges || [])
+                    .forEach(
+                        badge => {
+
+                            if (
+                                badges.includes(
+                                    badge
+                                )
+                            ) {
+
+                                counts[badge]++;
+
+                            }
+
+                        }
+                    );
+
+            }
+        );
+
+
+        displayBadges(
+            badges
+        );
+
+    }
+
+
+    function displayBadges(
+        list
+    ) {
+
+        const box =
+            document.getElementById(
+                "badges"
+            );
+
+
+        if (!list.length) {
+
+            box.innerHTML =
+
+                `<div class="empty">
+
+                    No badges found.
+
+                </div>`;
+
+            return;
+
+        }
+
+
+        box.innerHTML =
+
+            list
+                .map(
+                    badge => `
+
+                        <a
+                            class="badge"
+                            href="badge-view.html?name=${encodeURIComponent(
+                                badge
+                            )}"
+                        >
+
+                            <h2>
+                                ${escapeHTML(
+                                    badge
+                                )}
+                            </h2>
+
+                            <p>
+                                Browse prompts
+                                associated with
+                                this badge.
+                            </p>
+
+                        </a>
+
+                    `
+                )
+                .join("");
+
+    }
+
+
+    document
+        .getElementById(
+            "search"
+        )
+        .addEventListener(
+            "input",
+            function() {
+
+                const query =
+                    this.value
+                        .trim()
+                        .toLowerCase();
+
+
+                if (!query) {
+
+                    displayBadges(
+                        badges
+                    );
+
+                    return;
+
+                }
+
+
+                const filtered =
+                    badges.filter(
+                        badge =>
+                            badge
+                                .toLowerCase()
+                                .includes(
+                                    query
+                                )
+                    );
+
+
+                displayBadges(
+                    filtered
+                );
+
+            }
+        );
+
+
+    function escapeHTML(
+        value
+    ) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    loadBadges();
+
+
+</script>
+
+
+</body>
+
+</html>
