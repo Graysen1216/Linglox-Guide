@@ -12,140 +12,317 @@
 
     <title>Mechanics - Linglox Companion</title>
 
-    <link rel="stylesheet" href="global.css">
 
     <style>
 
-        .controls {
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+        }
+
+
+        header {
+            padding: 70px 20px;
+            background: #183b45;
+            text-align: center;
+        }
+
+
+        h1 {
+            font-size: 52px;
+            margin: 0 0 10px;
+        }
+
+
+        header p {
+            font-size: 20px;
+            color: #c7d8dc;
+            margin: 0;
+        }
+
+
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 50px 20px;
+        }
+
+
+        .back {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #9fb5ba;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+
+        .back:hover {
+            color: white;
+        }
+
+
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+
+        .intro h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+
+        .intro p {
+            color: #c7d8dc;
+            font-size: 18px;
+        }
+
+
+        .mechanics-search {
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+
+        .mechanics-search input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 16px 18px;
+            border-radius: 10px;
+            border: 1px solid #29454d;
+            background: #17252b;
+            color: white;
+            font-size: 17px;
+            outline: none;
+        }
+
+
+        .mechanics-search input:focus {
+            border-color: #3b8190;
+        }
+
+
+        .mechanics-search input::placeholder {
+            color: #8fa7ad;
+        }
+
+
+        .tabs {
             display: flex;
+            justify-content: center;
             gap: 10px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
-            margin: 20px 0;
         }
 
-        .controls button {
-            padding: 10px 16px;
-            border: 0;
+
+        .tab {
+            padding: 10px 18px;
+            border: none;
             border-radius: 8px;
+            background: #2d6875;
+            color: white;
+            font-size: 15px;
             cursor: pointer;
-            font: inherit;
         }
 
-        .controls button.active {
-            font-weight: bold;
-            outline: 2px solid currentColor;
+
+        .tab:hover {
+            background: #3b8190;
         }
 
-        .mechanics-grid {
+
+        .tab.active {
+            background: #3b8190;
+        }
+
+
+        .mechanic-grid {
             display: grid;
             grid-template-columns:
-                repeat(auto-fit, minmax(300px, 1fr));
-            gap: 18px;
+                repeat(
+                    auto-fit,
+                    minmax(300px, 1fr)
+                );
+
+            gap: 20px;
         }
+
 
         .mechanic-card {
+            background: #17252b;
+            padding: 25px;
             border-radius: 12px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid #29454d;
         }
 
+
         .mechanic-header {
-            padding: 16px;
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 20px;
         }
 
-        .swatch {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            flex: 0 0 auto;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-        }
 
         .mechanic-header h2 {
             margin: 0;
-            font-size: 20px;
+            font-size: 22px;
         }
+
+
+        .mechanic-header h3 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+
+        .swatch {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,.25);
+            flex: 0 0 auto;
+        }
+
 
         .theme {
-            margin: 3px 0 0;
-            opacity: 0.75;
+            margin-top: 5px;
+            color: #9fb5ba;
+            font-size: 14px;
         }
 
-        .mechanic-body {
-            padding: 0 16px 16px;
-        }
 
         .height {
             margin-top: 12px;
-            padding: 11px;
+            padding: 14px;
+            background: #101820;
+            border: 1px solid #29454d;
             border-radius: 8px;
-            background: rgba(0, 0, 0, 0.18);
         }
+
 
         .height strong {
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            color: #c7d8dc;
         }
 
-        .material-tag {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 4px 8px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.1);
-            font-size: 12px;
-        }
 
-        .material-description {
+        .height div {
+            color: #afc4c9;
             line-height: 1.5;
-            opacity: 0.9;
         }
 
-        .material-notes {
-            margin-top: 12px;
+
+        .description {
+            color: #afc4c9;
             line-height: 1.5;
-            opacity: 0.9;
-        }
-
-        .variant {
-            margin-top: 18px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .variant .mechanic-header {
-            padding: 0;
-        }
-
-        .variant h3 {
-            margin: 0;
-            font-size: 17px;
-        }
-
-        .empty,
-        .loading {
-            padding: 30px;
-            text-align: center;
-            opacity: 0.75;
-            grid-column: 1 / -1;
-        }
-
-        .count {
-            opacity: 0.7;
             margin-bottom: 14px;
         }
 
-        .error {
-            padding: 20px;
-            border-radius: 10px;
-            background: rgba(255, 80, 80, 0.1);
-            border: 1px solid rgba(255, 100, 100, 0.3);
+
+        .material-badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #29454d;
+            color: #c7d8dc;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+
+        .variant {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #29454d;
+        }
+
+
+        .variant .mechanic-header {
+            margin-bottom: 14px;
+        }
+
+
+        .notes {
+            margin-top: 15px;
+            color: #afc4c9;
             line-height: 1.5;
+        }
+
+
+        .notes strong {
+            color: #c7d8dc;
+        }
+
+
+        .empty {
             grid-column: 1 / -1;
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            color: #9fb5ba;
+        }
+
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 40px 15px;
+            }
+
+
+            h1 {
+                font-size: 36px;
+            }
+
+
+            header p {
+                font-size: 17px;
+            }
+
+
+            main {
+                padding: 30px 15px;
+            }
+
+
+            .intro h2 {
+                font-size: 27px;
+            }
+
+
+            .intro p {
+                font-size: 16px;
+            }
+
+
+            .mechanics-search {
+                margin-bottom: 25px;
+            }
+
+
+            .mechanic-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .mechanic-card {
+                padding: 21px;
+            }
+
+
+            .tab {
+                min-height: 44px;
+            }
+
         }
 
     </style>
@@ -163,7 +340,7 @@
     </h1>
 
     <p>
-        Explore Linglox colors and materials
+        Explore the mechanics and materials of Linglox.
     </p>
 
 </header>
@@ -180,172 +357,129 @@
     </a>
 
 
-    <div class="intro">
+    <section class="intro">
 
         <h2>
             Linglox Mechanics
         </h2>
 
         <p>
-            Browse the color mechanics and the material mechanics
-            imported from the Linglox Wiki XML data.
+            Learn how Linglox's colors and materials
+            affect prompts and puzzles.
         </p>
 
-    </div>
+    </section>
 
 
-    <div class="search-box">
+    <section class="mechanics-search">
 
         <input
             id="search"
             type="text"
-            placeholder="Search mechanics or materials..."
+            placeholder="Search mechanics and materials..."
             autocomplete="off"
         >
 
-    </div>
+    </section>
 
 
-    <div
-        class="controls"
-        aria-label="Mechanic type"
-    >
+    <div class="tabs">
 
         <button
-            id="colorsTab"
-            class="active"
-            type="button"
+            class="tab active"
+            data-tab="colors"
         >
             Colors
         </button>
 
+
         <button
-            id="materialsTab"
-            type="button"
+            class="tab"
+            data-tab="materials"
         >
             Materials
         </button>
 
-        <button
-            id="allTab"
-            type="button"
-        >
-            All
-        </button>
-
     </div>
 
 
-    <div
-        id="count"
-        class="count"
-    ></div>
-
-
-    <div
+    <section
         id="mechanics"
-        class="mechanics-grid"
+        class="mechanic-grid"
     >
 
-        <div class="loading">
+        <div class="empty">
             Loading mechanics...
         </div>
 
-    </div>
+    </section>
 
 
 </main>
 
 
-<script src="js/mechanics.js"></script>
+<script src="mechanics.js"></script>
 
 
 <script>
 
 (function () {
 
-    "use strict";
-
 
     const box =
-        document.getElementById("mechanics");
+        document.getElementById(
+            "mechanics"
+        );
+
 
     const search =
-        document.getElementById("search");
-
-    const count =
-        document.getElementById("count");
-
-
-    const tabs = {
-
-        colors:
-            document.getElementById("colorsTab"),
-
-        materials:
-            document.getElementById("materialsTab"),
-
-        all:
-            document.getElementById("allTab")
-
-    };
+        document.getElementById(
+            "search"
+        );
 
 
-    let mode = "colors";
+    const tabs =
+        [
+            ...document.querySelectorAll(
+                ".tab"
+            )
+        ];
 
 
-    /*
-     * mechanics.js provides:
-     *
-     * mechanics
-     * materials
-     * mechanicsData
-     *
-     * We use mechanicsData here so this page
-     * has one consistent source of data.
-     */
-
-    if (
-        typeof mechanicsData === "undefined" ||
-        !mechanicsData ||
-        !Array.isArray(mechanicsData.colors) ||
-        !Array.isArray(mechanicsData.materials)
-    ) {
-
-        box.innerHTML = `
-            <div class="error">
-
-                <strong>
-                    Could not load mechanics data.
-                </strong>
-
-                <br><br>
-
-                Make sure
-                <code>mechanics.js</code>
-                is in the same folder as this page.
-
-            </div>
-        `;
-
-        return;
-
-    }
+    let currentTab =
+        "colors";
 
 
     function escapeHTML(value) {
 
-        return String(value ?? "")
+        return String(
+            value ?? ""
+        )
 
-            .replace(/&/g, "&amp;")
+            .replace(
+                /&/g,
+                "&amp;"
+            )
 
-            .replace(/</g, "&lt;")
+            .replace(
+                /</g,
+                "&lt;"
+            )
 
-            .replace(/>/g, "&gt;")
+            .replace(
+                />/g,
+                "&gt;"
+            )
 
-            .replace(/"/g, "&quot;")
+            .replace(
+                /"/g,
+                "&quot;"
+            )
 
-            .replace(/'/g, "&#039;");
+            .replace(
+                /'/g,
+                "&#039;"
+            );
 
     }
 
@@ -366,28 +500,21 @@
         ];
 
 
-        if (Array.isArray(item.variants)) {
-
-            item.variants.forEach(
-                variant => {
+        (item.variants || [])
+            .forEach(
+                v => {
 
                     values.push(
-
-                        variant.name,
-                        variant.theme,
-                        variant.description,
-                        variant.high,
-                        variant.middle,
-                        variant.low,
-                        variant.checker,
-                        variant.notes
-
+                        v.name,
+                        v.theme,
+                        v.high,
+                        v.middle,
+                        v.low,
+                        v.description
                     );
 
                 }
             );
-
-        }
 
 
         return values
@@ -401,16 +528,13 @@
     }
 
 
-    function heightBlock(label, value) {
+    function heightBlock(
+        label,
+        value
+    ) {
 
-        if (
-            value === undefined ||
-            value === null ||
-            value === ""
-        ) {
-
+        if (!value) {
             return "";
-
         }
 
 
@@ -419,10 +543,12 @@
             <div class="height">
 
                 <strong>
-                    ${escapeHTML(label)}
+                    ${label}
                 </strong>
 
-                ${escapeHTML(value)}
+                <div>
+                    ${escapeHTML(value)}
+                </div>
 
             </div>
 
@@ -431,7 +557,7 @@
     }
 
 
-    function colorCard(item) {
+    function renderColor(item) {
 
         return `
 
@@ -442,12 +568,9 @@
 
                     <span
                         class="swatch"
-                        style="
-                            background:
-                                ${escapeHTML(
-                                    item.color || "#333333"
-                                )};
-                        "
+                        style="background:${escapeHTML(
+                            item.color || "#333"
+                        )}"
                     ></span>
 
 
@@ -461,11 +584,11 @@
                         ${
                             item.theme
                                 ? `
-                                    <p class="theme">
+                                    <div class="theme">
                                         ${escapeHTML(
                                             item.theme
                                         )}
-                                    </p>
+                                    </div>
                                 `
                                 : ""
                         }
@@ -475,29 +598,28 @@
                 </div>
 
 
-                <div class="mechanic-body">
+                ${heightBlock(
+                    "High",
+                    item.high
+                )}
 
-                    ${heightBlock(
-                        "High",
-                        item.high
-                    )}
 
-                    ${heightBlock(
-                        "Middle",
-                        item.middle
-                    )}
+                ${heightBlock(
+                    "Middle",
+                    item.middle
+                )}
 
-                    ${heightBlock(
-                        "Low",
-                        item.low
-                    )}
 
-                    ${heightBlock(
-                        "Checker",
-                        item.checker
-                    )}
+                ${heightBlock(
+                    "Low",
+                    item.low
+                )}
 
-                </div>
+
+                ${heightBlock(
+                    "Checker",
+                    item.checker
+                )}
 
 
             </article>
@@ -507,12 +629,10 @@
     }
 
 
-    function materialCard(item) {
+    function renderMaterial(item) {
 
         const variants =
-            Array.isArray(item.variants)
-                ? item.variants
-                : [];
+            item.variants || [];
 
 
         return `
@@ -520,207 +640,81 @@
             <article class="mechanic-card">
 
 
+                <span class="material-badge">
+                    Material
+                </span>
+
+
                 <div class="mechanic-header">
 
                     <div>
 
                         <h2>
-                            ${escapeHTML(item.name)}
+                            ${escapeHTML(
+                                item.name
+                            )}
                         </h2>
 
 
-                        <p class="theme">
-                            ${escapeHTML(
-                                item.theme || "Material"
-                            )}
-                        </p>
-
-
-                        <span class="material-tag">
-                            Material
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="mechanic-body">
-
-
-                    ${
-                        item.description
-                            ? `
-                                <p
-                                    class="material-description"
-                                >
-                                    ${escapeHTML(
-                                        item.description
-                                    )}
-                                </p>
-                            `
-                            : ""
-                    }
-
-
-                    ${heightBlock(
-                        "High",
-                        item.high
-                    )}
-
-                    ${heightBlock(
-                        "Middle",
-                        item.middle
-                    )}
-
-                    ${heightBlock(
-                        "Low",
-                        item.low
-                    )}
-
-
-                    ${
-                        item.checker &&
-                        item.checker !== "N/A"
-                            ? heightBlock(
-                                "Checker",
-                                item.checker
-                            )
-                            : ""
-                    }
-
-
-                    ${
-                        item.notes
-                            ? `
-                                <div
-                                    class="material-notes"
-                                >
-
-                                    <strong>
-                                        Notes:
-                                    </strong>
-
-                                    ${escapeHTML(
-                                        item.notes
-                                    )}
-
-                                </div>
-                            `
-                            : ""
-                    }
-
-
-                    ${
-                        variants.length
-                            ? variants
-                                .map(
-                                    renderVariant
-                                )
-                                .join("")
-                            : ""
-                    }
-
-
-                </div>
-
-
-            </article>
-
-        `;
-
-    }
-
-
-    function renderVariant(variant) {
-
-        return `
-
-            <div class="variant">
-
-
-                <div class="mechanic-header">
-
-
-                    <span
-                        class="swatch"
-                        style="
-                            background:
-                                ${escapeHTML(
-                                    variant.color ||
-                                    "#333333"
-                                )};
-                        "
-                    ></span>
-
-
-                    <div>
-
-                        <h3>
-                            ${escapeHTML(
-                                variant.name
-                            )}
-                        </h3>
-
-
                         ${
-                            variant.theme
+                            item.theme
                                 ? `
-                                    <p class="theme">
+                                    <div class="theme">
                                         ${escapeHTML(
-                                            variant.theme
+                                            item.theme
                                         )}
-                                    </p>
+                                    </div>
                                 `
                                 : ""
                         }
 
                     </div>
 
-
                 </div>
 
 
-                ${heightBlock(
-                    "High",
-                    variant.high
-                )}
-
-                ${heightBlock(
-                    "Middle",
-                    variant.middle
-                )}
-
-                ${heightBlock(
-                    "Low",
-                    variant.low
-                )}
-
-
                 ${
-                    variant.checker &&
-                    variant.checker !== "N/A"
-                        ? heightBlock(
-                            "Checker",
-                            variant.checker
-                        )
+                    item.description
+                        ? `
+                            <div class="description">
+                                ${escapeHTML(
+                                    item.description
+                                )}
+                            </div>
+                        `
                         : ""
                 }
 
 
+                ${heightBlock(
+                    "High",
+                    item.high
+                )}
+
+
+                ${heightBlock(
+                    "Middle",
+                    item.middle
+                )}
+
+
+                ${heightBlock(
+                    "Low",
+                    item.low
+                )}
+
+
                 ${
-                    variant.notes
+                    item.notes
                         ? `
-                            <div
-                                class="material-notes"
-                            >
+                            <div class="notes">
 
                                 <strong>
                                     Notes:
                                 </strong>
 
                                 ${escapeHTML(
-                                    variant.notes
+                                    item.notes
                                 )}
 
                             </div>
@@ -729,7 +723,64 @@
                 }
 
 
-            </div>
+                ${
+                    variants
+                        .map(
+                            v => `
+
+                                <div class="variant">
+
+
+                                    <div class="mechanic-header">
+
+                                        <span
+                                            class="swatch"
+                                            style="background:${escapeHTML(
+                                                v.color || "#333"
+                                            )}"
+                                        ></span>
+
+
+                                        <div>
+
+                                            <h3>
+                                                ${escapeHTML(
+                                                    v.name
+                                                )}
+                                            </h3>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    ${heightBlock(
+                                        "High",
+                                        v.high
+                                    )}
+
+
+                                    ${heightBlock(
+                                        "Middle",
+                                        v.middle
+                                    )}
+
+
+                                    ${heightBlock(
+                                        "Low",
+                                        v.low
+                                    )}
+
+
+                                </div>
+
+                            `
+                        )
+                        .join("")
+                }
+
+
+            </article>
 
         `;
 
@@ -738,78 +789,44 @@
 
     function render() {
 
+
+        const source =
+            currentTab === "colors"
+                ? mechanics
+                : materials;
+
+
         const query =
             search.value
                 .trim()
                 .toLowerCase();
 
 
-        let source = [];
-
-
-        if (
-            mode === "colors" ||
-            mode === "all"
-        ) {
-
-            source.push(
-
-                ...mechanicsData.colors.map(
-                    item => ({
-                        ...item,
-                        type: "color"
-                    })
-                )
-
-            );
-
-        }
-
-
-        if (
-            mode === "materials" ||
-            mode === "all"
-        ) {
-
-            source.push(
-
-                ...mechanicsData.materials.map(
-                    item => ({
-                        ...item,
-                        type: "material"
-                    })
-                )
-
-            );
-
-        }
-
-
-        const filtered =
+        const list =
             source.filter(
                 item =>
                     !query ||
-                    searchable(item)
-                        .includes(query)
+                    searchable(
+                        item
+                    ).includes(
+                        query
+                    )
             );
 
 
-        count.textContent =
-            `${filtered.length} result${
-                filtered.length === 1
-                    ? ""
-                    : "s"
-            }`;
+        if (!list.length) {
 
+            box.innerHTML = `
 
-        if (!filtered.length) {
+                <div class="empty">
 
-            box.innerHTML =
-                `
-                    <div class="empty">
-                        No mechanics found.
-                    </div>
-                `;
+                    No matching
+                    ${currentTab}
+                    found.
+
+                </div>
+
+            `;
 
             return;
 
@@ -817,13 +834,12 @@
 
 
         box.innerHTML =
-            filtered
+            list
 
                 .map(
-                    item =>
-                        item.type === "color"
-                            ? colorCard(item)
-                            : materialCard(item)
+                    currentTab === "colors"
+                        ? renderColor
+                        : renderMaterial
                 )
 
                 .join("");
@@ -831,43 +847,40 @@
     }
 
 
-    function setMode(nextMode) {
+    tabs.forEach(
+        tab => {
 
-        mode = nextMode;
+            tab.addEventListener(
+                "click",
+                () => {
 
-
-        Object.entries(tabs).forEach(
-            ([key, button]) => {
-
-                button.classList.toggle(
-                    "active",
-                    key === mode
-                );
-
-            }
-        );
+                    tabs.forEach(
+                        t =>
+                            t.classList.remove(
+                                "active"
+                            )
+                    );
 
 
-        render();
-
-    }
-
-
-    tabs.colors.addEventListener(
-        "click",
-        () => setMode("colors")
-    );
+                    tab.classList.add(
+                        "active"
+                    );
 
 
-    tabs.materials.addEventListener(
-        "click",
-        () => setMode("materials")
-    );
+                    currentTab =
+                        tab.dataset.tab;
 
 
-    tabs.all.addEventListener(
-        "click",
-        () => setMode("all")
+                    search.value =
+                        "";
+
+
+                    render();
+
+                }
+            );
+
+        }
     );
 
 
