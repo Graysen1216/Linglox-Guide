@@ -1,139 +1,797 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Mechanics - Linglox Companion</title>
-    <link rel="stylesheet" href="global.css">
+
     <style>
-        .controls { display:flex; gap:12px; flex-wrap:wrap; margin:20px 0; }
-        .controls input { flex:1 1 260px; min-width:220px; }
-        .tabs { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
-        .tab { cursor:pointer; border:1px solid #3b4650; background:#18232c; color:inherit; padding:10px 16px; border-radius:8px; }
-        .tab.active { background:#263744; border-color:#5a6b78; }
-        .mechanic-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px; }
-        .mechanic-card { background:#18232c; border:1px solid #2d3a44; border-radius:12px; padding:18px; overflow:hidden; }
-        .mechanic-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-        .swatch { width:34px; height:34px; border-radius:8px; border:1px solid rgba(255,255,255,.25); flex:0 0 auto; }
-        .mechanic-header h2 { margin:0; font-size:20px; }
-        .theme { margin:4px 0 0; opacity:.75; font-size:14px; }
-        .height { margin-top:12px; padding:12px; background:#101820; border-radius:8px; }
-        .height strong { display:block; margin-bottom:5px; }
-        .description { opacity:.9; line-height:1.55; }
-        .variant { margin-top:16px; border-top:1px solid #2d3a44; padding-top:16px; }
-        .variant h3 { margin:0 0 8px; }
-        .material-badge { display:inline-block; padding:4px 8px; border-radius:999px; background:#263744; font-size:12px; margin-bottom:8px; }
-        .empty { opacity:.7; padding:30px; text-align:center; }
-        @media (max-width:600px) { .mechanic-grid { grid-template-columns:1fr; } }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+        }
+
+        header {
+            padding: 70px 20px;
+            background: #183b45;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 52px;
+            margin: 0 0 10px;
+        }
+
+        header p {
+            font-size: 20px;
+            color: #c7d8dc;
+            margin: 0;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 50px 20px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #9fc7cf;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .back:hover {
+            color: white;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .intro h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .intro p {
+            color: #c7d8dc;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .mechanics-search {
+            max-width: 700px;
+            margin: 0 auto 25px;
+        }
+
+        .mechanics-search input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 16px 18px;
+            border-radius: 10px;
+            border: 1px solid #29454d;
+            background: #17252b;
+            color: white;
+            font-size: 17px;
+            outline: none;
+        }
+
+        .mechanics-search input:focus {
+            border-color: #3b8190;
+        }
+
+        .mechanics-search input::placeholder {
+            color: #8fa7ad;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: 1px solid #29454d;
+            border-radius: 8px;
+            background: #17252b;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .tab:hover {
+            background: #1b3037;
+        }
+
+        .tab.active {
+            background: #2d6875;
+            border-color: #3b8190;
+        }
+
+        .mechanic-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(300px, 1fr)
+            );
+            gap: 20px;
+        }
+
+        .mechanic-card {
+            background: #17252b;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #29454d;
+        }
+
+        .mechanic-card:hover {
+            border-color: #3b8190;
+        }
+
+        .mechanic-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .mechanic-header h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .mechanic-header h3 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .swatch {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex: 0 0 auto;
+            box-sizing: border-box;
+        }
+
+        .theme {
+            color: #9fb5ba;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .material-badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #29454d;
+            color: #c7d8dc;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+
+        .height {
+            margin-top: 12px;
+            padding: 15px;
+            background: #101820;
+            border: 1px solid #21363d;
+            border-radius: 9px;
+        }
+
+        .height strong {
+            display: block;
+            color: #c7d8dc;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .height div {
+            color: #afc4c9;
+            line-height: 1.5;
+        }
+
+        .description {
+            color: #afc4c9;
+            line-height: 1.5;
+        }
+
+        .notes {
+            margin-top: 15px;
+            padding: 14px 15px;
+            background: #101820;
+            border: 1px solid #21363d;
+            border-radius: 9px;
+            color: #afc4c9;
+            line-height: 1.5;
+        }
+
+        .notes strong {
+            color: #c7d8dc;
+        }
+
+        .variant {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #29454d;
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 30px;
+            color: #9fb5ba;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 40px 15px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            header p {
+                font-size: 17px;
+            }
+
+            main {
+                padding: 30px 15px;
+            }
+
+            .intro h2 {
+                font-size: 27px;
+            }
+
+            .intro p {
+                font-size: 16px;
+            }
+
+            .mechanics-search {
+                margin-bottom: 20px;
+            }
+
+            .tabs {
+                margin-bottom: 25px;
+            }
+
+            .tab {
+                min-height: 44px;
+            }
+
+            .mechanic-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mechanic-card {
+                padding: 21px;
+            }
+
+        }
+
     </style>
+
 </head>
+
+
 <body>
+
+
 <header>
-    <h1>Mechanics</h1>
-    <p>Explore the colors and materials of Linglox</p>
+
+    <h1>
+        Mechanics
+    </h1>
+
+    <p>
+        Explore the colors and materials of Linglox.
+    </p>
+
 </header>
+
+
 <main>
-    <a class="back" href="index.html">← Back to homepage</a>
-    <div class="intro">
-        <h2>Linglox Mechanics</h2>
-        <p>Browse color mechanics and material mechanics from the official-wiki data.</p>
-    </div>
-    <div class="controls">
-        <input id="search" type="text" placeholder="Search mechanics and materials..." autocomplete="off">
-    </div>
-    <div class="tabs">
-        <button class="tab active" data-tab="colors">Colors</button>
-        <button class="tab" data-tab="materials">Materials</button>
-    </div>
-    <div id="mechanics" class="mechanic-grid">
-        <div class="empty">Loading mechanics...</div>
-    </div>
+
+
+    <a
+        class="back"
+        href="index.html"
+    >
+        ← Back to homepage
+    </a>
+
+
+    <section class="intro">
+
+        <h2>
+            Linglox Mechanics
+        </h2>
+
+        <p>
+            Learn how Linglox's colors and materials
+            change the way prompts work.
+        </p>
+
+    </section>
+
+
+    <section class="mechanics-search">
+
+        <input
+            id="search"
+            type="text"
+            placeholder="Search mechanics and materials..."
+            autocomplete="off"
+        >
+
+    </section>
+
+
+    <section class="tabs">
+
+        <button
+            class="tab active"
+            data-tab="colors"
+        >
+            🎨 Colors
+        </button>
+
+        <button
+            class="tab"
+            data-tab="materials"
+        >
+            🧱 Materials
+        </button>
+
+    </section>
+
+
+    <section
+        id="mechanics"
+        class="mechanic-grid"
+    >
+
+        <div class="empty">
+            Loading mechanics...
+        </div>
+
+    </section>
+
+
 </main>
+
+
 <script src="mechanics.js"></script>
+
+
 <script>
+
 (function () {
-    const box = document.getElementById("mechanics");
-    const search = document.getElementById("search");
-    const tabs = [...document.querySelectorAll(".tab")];
+
+    const box =
+        document.getElementById(
+            "mechanics"
+        );
+
+
+    const search =
+        document.getElementById(
+            "search"
+        );
+
+
+    const tabs =
+        [
+            ...document.querySelectorAll(
+                ".tab"
+            )
+        ];
+
+
     let currentTab = "colors";
 
+
     function escapeHTML(value) {
+
         return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
     }
+
 
     function searchable(item) {
-        const values = [item.name, item.theme, item.description, item.high, item.middle, item.low, item.checker, item.notes];
-        (item.variants || []).forEach(v => values.push(v.name, v.theme, v.high, v.middle, v.low, v.description));
-        return values.filter(Boolean).join(" ").toLowerCase();
+
+        const values = [
+
+            item.name,
+            item.theme,
+            item.description,
+            item.high,
+            item.middle,
+            item.low,
+            item.checker,
+            item.notes
+
+        ];
+
+
+        (item.variants || [])
+
+            .forEach(
+                variant => {
+
+                    values.push(
+                        variant.name,
+                        variant.theme,
+                        variant.high,
+                        variant.middle,
+                        variant.low,
+                        variant.description
+                    );
+
+                }
+            );
+
+
+        return values
+
+            .filter(Boolean)
+
+            .join(" ")
+
+            .toLowerCase();
+
     }
 
-    function heightBlock(label, value) {
-        if (!value) return "";
-        return `<div class="height"><strong>${label}</strong><div>${escapeHTML(value)}</div></div>`;
+
+    function heightBlock(
+        label,
+        value
+    ) {
+
+        if (!value) {
+            return "";
+        }
+
+
+        return `
+
+            <div class="height">
+
+                <strong>
+                    ${label}
+                </strong>
+
+                <div>
+                    ${escapeHTML(value)}
+                </div>
+
+            </div>
+
+        `;
+
     }
+
 
     function renderColor(item) {
-        return `<article class="mechanic-card">
-            <div class="mechanic-header">
-                <span class="swatch" style="background:${escapeHTML(item.color || "#333")}"></span>
-                <div><h2>${escapeHTML(item.name)}</h2><div class="theme">${escapeHTML(item.theme || "")}</div></div>
-            </div>
-            ${heightBlock("High", item.high)}
-            ${heightBlock("Middle", item.middle)}
-            ${heightBlock("Low", item.low)}
-            ${heightBlock("Checker", item.checker)}
-        </article>`;
+
+        return `
+
+            <article class="mechanic-card">
+
+                <div class="mechanic-header">
+
+                    <span
+                        class="swatch"
+                        style="background:${escapeHTML(
+                            item.color || "#333"
+                        )}"
+                    ></span>
+
+                    <div>
+
+                        <h2>
+                            ${escapeHTML(item.name)}
+                        </h2>
+
+                        <div class="theme">
+                            ${escapeHTML(
+                                item.theme || ""
+                            )}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                ${heightBlock(
+                    "High",
+                    item.high
+                )}
+
+                ${heightBlock(
+                    "Middle",
+                    item.middle
+                )}
+
+                ${heightBlock(
+                    "Low",
+                    item.low
+                )}
+
+                ${heightBlock(
+                    "Checker",
+                    item.checker
+                )}
+
+            </article>
+
+        `;
+
     }
+
 
     function renderMaterial(item) {
-        const variants = item.variants || [];
-        return `<article class="mechanic-card">
-            <span class="material-badge">Material</span>
-            <div class="mechanic-header"><div><h2>${escapeHTML(item.name)}</h2><div class="theme">${escapeHTML(item.theme || "")}</div></div></div>
-            ${item.description ? `<div class="description">${escapeHTML(item.description)}</div>` : ""}
-            ${heightBlock("High", item.high)}
-            ${heightBlock("Middle", item.middle)}
-            ${heightBlock("Low", item.low)}
-            ${item.notes ? `<div class="description" style="margin-top:12px"><strong>Notes:</strong> ${escapeHTML(item.notes)}</div>` : ""}
-            ${variants.map(v => `<div class="variant">
+
+        const variants =
+            item.variants || [];
+
+
+        return `
+
+            <article class="mechanic-card">
+
+                <span class="material-badge">
+                    Material
+                </span>
+
                 <div class="mechanic-header">
-                    <span class="swatch" style="background:${escapeHTML(v.color || "#333")}"></span>
-                    <div><h3>${escapeHTML(v.name)}</h3></div>
+
+                    <div>
+
+                        <h2>
+                            ${escapeHTML(item.name)}
+                        </h2>
+
+                        ${item.theme ? `
+
+                            <div class="theme">
+                                ${escapeHTML(item.theme)}
+                            </div>
+
+                        ` : ""}
+
+                    </div>
+
                 </div>
-                ${heightBlock("High", v.high)}
-                ${heightBlock("Middle", v.middle)}
-                ${heightBlock("Low", v.low)}
-            </div>`).join("")}
-        </article>`;
+
+                ${item.description ? `
+
+                    <div class="description">
+                        ${escapeHTML(item.description)}
+                    </div>
+
+                ` : ""}
+
+                ${heightBlock(
+                    "High",
+                    item.high
+                )}
+
+                ${heightBlock(
+                    "Middle",
+                    item.middle
+                )}
+
+                ${heightBlock(
+                    "Low",
+                    item.low
+                )}
+
+                ${item.notes ? `
+
+                    <div class="notes">
+
+                        <strong>
+                            Notes:
+                        </strong>
+
+                        ${escapeHTML(item.notes)}
+
+                    </div>
+
+                ` : ""}
+
+                ${variants.map(
+                    variant => `
+
+                        <div class="variant">
+
+                            <div class="mechanic-header">
+
+                                <span
+                                    class="swatch"
+                                    style="background:${escapeHTML(
+                                        variant.color || "#333"
+                                    )}"
+                                ></span>
+
+                                <div>
+
+                                    <h3>
+                                        ${escapeHTML(
+                                            variant.name
+                                        )}
+                                    </h3>
+
+                                </div>
+
+                            </div>
+
+                            ${heightBlock(
+                                "High",
+                                variant.high
+                            )}
+
+                            ${heightBlock(
+                                "Middle",
+                                variant.middle
+                            )}
+
+                            ${heightBlock(
+                                "Low",
+                                variant.low
+                            )}
+
+                        </div>
+
+                    `
+                ).join("")}
+
+            </article>
+
+        `;
+
     }
+
 
     function render() {
-        const source = currentTab === "colors" ? mechanics : materials;
-        const query = search.value.trim().toLowerCase();
-        const list = source.filter(item => !query || searchable(item).includes(query));
+
+        const source =
+            currentTab === "colors"
+                ? mechanics
+                : materials;
+
+
+        const query =
+            search.value
+                .trim()
+                .toLowerCase();
+
+
+        const list =
+            source.filter(
+                item =>
+                    !query ||
+                    searchable(item)
+                        .includes(query)
+            );
+
+
         if (!list.length) {
-            box.innerHTML = `<div class="empty">No matching ${currentTab} found.</div>`;
+
+            box.innerHTML = `
+
+                <div class="empty">
+                    No matching ${currentTab} found.
+                </div>
+
+            `;
+
             return;
+
         }
-        box.innerHTML = list.map(currentTab === "colors" ? renderColor : renderMaterial).join("");
+
+
+        box.innerHTML =
+            list
+                .map(
+                    currentTab === "colors"
+                        ? renderColor
+                        : renderMaterial
+                )
+                .join("");
+
     }
 
-    tabs.forEach(tab => tab.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-        currentTab = tab.dataset.tab;
-        search.value = "";
-        render();
-    }));
 
-    search.addEventListener("input", render);
+    tabs.forEach(
+        tab =>
+
+            tab.addEventListener(
+                "click",
+                () => {
+
+                    tabs.forEach(
+                        current =>
+                            current.classList.remove(
+                                "active"
+                            )
+                    );
+
+                    tab.classList.add(
+                        "active"
+                    );
+
+                    currentTab =
+                        tab.dataset.tab;
+
+                    search.value = "";
+
+                    render();
+
+                }
+            )
+    );
+
+
+    search.addEventListener(
+        "input",
+        render
+    );
+
+
     render();
+
 })();
+
 </script>
+
+
 </body>
+
 </html>
