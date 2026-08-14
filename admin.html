@@ -12,24 +12,39 @@
 
     <title>Admin - Linglox Companion</title>
 
-    <link
-        rel="stylesheet"
-        href="global.css"
-    >
-
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
 
         header {
             padding: 35px 20px;
+            background: #183b45;
+            text-align: center;
         }
 
         header h1 {
-            margin: 0 0 10px 0;
+            margin: 0 0 10px;
             font-size: 38px;
         }
 
         header p {
             margin: 0;
+            color: #c7d8dc;
         }
 
         nav {
@@ -50,8 +65,19 @@
             background: #3b8190;
         }
 
+        nav a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible,
+        select:focus-visible {
+            outline: 3px solid #8ed8e5;
+            outline-offset: 3px;
+        }
+
         main {
-            max-width: 1000px;
+            width: min(1000px, calc(100% - 40px));
+            margin: auto;
+            padding: 40px 0;
         }
 
         .box {
@@ -63,6 +89,7 @@
         }
 
         button {
+            display: inline-block;
             padding: 10px 16px;
             border: none;
             border-radius: 7px;
@@ -70,10 +97,17 @@
             background: #2d6875;
             font-size: 15px;
             cursor: pointer;
+            transition:
+                background 0.15s,
+                transform 0.15s;
         }
 
         button:hover {
             background: #3b8190;
+        }
+
+        button:active {
+            transform: translateY(1px);
         }
 
         .logout {
@@ -84,20 +118,23 @@
             background: #704c54;
         }
 
-        .approve {
+        .approve,
+        .add {
             background: #28634c;
-            margin-right: 8px;
         }
 
-        .approve:hover {
+        .approve:hover,
+        .add:hover {
             background: #34805f;
         }
 
-        .reject {
+        .reject,
+        .delete {
             background: #673d45;
         }
 
-        .reject:hover {
+        .reject:hover,
+        .delete:hover {
             background: #80505a;
         }
 
@@ -110,26 +147,20 @@
             background: #6b8138;
         }
 
-        .delete {
-            background: #673d45;
+        .cancel {
+            background: #3d4549;
+            margin-left: 8px;
         }
 
-        .delete:hover {
-            background: #80505a;
-        }
-
-        .add {
-            background: #28634c;
-        }
-
-        .add:hover {
-            background: #34805f;
+        .cancel:hover {
+            background: #515b60;
         }
 
         input,
         textarea,
         select {
             width: 100%;
+            min-height: 44px;
             box-sizing: border-box;
             padding: 11px;
             margin-top: 6px;
@@ -147,6 +178,7 @@
         }
 
         label {
+            display: block;
             font-weight: bold;
         }
 
@@ -157,6 +189,7 @@
             border-radius: 10px;
             padding: 20px;
             margin-top: 15px;
+            overflow-wrap: anywhere;
         }
 
         .submission h2,
@@ -167,9 +200,11 @@
         .metadata {
             color: #afc4c9;
             line-height: 1.7;
+            overflow-wrap: anywhere;
         }
 
         .answer {
+            display: inline-block;
             background: #29454d;
             padding: 4px 8px;
             border-radius: 5px;
@@ -207,22 +242,15 @@
             margin-top: 10px;
         }
 
-        .cancel {
-            background: #3d4549;
-            margin-left: 8px;
-        }
-
-        .cancel:hover {
-            background: #515b60;
-        }
-
         .verified-row {
             margin-bottom: 15px;
         }
 
         .verified-row input {
             width: auto;
+            min-height: auto;
             margin-right: 8px;
+            margin-bottom: 0;
         }
 
         .help {
@@ -231,11 +259,6 @@
             margin-top: -8px;
             margin-bottom: 15px;
         }
-
-
-        /* ================================
-           MOBILE ADMIN LAYOUT
-           ================================ */
 
         @media (max-width: 600px) {
 
@@ -251,6 +274,11 @@
                 display: block;
                 margin: 8px 0;
                 padding: 12px;
+            }
+
+            main {
+                width: min(100% - 24px, 1000px);
+                padding: 28px 0 35px;
             }
 
             .box {
@@ -271,23 +299,29 @@
 
             .form-buttons button {
                 width: 100%;
-            }
-
-            .cancel {
-                margin-left: 0;
+                margin: 0;
             }
 
             .approve,
             .reject,
             .edit,
-            .delete {
-                margin-right: 0;
-                margin-bottom: 8px;
-            }
-
+            .delete,
             .submission button,
             .official-prompt > button {
                 width: 100%;
+                margin: 0 0 8px;
+            }
+
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+            button {
+                transition: none;
             }
 
         }
@@ -329,8 +363,6 @@
 <main>
 
 
-    <!-- LOGIN -->
-
     <div
         class="box"
         id="loginBox"
@@ -351,8 +383,6 @@
 
     </div>
 
-
-    <!-- ACCESS DENIED -->
 
     <div
         class="box hidden"
@@ -378,15 +408,11 @@
     </div>
 
 
-    <!-- ADMIN PANEL -->
-
     <div
         id="adminPanel"
         class="hidden"
     >
 
-
-        <!-- ACCOUNT -->
 
         <div class="box">
 
@@ -406,8 +432,6 @@
         </div>
 
 
-        <!-- ADD PROMPT -->
-
         <div class="box">
 
             <h2 class="section-title">
@@ -415,11 +439,9 @@
             </h2>
 
             <p class="metadata">
-
                 Add a prompt directly to the official
                 database. Admin-created prompts do not
                 require review.
-
             </p>
 
 
@@ -572,7 +594,6 @@
                         Add to Official Database
                     </button>
 
-
                     <button
                         class="cancel"
                         onclick="toggleAddForm()"
@@ -582,13 +603,10 @@
 
                 </div>
 
-
             </div>
 
         </div>
 
-
-        <!-- PENDING SUBMISSIONS -->
 
         <div class="box">
 
@@ -603,8 +621,6 @@
         </div>
 
 
-        <!-- OFFICIAL PROMPTS -->
-
         <div class="box">
 
             <h2 class="section-title">
@@ -612,10 +628,8 @@
             </h2>
 
             <p class="metadata">
-
                 Search the official database to
                 edit or delete prompts.
-
             </p>
 
 
@@ -650,7 +664,6 @@
 
 <script>
 
-
     const SUPABASE_URL =
         "https://njjqjvsoydazatafclwc.supabase.co";
 
@@ -679,10 +692,8 @@
             provider: "github",
 
             options: {
-
                 redirectTo:
                     window.location.href
-
             }
 
         });
@@ -753,7 +764,6 @@
                 .getElementById("deniedBox")
                 .classList
                 .remove("hidden");
-
 
             return;
 
@@ -834,14 +844,11 @@
             document.getElementById(
                 "add-areas"
             ).value
-
                 .split(",")
-
                 .map(
                     value =>
                         value.trim()
                 )
-
                 .filter(Boolean);
 
 
@@ -849,14 +856,11 @@
             document.getElementById(
                 "add-badges"
             ).value
-
                 .split(",")
-
                 .map(
                     value =>
                         value.trim()
                 )
-
                 .filter(Boolean);
 
 
@@ -869,7 +873,6 @@
         const {
             error
         } =
-
         await supabaseClient
 
             .from("prompts")
@@ -961,45 +964,56 @@
             "add-prompt"
         ).value = "";
 
+
         document.getElementById(
             "add-answer"
         ).value = "";
+
 
         document.getElementById(
             "add-dimension"
         ).value = "";
 
+
         document.getElementById(
             "add-areas"
         ).value = "";
+
 
         document.getElementById(
             "add-badges"
         ).value = "";
 
+
         document.getElementById(
             "add-color"
         ).value = "";
+
 
         document.getElementById(
             "add-height"
         ).value = "";
 
+
         document.getElementById(
             "add-mechanic"
         ).value = "";
+
 
         document.getElementById(
             "add-source"
         ).value = "";
 
+
         document.getElementById(
             "add-evidence"
         ).value = "";
 
+
         document.getElementById(
             "add-notes"
         ).value = "";
+
 
         document.getElementById(
             "add-verified"
@@ -1042,7 +1056,6 @@
         if (error) {
 
             box.innerHTML =
-
                 `<p class="error">
 
                     ${escapeHTML(
@@ -1059,7 +1072,6 @@
         if (!data || !data.length) {
 
             box.innerHTML =
-
                 `<div class="empty">
 
                     No pending submissions 🎉
@@ -1072,7 +1084,6 @@
 
 
         box.innerHTML =
-
             data
                 .map(
                     submission =>
@@ -1132,6 +1143,7 @@
 
                     <br>
 
+
                     <strong>
                         Area:
                     </strong>
@@ -1142,6 +1154,7 @@
                     )}
 
                     <br>
+
 
                     <strong>
                         Badge:
@@ -1154,6 +1167,7 @@
 
                     <br>
 
+
                     <strong>
                         Color:
                     </strong>
@@ -1163,6 +1177,7 @@
                     )}
 
                     <br>
+
 
                     <strong>
                         Height:
@@ -1174,6 +1189,7 @@
 
                     <br>
 
+
                     <strong>
                         Mechanic:
                     </strong>
@@ -1184,6 +1200,7 @@
 
                     <br>
 
+
                     <strong>
                         Source:
                     </strong>
@@ -1193,6 +1210,7 @@
                     )}
 
                     <br>
+
 
                     <strong>
                         Notes:
@@ -1251,16 +1269,13 @@
             const {
                 error
             } =
-
             await supabaseClient
 
                 .from("submissions")
 
                 .update({
-
                     status:
                         "rejected"
-
                 })
 
                 .eq(
@@ -1291,7 +1306,6 @@
             data: submission,
             error: fetchError
         } =
-
         await supabaseClient
 
             .from("submissions")
@@ -1320,7 +1334,6 @@
         const {
             error: insertError
         } =
-
         await supabaseClient
 
             .from("prompts")
@@ -1381,16 +1394,13 @@
         const {
             error: updateError
         } =
-
         await supabaseClient
 
             .from("submissions")
 
             .update({
-
                 status:
                     "approved"
-
             })
 
             .eq(
@@ -1453,7 +1463,6 @@
         if (error) {
 
             box.innerHTML =
-
                 `<p class="error">
 
                     ${escapeHTML(
@@ -1506,7 +1515,6 @@
         if (!list.length) {
 
             box.innerHTML =
-
                 `<div class="empty">
 
                     No prompts found.
@@ -1519,7 +1527,6 @@
 
 
         box.innerHTML =
-
             list
                 .map(
                     prompt =>
@@ -1556,17 +1563,16 @@
             >
 
                 <h2>
-
                     ${escapeHTML(
                         prompt.prompt
                     )}
-
                 </h2>
 
 
                 <div class="metadata">
 
                     Answer:
+
                     <span class="answer">
 
                         ${escapeHTML(
@@ -1633,7 +1639,6 @@
                     )}
 
                 </div>
-
 
             </div>
 
@@ -1951,7 +1956,6 @@
         const {
             error
         } =
-
         await supabaseClient
 
             .from("prompts")
@@ -2056,17 +2060,11 @@
 
         const confirmed =
             confirm(
-
                 "Are you sure you want to permanently delete:\n\n" +
-
                 prompt.prompt +
-
                 " → " +
-
                 prompt.answer +
-
                 "\n\nThis cannot be undone."
-
             );
 
 
@@ -2078,7 +2076,6 @@
         const {
             error
         } =
-
         await supabaseClient
 
             .from("prompts")
@@ -2165,11 +2162,8 @@
                                 prompt.notes
 
                             ]
-
                                 .filter(Boolean)
-
                                 .join(" ")
-
                                 .toLowerCase();
 
 
@@ -2224,7 +2218,6 @@
 
 
     checkAdmin();
-
 
 </script>
 
