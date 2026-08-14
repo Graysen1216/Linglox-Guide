@@ -1167,5 +1167,309 @@ const mechanics = [
         middle: "Linked prompts can swap prompt words or color+height.",
         low: "Linked prompts have their color and height swapped.",
         checker: "N/A"
+    },
+
+    // ============================================================
+    // COLORS FROM THE XML EXPORT
+    // ============================================================
+
+    {
+        name: "Penny Brown",
+        color: "#CC7943",
+        theme: "Currency substitution",
+        high: "Mix between Middle Penny Brown and High Institutional White. Replace $ with the correct currency reference, then find a homophone. ($arue → buckaroo)",
+        middle: "Replace $ with the correct currency reference and keep the rest of the prompt unchanged. (es$tric → eccentric)",
+        low: "WIP.",
+        checker: "N/A"
+    },
+
+    {
+        name: "Dollar Green",
+        color: "#B3EC8A",
+        theme: "Currency / dollar sign",
+        high: "Replace a currency reference with $, then find a homophone. The answer must be a real word. (buckeye → $igh)",
+        middle: "Replace a currency reference with $, with $ acting as S. The answer must be a real word. (cashew → $ew)",
+        low: "Effectively the same as Low Hot Pink, except the answer must contain a dollar sign. (rapper → a$ap rocky)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Honey Yellow",
+        color: "#EBA937",
+        theme: "Stickiness / compound words",
+        high: "Phonetically compound word containing the prompt word's sound. (jean → hygiene)",
+        middle: "Compound word containing the prompt itself. (flower → sunflower)",
+        low: "Prompt object made sticky conceptually. (memo → sticky note)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Super Saiyan Patrick Star",
+        color: "#C205E5",
+        theme: "Memes",
+        high: "Continuation of the hint into a meme. (hawk → hawk tuah)",
+        middle: "Meme-ified version of the hint; change letters to make it a meme. (stocks → stonks)",
+        low: "A character of the referenced meme present in the hint. (blue hedgehog → sanic)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Brainrot Blue",
+        color: "#036EB4",
+        theme: "Italian Brainrot",
+        high: "Name the Italian Brainrot character shown on the prompt's block.",
+        middle: "Name the Italian Brainrot character shown on the prompt's block.",
+        low: "Name the Italian Brainrot character shown on the prompt's block.",
+        checker: "N/A"
+    },
+
+    {
+        name: "Yellow Flip/Flop",
+        color: "#B48455",
+        theme: "Vertical flipping",
+        high: "Flip the word vertically, then find a homophone of the result. (comm → cow)",
+        middle: "Flip each letter of the hint vertically. (wow → mom)",
+        low: "Physically/conceptually flip the hint vertically. (down → up)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Silver Flip/Flop",
+        color: "#898788",
+        theme: "180-degree rotation",
+        high: "Rotate the word 180 degrees, then find a homophone of the result. (plow → mould)",
+        middle: "Rotate the word 180 degrees. (loom → wool)",
+        low: "Swap each letter with its opposite cardinal direction seen on a compass; ignore other letters. (neas → swan)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Red Flip/Flop",
+        color: "#97695B",
+        theme: "Horizontal flipping",
+        high: "Flip the word horizontally, then find a homophone of the result. (lid → bill)",
+        middle: "Flip the word horizontally. (qoq → pop)",
+        low: "Physically/conceptually flip the hint horizontally. (right → left)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Cabbage",
+        color: "#D3DA13",
+        theme: "First half of alphabet",
+        high: "Undiscovered.",
+        middle: "Near synonym of the clue using only letters from the first half of the alphabet (A-M). (taken over → hijacked)",
+        low: "Undiscovered.",
+        checker: "N/A"
+    },
+
+    {
+        name: "Rusty Noon",
+        color: "#974C59",
+        theme: "Second half of alphabet",
+        high: "Undiscovered.",
+        middle: "Near synonym of the clue using only letters from the second half of the alphabet (N-Z). (help → support)",
+        low: "Undiscovered.",
+        checker: "N/A"
+    },
+
+    {
+        name: "Light Red",
+        color: "#EEC4B6",
+        theme: "Beginnings",
+        high: "Homophone of the start of the hint. (spicy → spy)",
+        middle: "Beginning spelling of the hint, sometimes the prefix. (overhang → over)",
+        low: "Physical/conceptual beginning of the hint; something that may come at the start of a word. (story → prologue)",
+        checker: "Makes the primary color and height's mechanic only affect the beginning of the word."
+    },
+
+    {
+        name: "Baker Miller Pink",
+        color: "#FF91AE",
+        theme: "Safety",
+        high: "N/A",
+        middle: "N/A",
+        low: "Less dangerous/hostile version of the prompt. (poison → drink)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Swirly",
+        color: "#000000",
+        theme: "Meme phrases",
+        high: "N/A",
+        middle: "Continuation of the meme given. (tung tung tung → sahur)",
+        low: "N/A",
+        checker: "N/A"
+    },
+
+    {
+        name: "UPS Brown",
+        color: "#330000",
+        theme: "Removal of violence",
+        high: "Sound of the word changed to a non-violent alternative. (smack → snack)",
+        middle: "Prompt with the instance of violence removed. (crosswords → cross)",
+        low: "Synonym of the prompt, then apply the Middle rule. (skip → shortcut → short)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Burnt Orange",
+        color: "#000000",
+        theme: "Numbers to letters",
+        high: "Number converted to a homophone. + indicates the sound is combined with adjacent letters. (2day → today)",
+        middle: "Number converted to its spelling. (of10 → often)",
+        low: "Wordplay between the number and its operations; similar to Low and High Toothpaste combined. (-4 → foregone)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Canary Yellow",
+        color: "#FFEF00",
+        theme: "Adding fire",
+        high: "Homophone of the prompt with fire added to it. (whiled → wildfire)",
+        middle: "Prompt with the word fire added to it. (ball → fireball)",
+        low: "Result or meaning of adding fire to the prompt, including phrases using fire. (play → play with fire → risk)",
+        checker: "N/A"
+    },
+
+    {
+        name: "John Deere Green",
+        color: "#367C2B",
+        theme: "Stealing",
+        high: "Stolen sound. The original prompt's rules are applied first. (hijack → high, hijack → jack)",
+        middle: "Stolen letters. The original prompt's rules are applied first. (daylight → light, daylight → day)",
+        low: "Stolen concept. The original prompt's rules are applied first. (purple → blue, purple → red)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Cadbury Purple",
+        color: "#3B0084",
+        theme: "Actuality / honesty",
+        high: "Less misleading spelling of the prompt. (bologna → baloney)",
+        middle: "Prompt with silent letters removed. (subtle → sutle)",
+        low: "Real version of the concept. (teddy bear → bear)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Tiffany Blue",
+        color: "#81D8D0",
+        theme: "Surpassing / letter limits",
+        high: "Homophone of the new excess sound after applying the numbered letter limit. (parasite (4) → para → lyze → lies)",
+        middle: "New excess letters after applying the numbered letter limit. (malleable (3) → mal → function)",
+        low: "Synonym of the prompt, then the excess letters. (children (3) → offspring (3) → spring)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Barbie Pink",
+        color: "#DA1884",
+        theme: "Sequence chaining",
+        high: "Uses Institutional White rules by default. Add the previous prompt to the current prompt according to their assigned sequence numbers.",
+        middle: "Uses Institutional White rules by default. Add the previous prompt to the current prompt according to their assigned sequence numbers. (3. pen + 2. hap → happen)",
+        low: "Uses Institutional White rules by default. Add the previous prompt to the current prompt according to their assigned sequence numbers.",
+        checker: "N/A"
+    },
+
+    {
+        name: "Light Pink",
+        color: "#DC9095",
+        theme: "Common jokes",
+        high: "Write the answer to the joke as shown on the prompt. (a fly with no wings? → walk)",
+        middle: "Write the answer to the joke as shown on the prompt. (a fly with no wings? → walk)",
+        low: "Write the answer to the joke as shown on the prompt. (a fly with no wings? → walk)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Atrovirens",
+        color: "#0F645A",
+        theme: "Easier pronunciation / IPA",
+        high: "Change consonants to make the word easier to pronounce globally, then apply High Institutional White. (vigor → bigger)",
+        middle: "Change consonants to make the word easier to pronounce globally. (think → sink)",
+        low: "Transcribe the given IPA into words. (əˈmeɪzɪŋ → amazing)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Lilac",
+        color: "#A75E9B",
+        theme: "British vocabulary",
+        high: "N/A",
+        middle: "Translate the hint from a regional/American form to a common British word used in England. (sweater → jumper)",
+        low: "N/A",
+        checker: "N/A"
+    },
+
+    {
+        name: "Lemon Fire Yellow",
+        color: "#F2B90C",
+        theme: "Horror",
+        high: "Change the phrase's tone to sound more horrifying or hopeless. (H E L P M E → help me.)",
+        middle: "Horror version of the spelling. (spear → fear)",
+        low: "Horror version of the hint. (dream → nightmare)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Lemon Light Yellow",
+        color: "#F2CC77",
+        theme: "Science fiction",
+        high: "Add an emoticon to the phrase. (emoticons → emoticons :O)",
+        middle: "Sci-fi version of the spelling. (cypress → cyber)",
+        low: "Sci-fi version of the hint. (human → cyborg)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Lemon Earth Yellow",
+        color: "#613F21",
+        theme: "Steampunk",
+        high: "Add a stutter to the phrase and make it sound more negative. (how may i help you? → w-what do you w-want)",
+        middle: "Steampunk version of the spelling. (google → goggle)",
+        low: "Steampunk version of the hint. (ship → airship)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Lemon Yellow",
+        color: "#FFF44F",
+        theme: "Normalcy",
+        high: "Delete stylized punctuation from the hint and make the tone more normal. (W H A T I N THE WORLD?! → what in the world)",
+        middle: "More normalized version of the spelling. (blindness → kindness)",
+        low: "More normalized version of the hint. (airship → ship)",
+        checker: "N/A"
+    },
+
+    {
+        name: "Vantablack",
+        color: "#010101",
+        theme: "Outline / material dominance",
+        high: "Special color mechanic: Checkers except Really Black and clue colors are ignored; only the Outline Color and Material affect the clue.",
+        middle: "Special color mechanic: Checkers except Really Black and clue colors are ignored; only the Outline Color and Material affect the clue.",
+        low: "Special color mechanic: Checkers except Really Black and clue colors are ignored; only the Outline Color and Material affect the clue.",
+        checker: "Really Black checkers are not ignored. If there is no Outline Color, Vantablack acts as Reflective. Any color in the answer is omitted."
+    },
+
+    {
+        name: "Dark Magenta",
+        color: "#6B1391",
+        theme: "Replacing words",
+        high: "The clue with words replaced.",
+        middle: "The clue with words replaced.",
+        low: "The clue with words replaced.",
+        checker: "Heightless mechanic; combination of Dark Blue and Dark Red. A Cadet Blue checker can restrict the replacement to ending word(s)."
+    },
+
+    {
+        name: "Dreamy Gray",
+        color: "#D4E1E8",
+        theme: "Taxidermizing / preservation",
+        high: "Remove all vowels from the hint; removing Y is optional. (posset → psst)",
+        middle: "Make a conceptually similar word using letters from the hint. (malevolent → mean)",
+        low: "Answer is a way of preserving the hint. (moment → photograph)",
+        checker: "N/A"
     }
 ];
