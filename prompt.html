@@ -12,46 +12,12 @@
 
     <title>Prompt - Linglox Companion</title>
 
+    <link
+        rel="stylesheet"
+        href="global.css"
+    >
+
     <style>
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #101820;
-            color: white;
-        }
-
-        header {
-            padding: 40px 20px;
-            background: #183b45;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 40px;
-        }
-
-        header p {
-            color: #c7d8dc;
-        }
-
-        main {
-            max-width: 850px;
-            margin: auto;
-            padding: 40px 20px;
-        }
-
-        .back {
-            display: inline-block;
-            margin-bottom: 25px;
-            color: #8ed8e5;
-            text-decoration: none;
-        }
-
-        .back:hover {
-            text-decoration: underline;
-        }
 
         .box {
             background: #17252b;
@@ -64,6 +30,7 @@
             font-size: 42px;
             margin-top: 0;
             margin-bottom: 25px;
+            overflow-wrap: anywhere;
         }
 
         .answer-label {
@@ -79,6 +46,9 @@
 
             display: inline-block;
 
+            max-width: 100%;
+            box-sizing: border-box;
+
             background: #080c0e;
 
             color: transparent;
@@ -91,6 +61,8 @@
 
             user-select: none;
 
+            overflow-wrap: anywhere;
+
             transition:
                 background 0.15s,
                 color 0.15s;
@@ -99,6 +71,11 @@
 
         .spoiler:hover {
             background: #1d272b;
+        }
+
+        .spoiler:focus-visible {
+            outline: 2px solid #8ed8e5;
+            outline-offset: 3px;
         }
 
         .spoiler.revealed {
@@ -130,6 +107,8 @@
             line-height: 1.9;
 
             color: #b7c9cd;
+
+            overflow-wrap: anywhere;
 
         }
 
@@ -165,27 +144,40 @@
 
         }
 
-        .loading {
-
-            text-align: center;
-
-            padding: 40px;
-
-            color: #a8bcc1;
-
+        .error h2 {
+            margin-top: 0;
         }
 
-        .error {
+        .metadata a,
+        .timestamps a {
+            color: #8ed8e5;
+        }
 
-            background: #3d2529;
+        .metadata a:hover,
+        .timestamps a:hover {
+            text-decoration: underline;
+        }
 
-            border: 1px solid #70454b;
+        @media (max-width: 600px) {
 
-            border-radius: 10px;
+            .box {
+                padding: 20px;
+            }
 
-            padding: 20px;
+            .prompt-title {
+                font-size: 30px;
+                line-height: 1.2;
+                margin-bottom: 20px;
+            }
 
-            color: #ffb0b0;
+            .metadata {
+                margin-top: 25px;
+                line-height: 1.8;
+            }
+
+            .spoiler {
+                width: 100%;
+            }
 
         }
 
@@ -439,7 +431,11 @@
             <div
                 class="spoiler"
                 id="answerSpoiler"
+                role="button"
+                tabindex="0"
                 title="Click to reveal"
+                aria-label="Click to reveal answer"
+                aria-expanded="false"
             >
 
                 ${escapeHTML(
@@ -451,7 +447,8 @@
 
             <div class="spoiler-hint">
 
-                Click the black box to reveal the answer.
+                Click or press Enter to reveal
+                the answer.
 
             </div>
 
@@ -639,13 +636,42 @@
             );
 
 
+        function revealSpoiler() {
+
+            spoiler.classList.toggle(
+                "revealed"
+            );
+
+            spoiler.setAttribute(
+                "aria-expanded",
+                spoiler.classList.contains(
+                    "revealed"
+                )
+            );
+
+        }
+
+
         spoiler.addEventListener(
             "click",
-            function() {
+            revealSpoiler
+        );
 
-                spoiler.classList.toggle(
-                    "revealed"
-                );
+
+        spoiler.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    revealSpoiler();
+
+                }
 
             }
         );
