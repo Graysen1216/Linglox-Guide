@@ -12,7 +12,172 @@
 
     <title>Dimension - Linglox Companion</title>
 
-    <link rel="stylesheet" href="global.css">
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+        }
+
+        header {
+            padding: 40px 20px;
+            background: #183b45;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        header p {
+            color: #c7d8dc;
+        }
+
+        main {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #8ed8e5;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .info {
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .info h2 {
+            margin-top: 0;
+        }
+
+        .count {
+            color: #a8bcc1;
+        }
+
+        .badge-section {
+            margin-bottom: 30px;
+        }
+
+        .badge-title {
+            background: #183b45;
+            border: 1px solid #29454d;
+            border-radius: 10px;
+            padding: 15px 18px;
+            margin-bottom: 12px;
+        }
+
+        .badge-title h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .badge-count {
+            color: #8ed8e5;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .prompt-card {
+            display: block;
+            text-decoration: none;
+            color: white;
+
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+
+            padding: 22px;
+            margin-bottom: 12px;
+            margin-left: 15px;
+
+            transition:
+                transform 0.15s,
+                border-color 0.15s,
+                background 0.15s;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-2px);
+            border-color: #3b8190;
+            background: #1b3037;
+        }
+
+        .prompt-card h3 {
+            margin: 0 0 12px 0;
+            font-size: 21px;
+        }
+
+        .metadata {
+            color: #afc4c9;
+            line-height: 1.7;
+        }
+
+        .arrow {
+            float: right;
+            color: #8ed8e5;
+            font-size: 20px;
+        }
+
+        .loading,
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #a8bcc1;
+        }
+
+        .error {
+            background: #3d2529;
+            border: 1px solid #70454b;
+            border-radius: 10px;
+            padding: 20px;
+            color: #ffb0b0;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 30px 15px;
+            }
+
+            header h1 {
+                font-size: 32px;
+            }
+
+            main {
+                padding: 30px 15px;
+            }
+
+            .info {
+                padding: 20px;
+            }
+
+            .prompt-card {
+                margin-left: 0;
+                padding: 18px;
+            }
+
+            .badge-title {
+                padding: 13px 15px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
@@ -77,7 +242,6 @@
 
 <script>
 
-
     const SUPABASE_URL =
         "https://njjqjvsoydazatafclwc.supabase.co";
 
@@ -141,11 +305,6 @@
         loadPrompts();
 
     }
-
-
-    /* =========================================
-       LOAD PROMPTS
-       ========================================= */
 
 
     async function loadPrompts() {
@@ -222,10 +381,6 @@
         }
 
 
-        /*
-         * Group prompts by badge.
-         */
-
         const grouped = {};
 
 
@@ -273,10 +428,6 @@
         );
 
 
-        /*
-         * Sort badges alphabetically.
-         */
-
         const sortedBadges =
             Object.keys(grouped)
                 .sort(
@@ -306,20 +457,10 @@
     }
 
 
-    /* =========================================
-       CREATE BADGE SECTION
-       ========================================= */
-
-
     function createBadgeSection(
         badge,
         prompts
     ) {
-
-        /*
-         * Sort prompts alphabetically
-         * within each badge.
-         */
 
         prompts.sort(
             (a, b) =>
@@ -377,11 +518,6 @@
         `;
 
     }
-
-
-    /* =========================================
-       CREATE PROMPT CARD
-       ========================================= */
 
 
     function createCard(
@@ -475,11 +611,6 @@
     }
 
 
-    /* =========================================
-       HTML ESCAPING
-       ========================================= */
-
-
     function escapeHTML(
         value
     ) {
@@ -512,7 +643,6 @@
             );
 
     }
-
 
 </script>
 
