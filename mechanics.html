@@ -17,142 +17,124 @@
         href="global.css"
     >
 
-    <style>
+   <link rel="stylesheet" href="global.css">
 
-        .intro {
-            margin-bottom: 30px;
-        }
+<style>
 
-        .intro h2 {
-            margin-bottom: 8px;
-        }
+    .intro {
+        margin-bottom: 30px;
+    }
 
-        .intro p {
-            color: #afc4c9;
-        }
+    .intro h2 {
+        margin-bottom: 8px;
+    }
+
+    .intro p {
+        color: #afc4c9;
+    }
+
+    .search-box {
+        background: #17252b;
+        border: 1px solid #29454d;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 13px;
+        border-radius: 8px;
+        border: 1px solid #29454d;
+        background: #101820;
+        color: white;
+        font-size: 16px;
+    }
+
+    .mechanics {
+        display: grid;
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(260px, 1fr)
+            );
+        gap: 18px;
+    }
+
+    .mechanic {
+        display: block;
+        background: #17252b;
+        border: 1px solid #29454d;
+        border-radius: 12px;
+        padding: 22px;
+        color: white;
+        text-decoration: none;
+        overflow-wrap: anywhere;
+        transition:
+            transform 0.15s,
+            border-color 0.15s,
+            background 0.15s;
+    }
+
+    .mechanic:hover {
+        transform: translateY(-2px);
+        border-color: #3b8190;
+        background: #1b3037;
+    }
+
+    .color-preview {
+        width: 100%;
+        height: 12px;
+        border-radius: 6px;
+        margin-bottom: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .mechanic h2 {
+        margin: 0 0 8px;
+        font-size: 22px;
+    }
+
+    .theme {
+        color: #8ed8e5;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+
+    .mechanic p {
+        margin: 0;
+        color: #afc4c9;
+        line-height: 1.5;
+    }
+
+    .count {
+        color: #8ed8e5;
+        margin-bottom: 20px;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 40px;
+        color: #a8bcc1;
+    }
+
+    @media (max-width: 600px) {
 
         .search-box {
-            background: #17252b;
-            border: 1px solid #29454d;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .search-box input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 13px;
-            border-radius: 8px;
-            border: 1px solid #29454d;
-            background: #101820;
-            color: white;
-            font-size: 16px;
+            padding: 15px;
         }
 
         .mechanics {
-            display: grid;
-            grid-template-columns:
-                repeat(
-                    auto-fit,
-                    minmax(260px, 1fr)
-                );
-
-            gap: 18px;
+            grid-template-columns: 1fr;
         }
 
         .mechanic {
-            display: block;
-
-            background: #17252b;
-
-            border: 1px solid #29454d;
-
-            border-radius: 12px;
-
-            padding: 22px;
-
-            color: white;
-
-            text-decoration: none;
-
-            transition:
-                transform 0.15s,
-                border-color 0.15s,
-                background 0.15s;
+            padding: 18px;
         }
 
-        .mechanic:hover {
-            transform: translateY(-2px);
+    }
 
-            border-color: #3b8190;
-
-            background: #1b3037;
-        }
-
-        .color-preview {
-            width: 100%;
-            height: 12px;
-
-            border-radius: 6px;
-
-            margin-bottom: 18px;
-
-            border: 1px solid rgba(
-                255,
-                255,
-                255,
-                0.2
-            );
-
-            box-sizing: border-box;
-        }
-
-        .mechanic h2 {
-            margin: 0 0 8px 0;
-            font-size: 22px;
-        }
-
-        .theme {
-            color: #8ed8e5;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-
-        .mechanic p {
-            margin: 0;
-            color: #afc4c9;
-            line-height: 1.5;
-        }
-
-        .count {
-            color: #8ed8e5;
-            margin-bottom: 20px;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 40px;
-            color: #a8bcc1;
-        }
-
-        @media (max-width: 600px) {
-
-            .mechanics {
-                grid-template-columns: 1fr;
-            }
-
-            .search-box {
-                padding: 16px;
-            }
-
-            .mechanic {
-                padding: 20px;
-            }
-
-        }
-
-    </style>
+</style>
 
 </head>
 
