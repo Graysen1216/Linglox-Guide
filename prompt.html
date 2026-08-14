@@ -19,35 +19,47 @@
 
     <style>
 
+        /*
+         * Page-specific styles
+         */
+
+        main {
+            max-width: 850px;
+        }
+
+
         .box {
             background: #17252b;
             border: 1px solid #29454d;
             border-radius: 12px;
-            padding: 30px;
+            padding: clamp(20px, 5vw, 30px);
         }
 
+
         .prompt-title {
-            font-size: 42px;
             margin-top: 0;
             margin-bottom: 25px;
+            font-size: clamp(30px, 7vw, 42px);
+            line-height: 1.15;
             overflow-wrap: anywhere;
         }
 
+
         .answer-label {
-            font-weight: bold;
             margin-bottom: 8px;
+            font-weight: bold;
         }
 
-        /* ===============================
-           SPOILER SHIELD
-           =============================== */
+
+        /*
+         * Spoiler Shield
+         */
 
         .spoiler {
 
             display: inline-block;
 
             max-width: 100%;
-            box-sizing: border-box;
 
             background: #080c0e;
 
@@ -69,14 +81,11 @@
 
         }
 
+
         .spoiler:hover {
             background: #1d272b;
         }
 
-        .spoiler:focus-visible {
-            outline: 2px solid #8ed8e5;
-            outline-offset: 3px;
-        }
 
         .spoiler.revealed {
 
@@ -85,6 +94,7 @@
             color: white;
 
         }
+
 
         .spoiler-hint {
 
@@ -96,9 +106,10 @@
 
         }
 
-        /* ===============================
-           METADATA
-           =============================== */
+
+        /*
+         * Prompt metadata
+         */
 
         .metadata {
 
@@ -108,9 +119,8 @@
 
             color: #b7c9cd;
 
-            overflow-wrap: anywhere;
-
         }
+
 
         .label {
 
@@ -120,6 +130,7 @@
 
         }
 
+
         .verified {
 
             color: #9be7b0;
@@ -127,6 +138,7 @@
             font-weight: bold;
 
         }
+
 
         .timestamps {
 
@@ -144,19 +156,6 @@
 
         }
 
-        .error h2 {
-            margin-top: 0;
-        }
-
-        .metadata a,
-        .timestamps a {
-            color: #8ed8e5;
-        }
-
-        .metadata a:hover,
-        .timestamps a:hover {
-            text-decoration: underline;
-        }
 
         @media (max-width: 600px) {
 
@@ -164,19 +163,20 @@
                 padding: 20px;
             }
 
+
             .prompt-title {
-                font-size: 30px;
-                line-height: 1.2;
                 margin-bottom: 20px;
             }
+
 
             .metadata {
                 margin-top: 25px;
                 line-height: 1.8;
             }
 
+
             .spoiler {
-                width: 100%;
+                max-width: 100%;
             }
 
         }
@@ -431,9 +431,9 @@
             <div
                 class="spoiler"
                 id="answerSpoiler"
+                title="Click to reveal"
                 role="button"
                 tabindex="0"
-                title="Click to reveal"
                 aria-label="Click to reveal answer"
                 aria-expanded="false"
             >
@@ -447,7 +447,7 @@
 
             <div class="spoiler-hint">
 
-                Click or press Enter to reveal
+                Click the black box to reveal
                 the answer.
 
             </div>
@@ -636,17 +636,19 @@
             );
 
 
-        function revealSpoiler() {
+        function toggleSpoiler() {
 
-            spoiler.classList.toggle(
-                "revealed"
-            );
+            const revealed =
+                spoiler.classList.toggle(
+                    "revealed"
+                );
+
 
             spoiler.setAttribute(
                 "aria-expanded",
-                spoiler.classList.contains(
-                    "revealed"
-                )
+                revealed
+                    ? "true"
+                    : "false"
             );
 
         }
@@ -654,7 +656,7 @@
 
         spoiler.addEventListener(
             "click",
-            revealSpoiler
+            toggleSpoiler
         );
 
 
@@ -669,7 +671,7 @@
 
                     event.preventDefault();
 
-                    revealSpoiler();
+                    toggleSpoiler();
 
                 }
 
