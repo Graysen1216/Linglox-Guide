@@ -34,6 +34,7 @@
 
         header p {
             color: #c7d8dc;
+            margin-bottom: 0;
         }
 
         main {
@@ -85,6 +86,16 @@
             font-size: 16px;
         }
 
+        .type {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: #29454d;
+            color: #c7d8dc;
+            font-size: 13px;
+        }
+
         .section {
             background: #17252b;
             border: 1px solid #29454d;
@@ -104,12 +115,75 @@
             margin-bottom: 0;
         }
 
+        .section + .section {
+            margin-top: 0;
+        }
+
+        .variant {
+            background: #1b3037;
+            border: 1px solid #29454d;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .variant:first-child {
+            margin-top: 0;
+        }
+
+        .variant h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 21px;
+        }
+
+        .variant-color {
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(
+                255,
+                255,
+                255,
+                0.15
+            );
+            box-sizing: border-box;
+        }
+
+        .variant-section {
+            margin-top: 18px;
+        }
+
+        .variant-section:first-of-type {
+            margin-top: 0;
+        }
+
+        .variant-section h4 {
+            color: #8ed8e5;
+            margin: 0 0 6px 0;
+            font-size: 15px;
+        }
+
+        .variant-section p {
+            margin: 0;
+        }
+
         .error {
             background: #3d2529;
             border: 1px solid #70454b;
             border-radius: 10px;
             padding: 20px;
             color: #ffb0b0;
+        }
+
+        .description {
+            white-space: pre-line;
+        }
+
+        .notes {
+            color: #9fb5ba !important;
+            font-size: 14px;
         }
 
         @media (max-width: 600px) {
@@ -136,6 +210,10 @@
 
             .section {
                 padding: 20px;
+            }
+
+            .variant {
+                padding: 17px;
             }
 
         }
@@ -215,6 +293,16 @@
         value
     ) {
 
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            return "";
+
+        }
+
+
         return String(value)
 
             .replace(
@@ -245,36 +333,283 @@
     }
 
 
+    function displayValue(
+        value
+    ) {
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
+        ) {
+
+            return "N/A";
+
+        }
+
+
+        return escapeHTML(
+            value
+        );
+
+    }
+
+
+    function createHeightSection(
+        titleText,
+        value
+    ) {
+
+        return `
+
+            <div class="section">
+
+                <h2>
+                    ${titleText}
+                </h2>
+
+                <p>
+                    ${displayValue(
+                        value
+                    )}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+
+    function createVariant(
+        variant
+    ) {
+
+        return `
+
+            <div class="variant">
+
+                ${
+                    variant.color
+                        ? `
+
+                            <div
+                                class="variant-color"
+                                style="
+                                    background:${escapeHTML(
+                                        variant.color
+                                    )};
+                                "
+                            ></div>
+
+                        `
+                        : ""
+                }
+
+
+                <h3>
+                    ${escapeHTML(
+                        variant.name
+                    )}
+                </h3>
+
+
+                ${createVariantHeight(
+                    "High",
+                    variant.high
+                )}
+
+
+                ${createVariantHeight(
+                    "Middle",
+                    variant.middle
+                )}
+
+
+                ${createVariantHeight(
+                    "Low",
+                    variant.low
+                )}
+
+
+                ${
+                    variant.checker
+                        ? createVariantHeight(
+                            "Checker",
+                            variant.checker
+                        )
+                        : ""
+                }
+
+            </div>
+
+        `;
+
+    }
+
+
+    function createVariantHeight(
+        titleText,
+        value
+    ) {
+
+        return `
+
+            <div class="variant-section">
+
+                <h4>
+                    ${titleText}
+                </h4>
+
+                <p>
+                    ${displayValue(
+                        value
+                    )}
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+
+    function findEntry(
+        requestedName
+    ) {
+
+        const colorMatch =
+            typeof mechanics !== "undefined"
+                ? mechanics.find(
+                    item =>
+                        item.name ===
+                        requestedName
+                )
+                : null;
+
+
+        if (colorMatch) {
+
+            return {
+                entry: colorMatch,
+                type: "color"
+            };
+
+        }
+
+
+        const materialMatch =
+            typeof materials !== "undefined"
+                ? materials.find(
+                    item =>
+                        item.name ===
+                        requestedName
+                )
+                : null;
+
+
+        if (materialMatch) {
+
+            return {
+                entry: materialMatch,
+                type: "material"
+            };
+
+        }
+
+
+        /*
+         * Also allow URLs to point directly
+         * at a material variant.
+         *
+         * Example:
+         * mechanic-view.html?name=Fabric
+         *
+         * will show Fabric itself, while
+         * ?name=Dark%20Taupe%20Fabric
+         * will show that specific variant.
+         */
+
+        if (
+            typeof materials !== "undefined"
+        ) {
+
+            for (
+                const material of materials
+            ) {
+
+                if (
+                    !Array.isArray(
+                        material.variants
+                    )
+                ) {
+
+                    continue;
+
+                }
+
+
+                const variant =
+                    material.variants.find(
+                        item =>
+                            item.name ===
+                            requestedName
+                    );
+
+
+                if (variant) {
+
+                    return {
+                        entry: variant,
+                        type: "variant",
+                        parent: material
+                    };
+
+                }
+
+            }
+
+        }
+
+
+        return null;
+
+    }
+
+
     if (!name) {
 
         title.textContent =
             "Mechanic Not Found";
 
-        content.innerHTML =
 
-            `<div class="error">
+        content.innerHTML = `
+
+            <div class="error">
 
                 No mechanic was specified.
 
-            </div>`;
+            </div>
+
+        `;
 
     } else {
 
-        const mechanic =
-            mechanics.find(
-                item =>
-                    item.name === name
+        const result =
+            findEntry(
+                name
             );
 
 
-        if (!mechanic) {
+        if (!result) {
 
             title.textContent =
                 "Mechanic Not Found";
 
-            content.innerHTML =
 
-                `<div class="error">
+            content.innerHTML = `
+
+                <div class="error">
 
                     Could not find the mechanic:
 
@@ -286,101 +621,457 @@
                         )}
                     </strong>
 
-                </div>`;
+                </div>
+
+            `;
 
         } else {
+
+            const mechanic =
+                result.entry;
+
 
             title.textContent =
                 mechanic.name;
 
 
-            content.innerHTML = `
+            let html = "";
 
-                <div class="hero">
 
-                    <div
-                        class="color-preview"
-                        style="background:${mechanic.color};"
-                    ></div>
+            /*
+             * COLOR MECHANIC
+             */
 
-                    <h1>
-                        ${escapeHTML(
-                            mechanic.name
-                        )}
-                    </h1>
+            if (
+                result.type === "color"
+            ) {
 
-                    <div class="theme">
+                html = `
 
-                        Theme:
-                        ${escapeHTML(
+                    <div class="hero">
+
+                        ${
+                            mechanic.color
+                                ? `
+
+                                    <div
+                                        class="color-preview"
+                                        style="
+                                            background:${escapeHTML(
+                                                mechanic.color
+                                            )};
+                                        "
+                                    ></div>
+
+                                `
+                                : ""
+                        }
+
+
+                        <h1>
+                            ${escapeHTML(
+                                mechanic.name
+                            )}
+                        </h1>
+
+
+                        ${
                             mechanic.theme
-                        )}
+                                ? `
+
+                                    <div class="theme">
+
+                                        Theme:
+                                        ${escapeHTML(
+                                            mechanic.theme
+                                        )}
+
+                                    </div>
+
+                                `
+                                : ""
+                        }
+
+
+                        <div class="type">
+                            Color Mechanic
+                        </div>
 
                     </div>
 
-                </div>
+
+                    ${createHeightSection(
+                        "High",
+                        mechanic.high
+                    )}
 
 
-                <div class="section">
-
-                    <h2>
-                        High
-                    </h2>
-
-                    <p>
-                        ${escapeHTML(
-                            mechanic.high
-                        )}
-                    </p>
-
-                </div>
+                    ${createHeightSection(
+                        "Middle",
+                        mechanic.middle
+                    )}
 
 
-                <div class="section">
-
-                    <h2>
-                        Middle
-                    </h2>
-
-                    <p>
-                        ${escapeHTML(
-                            mechanic.middle
-                        )}
-                    </p>
-
-                </div>
+                    ${createHeightSection(
+                        "Low",
+                        mechanic.low
+                    )}
 
 
-                <div class="section">
+                    ${createHeightSection(
+                        "Checker",
+                        mechanic.checker
+                    )}
 
-                    <h2>
-                        Low
-                    </h2>
+                `;
 
-                    <p>
-                        ${escapeHTML(
-                            mechanic.low
-                        )}
-                    </p>
-
-                </div>
+            }
 
 
-                <div class="section">
+            /*
+             * MATERIAL WITH VARIANTS
+             */
 
-                    <h2>
-                        Checker
-                    </h2>
+            else if (
+                result.type === "material" &&
+                Array.isArray(
+                    mechanic.variants
+                )
+            ) {
 
-                    <p>
-                        ${escapeHTML(
-                            mechanic.checker
-                        )}
-                    </p>
+                html = `
 
-                </div>
+                    <div class="hero">
 
-            `;
+                        <h1>
+                            ${escapeHTML(
+                                mechanic.name
+                            )}
+                        </h1>
+
+
+                        <div class="type">
+                            Material
+                        </div>
+
+                    </div>
+
+
+                    ${
+                        mechanic.description
+                            ? `
+
+                                <div class="section">
+
+                                    <h2>
+                                        Description
+                                    </h2>
+
+                                    <p class="description">
+
+                                        ${escapeHTML(
+                                            mechanic.description
+                                        )}
+
+                                    </p>
+
+                                </div>
+
+                            `
+                            : ""
+                    }
+
+
+                    <div class="section">
+
+                        <h2>
+                            Variants
+                        </h2>
+
+
+                        ${mechanic.variants
+                            .map(
+                                variant =>
+                                    createVariant(
+                                        variant
+                                    )
+                            )
+                            .join("")}
+
+                    </div>
+
+                `;
+
+            }
+
+
+            /*
+             * NORMAL MATERIAL
+             */
+
+            else if (
+                result.type === "material"
+            ) {
+
+                html = `
+
+                    <div class="hero">
+
+                        ${
+                            mechanic.color
+                                ? `
+
+                                    <div
+                                        class="color-preview"
+                                        style="
+                                            background:${escapeHTML(
+                                                mechanic.color
+                                            )};
+                                        "
+                                    ></div>
+
+                                `
+                                : ""
+                        }
+
+
+                        <h1>
+                            ${escapeHTML(
+                                mechanic.name
+                            )}
+                        </h1>
+
+
+                        ${
+                            mechanic.theme
+                                ? `
+
+                                    <div class="theme">
+
+                                        Theme:
+                                        ${escapeHTML(
+                                            mechanic.theme
+                                        )}
+
+                                    </div>
+
+                                `
+                                : ""
+                        }
+
+
+                        <div class="type">
+                            Material
+                        </div>
+
+                    </div>
+
+
+                    ${
+                        mechanic.description
+                            ? `
+
+                                <div class="section">
+
+                                    <h2>
+                                        Description
+                                    </h2>
+
+                                    <p class="description">
+
+                                        ${escapeHTML(
+                                            mechanic.description
+                                        )}
+
+                                    </p>
+
+                                </div>
+
+                            `
+                            : ""
+                    }
+
+
+                    ${
+                        mechanic.theme
+                            ? `
+
+                                <div class="section">
+
+                                    <h2>
+                                        Theme
+                                    </h2>
+
+                                    <p>
+                                        ${escapeHTML(
+                                            mechanic.theme
+                                        )}
+                                    </p>
+
+                                </div>
+
+                            `
+                            : ""
+                    }
+
+
+                    ${
+                        mechanic.high !== undefined
+                            ? createHeightSection(
+                                "High",
+                                mechanic.high
+                            )
+                            : ""
+                    }
+
+
+                    ${
+                        mechanic.middle !== undefined
+                            ? createHeightSection(
+                                "Middle",
+                                mechanic.middle
+                            )
+                            : ""
+                    }
+
+
+                    ${
+                        mechanic.low !== undefined
+                            ? createHeightSection(
+                                "Low",
+                                mechanic.low
+                            )
+                            : ""
+                    }
+
+
+                    ${
+                        mechanic.checker !== undefined
+                            ? createHeightSection(
+                                "Checker",
+                                mechanic.checker
+                            )
+                            : ""
+                    }
+
+
+                    ${
+                        mechanic.notes
+                            ? `
+
+                                <div class="section">
+
+                                    <h2>
+                                        Notes
+                                    </h2>
+
+                                    <p class="notes">
+
+                                        ${escapeHTML(
+                                            mechanic.notes
+                                        )}
+
+                                    </p>
+
+                                </div>
+
+                            `
+                            : ""
+                    }
+
+                `;
+
+            }
+
+
+            /*
+             * INDIVIDUAL MATERIAL VARIANT
+             */
+
+            else if (
+                result.type === "variant"
+            ) {
+
+                html = `
+
+                    <div class="hero">
+
+                        ${
+                            mechanic.color
+                                ? `
+
+                                    <div
+                                        class="color-preview"
+                                        style="
+                                            background:${escapeHTML(
+                                                mechanic.color
+                                            )};
+                                        "
+                                    ></div>
+
+                                `
+                                : ""
+                        }
+
+
+                        <h1>
+                            ${escapeHTML(
+                                mechanic.name
+                            )}
+                        </h1>
+
+
+                        <div class="theme">
+
+                            Variant of
+                            ${escapeHTML(
+                                result.parent.name
+                            )}
+
+                        </div>
+
+
+                        <div class="type">
+                            Material Variant
+                        </div>
+
+                    </div>
+
+
+                    ${createHeightSection(
+                        "High",
+                        mechanic.high
+                    )}
+
+
+                    ${createHeightSection(
+                        "Middle",
+                        mechanic.middle
+                    )}
+
+
+                    ${createHeightSection(
+                        "Low",
+                        mechanic.low
+                    )}
+
+
+                    ${
+                        mechanic.checker !== undefined
+                            ? createHeightSection(
+                                "Checker",
+                                mechanic.checker
+                            )
+                            : ""
+                    }
+
+                `;
+
+            }
+
+
+            content.innerHTML =
+                html;
 
         }
 
