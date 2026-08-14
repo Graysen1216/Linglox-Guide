@@ -12,7 +12,161 @@
 
     <title>Badge - Linglox Companion</title>
 
-    <link rel="stylesheet" href="global.css">
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101820;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 40px 20px;
+            background: #183b45;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        header p {
+            color: #c7d8dc;
+            margin: 10px 0 0;
+        }
+
+        main {
+            width: min(900px, calc(100% - 40px));
+            margin: auto;
+            padding: 40px 0;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #8ed8e5;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .intro {
+            margin-bottom: 30px;
+        }
+
+        .intro h2 {
+            margin: 0 0 8px;
+            font-size: 32px;
+            overflow-wrap: anywhere;
+        }
+
+        .intro p {
+            color: #afc4c9;
+            margin: 0;
+        }
+
+        .prompt {
+            background: #17252b;
+            border: 1px solid #29454d;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+            overflow-wrap: anywhere;
+        }
+
+        .prompt h2 {
+            margin: 0 0 15px;
+            font-size: 24px;
+        }
+
+        .prompt p {
+            margin: 0 0 18px;
+            color: #d0dde0;
+        }
+
+        .answer {
+            display: inline-block;
+            background: #29454d;
+            padding: 4px 8px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .metadata {
+            color: #afc4c9;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .label {
+            color: white;
+            font-weight: bold;
+        }
+
+        .loading,
+        .empty {
+            padding: 40px;
+            text-align: center;
+            color: #a8bcc1;
+        }
+
+        .error {
+            padding: 20px;
+            background: #3d2529;
+            border: 1px solid #70454b;
+            border-radius: 10px;
+            color: #ffb0b0;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 30px 15px;
+            }
+
+            header h1 {
+                font-size: 30px;
+            }
+
+            main {
+                width: min(100% - 24px, 900px);
+                padding: 28px 0 35px;
+            }
+
+            .intro h2 {
+                font-size: 28px;
+            }
+
+            .prompt {
+                padding: 18px;
+            }
+
+            .prompt h2 {
+                font-size: 21px;
+            }
+
+            .loading,
+            .empty {
+                padding: 30px 18px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
@@ -73,7 +227,6 @@
 
 
 <script>
-
 
     const SUPABASE_URL =
         "https://njjqjvsoydazatafclwc.supabase.co";
@@ -181,7 +334,6 @@
         if (error) {
 
             box.innerHTML =
-
                 `<div class="error">
 
                     Could not load prompts.
@@ -202,7 +354,6 @@
         if (!data || !data.length) {
 
             box.innerHTML =
-
                 `<div class="empty">
 
                     No prompts are currently
@@ -216,7 +367,6 @@
 
 
         box.innerHTML =
-
             data
                 .map(
                     prompt =>
@@ -373,7 +523,6 @@
             );
 
     }
-
 
 </script>
 
