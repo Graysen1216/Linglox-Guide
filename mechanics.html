@@ -106,7 +106,8 @@
         }
 
         .variant h3 {
-            margin: 0 0 8px;
+            margin: 0;
+            font-size: 17px;
         }
 
         .material-badge {
@@ -122,6 +123,16 @@
             opacity: .7;
             padding: 30px;
             text-align: center;
+            grid-column: 1 / -1;
+        }
+
+        .error {
+            color: #ff9999;
+            background: #301c1c;
+            border: 1px solid #633333;
+            border-radius: 10px;
+            padding: 18px;
+            grid-column: 1 / -1;
         }
 
         @media (max-width: 600px) {
@@ -158,8 +169,21 @@
     </div>
 
     <div class="tabs">
-        <button class="tab active" data-tab="colors">Colors</button>
-        <button class="tab" data-tab="materials">Materials</button>
+        <button
+            class="tab active"
+            type="button"
+            data-tab="colors"
+        >
+            Colors
+        </button>
+
+        <button
+            class="tab"
+            type="button"
+            data-tab="materials"
+        >
+            Materials
+        </button>
     </div>
 
     <div id="mechanics" class="mechanic-grid">
@@ -168,16 +192,52 @@
 
 </main>
 
+<!--
+    mechanics.js MUST be loaded before the code below.
+    It defines:
+
+        const mechanics = [...]
+        const materials = [...]
+        const mechanicsData = {
+            colors: mechanics,
+            materials: materials
+        };
+-->
 <script src="mechanics.js"></script>
 
 <script>
 (function () {
+    "use strict";
 
     const box = document.getElementById("mechanics");
     const search = document.getElementById("search");
-    const tabs = [...document.querySelectorAll(".tab")];
+    const tabs = Array.from(document.querySelectorAll(".tab"));
 
     let currentTab = "colors";
+
+    /*
+     * mechanics.js provides mechanicsData.
+     *
+     * Using mechanicsData here keeps this page tied to the
+     * single data object exported by mechanics.js.
+     */
+    if (
+        typeof mechanicsData === "undefined" ||
+        !mechanicsData ||
+        !Array.isArray(mechanicsData.colors) ||
+        !Array.isArray(mechanicsData.materials)
+    ) {
+        box.innerHTML = `
+            <div class="error">
+                <strong>Could not load mechanics data.</strong>
+                <br><br>
+                Make sure <code>mechanics.js</code> is in the same folder
+                as this page and contains the mechanicsData object.
+            </div>
+        `;
+
+        return;
+    }
 
     function escapeHTML(value) {
         return String(value ?? "")
@@ -200,29 +260,39 @@
             item.notes
         ];
 
-        (item.variants || []).forEach(v => {
-            values.push(
-                v.name,
-                v.theme,
-                v.high,
-                v.middle,
-                v.low,
-                v.description
-            );
-        });
+        if (Array.isArray(item.variants)) {
+            item.variants.forEach(variant => {
+                values.push(
+                    variant.name,
+                    variant.theme,
+                    variant.description,
+                    variant.high,
+                    variant.middle,
+                    variant.low,
+                    variant.checker,
+                    variant.notes
+                );
+            });
+        }
 
         return values
-            .filter(Boolean)
+            .filter(value => value !== undefined && value !== null)
             .join(" ")
             .toLowerCase();
     }
 
     function heightBlock(label, value) {
-        if (!value) return "";
+        if (
+            value === undefined ||
+            value === null ||
+            value === ""
+        ) {
+            return "";
+        }
 
         return `
             <div class="height">
-                <strong>${label}</strong>
+                <strong>${escapeHTML(label)}</strong>
                 <div>${escapeHTML(value)}</div>
             </div>
         `;
@@ -233,17 +303,27 @@
             <article class="mechanic-card">
 
                 <div class="mechanic-header">
+
                     <span
                         class="swatch"
-                        style="background:${escapeHTML(item.color || "#333")}"
+                        style="background-color: ${escapeHTML(item.color || "#333333")};"
+                        aria-hidden="true"
                     ></span>
 
                     <div>
                         <h2>${escapeHTML(item.name)}</h2>
-                        <div class="theme">
-                            ${escapeHTML(item.theme || "")}
-                        </div>
+
+                        ${
+                            item.theme
+                                ? `
+                                    <div class="theme">
+                                        ${escapeHTML(item.theme)}
+                                    </div>
+                                `
+                                : ""
+                        }
                     </div>
+
                 </div>
 
                 ${heightBlock("High", item.high)}
@@ -256,8 +336,9 @@
     }
 
     function renderMaterial(item) {
-
-        const variants = item.variants || [];
+        const variants = Array.isArray(item.variants)
+            ? item.variants
+            : [];
 
         return `
             <article class="mechanic-card">
@@ -267,20 +348,30 @@
                 </span>
 
                 <div class="mechanic-header">
+
                     <div>
                         <h2>${escapeHTML(item.name)}</h2>
 
-                        <div class="theme">
-                            ${escapeHTML(item.theme || "")}
-                        </div>
+                        ${
+                            item.theme
+                                ? `
+                                    <div class="theme">
+                                        ${escapeHTML(item.theme)}
+                                    </div>
+                                `
+                                : ""
+                        }
                     </div>
+
                 </div>
 
                 ${
                     item.description
-                        ? `<div class="description">
-                            ${escapeHTML(item.description)}
-                           </div>`
+                        ? `
+                            <div class="description">
+                                ${escapeHTML(item.description)}
+                            </div>
+                        `
                         : ""
                 }
 
@@ -289,89 +380,144 @@
                 ${heightBlock("Low", item.low)}
 
                 ${
-                    item.notes
-                        ? `<div
-                                class="description"
-                                style="margin-top:12px"
-                           >
-                                <strong>Notes:</strong>
-                                ${escapeHTML(item.notes)}
-                           </div>`
+                    item.checker &&
+                    item.checker !== "N/A"
+                        ? heightBlock("Checker", item.checker)
                         : ""
                 }
 
-                ${variants.map(v => `
-                    <div class="variant">
-
-                        <div class="mechanic-header">
-
-                            <span
-                                class="swatch"
-                                style="background:${escapeHTML(v.color || "#333")}"
-                            ></span>
-
-                            <div>
-                                <h3>${escapeHTML(v.name)}</h3>
+                ${
+                    item.notes
+                        ? `
+                            <div
+                                class="description"
+                                style="margin-top: 12px;"
+                            >
+                                <strong>Notes:</strong>
+                                ${escapeHTML(item.notes)}
                             </div>
+                        `
+                        : ""
+                }
 
-                        </div>
-
-                        ${heightBlock("High", v.high)}
-                        ${heightBlock("Middle", v.middle)}
-                        ${heightBlock("Low", v.low)}
-
-                    </div>
-                `).join("")}
+                ${
+                    variants.length
+                        ? variants.map(renderVariant).join("")
+                        : ""
+                }
 
             </article>
         `;
     }
 
-    function render() {
+    function renderVariant(variant) {
+        return `
+            <div class="variant">
 
+                <div class="mechanic-header">
+
+                    <span
+                        class="swatch"
+                        style="background-color: ${escapeHTML(variant.color || "#333333")};"
+                        aria-hidden="true"
+                    ></span>
+
+                    <div>
+                        <h3>
+                            ${escapeHTML(variant.name)}
+                        </h3>
+
+                        ${
+                            variant.theme
+                                ? `
+                                    <div class="theme">
+                                        ${escapeHTML(variant.theme)}
+                                    </div>
+                                `
+                                : ""
+                        }
+                    </div>
+
+                </div>
+
+                ${
+                    variant.description
+                        ? `
+                            <div class="description">
+                                ${escapeHTML(variant.description)}
+                            </div>
+                        `
+                        : ""
+                }
+
+                ${heightBlock("High", variant.high)}
+                ${heightBlock("Middle", variant.middle)}
+                ${heightBlock("Low", variant.low)}
+
+                ${
+                    variant.checker &&
+                    variant.checker !== "N/A"
+                        ? heightBlock("Checker", variant.checker)
+                        : ""
+                }
+
+                ${
+                    variant.notes
+                        ? `
+                            <div
+                                class="description"
+                                style="margin-top: 12px;"
+                            >
+                                <strong>Notes:</strong>
+                                ${escapeHTML(variant.notes)}
+                            </div>
+                        `
+                        : ""
+                }
+
+            </div>
+        `;
+    }
+
+    function render() {
         const source =
             currentTab === "colors"
-                ? mechanics
-                : materials;
+                ? mechanicsData.colors
+                : mechanicsData.materials;
 
-        const query =
-            search.value
-                .trim()
-                .toLowerCase();
+        const query = search.value
+            .trim()
+            .toLowerCase();
 
-        const list = source.filter(
-            item =>
-                !query ||
-                searchable(item).includes(query)
-        );
+        const list = query
+            ? source.filter(item => searchable(item).includes(query))
+            : source;
 
-        if (!list.length) {
-
-            box.innerHTML =
-                `<div class="empty">
+        if (list.length === 0) {
+            box.innerHTML = `
+                <div class="empty">
                     No matching ${currentTab} found.
-                </div>`;
+                </div>
+            `;
 
             return;
         }
 
-        box.innerHTML =
-            list
-                .map(
-                    currentTab === "colors"
-                        ? renderColor
-                        : renderMaterial
-                )
-                .join("");
+        box.innerHTML = list
+            .map(
+                currentTab === "colors"
+                    ? renderColor
+                    : renderMaterial
+            )
+            .join("");
     }
 
     tabs.forEach(tab => {
+        tab.addEventListener("click", function () {
 
-        tab.addEventListener("click", () => {
-
-            tabs.forEach(t =>
-                t.classList.remove("active")
-            );
+            tabs.forEach(otherTab => {
+                otherTab.classList.remove("active");
+            });
 
             tab.classList.add("active");
 
@@ -381,7 +527,6 @@
 
             render();
         });
-
     });
 
     search.addEventListener("input", render);
