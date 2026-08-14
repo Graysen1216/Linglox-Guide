@@ -36,25 +36,6 @@
             color: #c7d8dc;
         }
 
-        .admin-link {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .admin-link a {
-            display: inline-block;
-            padding: 10px 18px;
-            border-radius: 8px;
-            background: #29454d;
-            color: white;
-            text-decoration: none;
-            font-size: 15px;
-        }
-
-        .admin-link a:hover {
-            background: #3b8190;
-        }
-
         main {
             max-width: 1000px;
             margin: auto;
@@ -159,6 +140,30 @@
             color: #ffb0b0;
         }
 
+        @media (max-width: 600px) {
+
+            header {
+                padding: 30px 15px;
+            }
+
+            header h1 {
+                font-size: 32px;
+            }
+
+            main {
+                padding: 30px 15px;
+            }
+
+            .dimensions {
+                grid-template-columns: 1fr;
+            }
+
+            .dimension {
+                padding: 18px;
+            }
+
+        }
+
     </style>
 
 </head>
@@ -176,17 +181,6 @@
     <p>
         Explore the worlds of Linglox
     </p>
-
-    <div
-        id="adminLink"
-        class="admin-link"
-    >
-
-        <a href="admin.html">
-            ⚙ Admin Panel
-        </a>
-
-    </div>
 
 </header>
 
@@ -235,7 +229,6 @@
 
 
 <script>
-
 
     const SUPABASE_URL =
         "https://njjqjvsoydazatafclwc.supabase.co";
@@ -289,59 +282,6 @@
         "The Green Zone"
 
     ];
-
-
-    /* =========================================
-       ADMIN ACCESS
-       ========================================= */
-
-
-    async function checkAdmin() {
-
-        const {
-            data: {
-                user
-            }
-        } =
-        await supabaseClient.auth.getUser();
-
-
-        if (!user) {
-            return;
-        }
-
-
-        const {
-            data
-        } =
-        await supabaseClient
-
-            .from("admin_users")
-
-            .select("user_id")
-
-            .eq(
-                "user_id",
-                user.id
-            )
-
-            .maybeSingle();
-
-
-        if (data) {
-
-            document
-                .getElementById("adminLink")
-                .style.display = "block";
-
-        }
-
-    }
-
-
-    /* =========================================
-       LOAD DIMENSIONS
-       ========================================= */
 
 
     async function loadDimensions() {
@@ -464,11 +404,6 @@
     }
 
 
-    /* =========================================
-       HTML ESCAPING
-       ========================================= */
-
-
     function escapeHTML(
         value
     ) {
@@ -502,13 +437,6 @@
 
     }
 
-
-    /* =========================================
-       START
-       ========================================= */
-
-
-    checkAdmin();
 
     loadDimensions();
 
