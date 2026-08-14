@@ -12,46 +12,12 @@
 
     <title>Mechanics - Linglox Companion</title>
 
+    <link
+        rel="stylesheet"
+        href="global.css"
+    >
+
     <style>
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #101820;
-            color: white;
-        }
-
-        header {
-            padding: 40px 20px;
-            background: #183b45;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 40px;
-        }
-
-        header p {
-            color: #c7d8dc;
-        }
-
-        main {
-            max-width: 1100px;
-            margin: auto;
-            padding: 40px 20px;
-        }
-
-        .back {
-            display: inline-block;
-            margin-bottom: 25px;
-            color: #8ed8e5;
-            text-decoration: none;
-        }
-
-        .back:hover {
-            text-decoration: underline;
-        }
 
         .intro {
             margin-bottom: 30px;
@@ -168,6 +134,22 @@
             text-align: center;
             padding: 40px;
             color: #a8bcc1;
+        }
+
+        @media (max-width: 600px) {
+
+            .mechanics {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box {
+                padding: 16px;
+            }
+
+            .mechanic {
+                padding: 20px;
+            }
+
         }
 
     </style>
