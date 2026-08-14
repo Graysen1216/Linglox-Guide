@@ -12,57 +12,23 @@
 
     <title>Submit a Prompt - Linglox Companion</title>
 
+    <link
+        rel="stylesheet"
+        href="global.css"
+    >
+
     <style>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #101820;
-            color: white;
-        }
-
-        header {
-            padding: 40px 20px;
-            background: #183b45;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 40px;
-        }
-
-        header p {
-            color: #c7d8dc;
-        }
+        /*
+         * PAGE-SPECIFIC STYLES
+         */
 
         main {
             max-width: 800px;
-            margin: auto;
-            padding: 40px 20px;
-        }
-
-        .back {
-            display: inline-block;
-            margin-bottom: 30px;
-            color: #8ed8e5;
-            text-decoration: none;
-        }
-
-        .back:hover {
-            text-decoration: underline;
         }
 
         .box {
-            background: #17252b;
-            border: 1px solid #29454d;
-            border-radius: 12px;
-            padding: 30px;
             margin-bottom: 20px;
-        }
-
-        .box h2 {
-            margin-top: 0;
         }
 
         label {
@@ -72,42 +38,9 @@
             font-weight: bold;
         }
 
-        input,
-        select,
-        textarea {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #29454d;
-            background: #101820;
-            color: white;
-            font-size: 15px;
-        }
-
         textarea {
             min-height: 120px;
             resize: vertical;
-        }
-
-        button {
-            margin-top: 25px;
-            padding: 13px 20px;
-            border: none;
-            border-radius: 8px;
-            background: #2d6875;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #3b8190;
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
         }
 
         .help {
@@ -128,11 +61,29 @@
             display: none;
         }
 
+        /*
+         * MOBILE
+         */
+
+        @media (max-width: 600px) {
+
+            .box {
+                padding: 20px;
+            }
+
+            label {
+                margin-top: 18px;
+            }
+
+        }
+
     </style>
 
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -295,13 +246,13 @@
 
             <input
                 id="evidence"
+                type="url"
+                inputmode="url"
                 placeholder="Optional"
             >
 
             <p class="help">
-
                 If you have evidence, provide a link to it here.
-
             </p>
 
 
