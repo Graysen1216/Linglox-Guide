@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://graysen1216.github.io/Linglox-Ultimate-Companion/sitemap.xml
