@@ -3,7 +3,7 @@
 
 > The ultimate companion guide and searchable database for Linglox.
 
-**Website:** https://graysen1216.github.io/Linglox-Ultimate-Companion/
+**Website:** https://graysen1216.github.io/Linglox-Guide/
 
 Linglox Companion is an unofficial guide to Linglox, featuring a searchable prompt database, mechanics, materials, badges, dimensions, areas, and more.
 
