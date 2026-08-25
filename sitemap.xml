@@ -2,42 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/</loc>
+        <loc>https://graysen1216.github.io/Linglox-Guide/</loc>
     </url>
 
     <url>
-        <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/database.html</loc>
+        <loc>https://graysen1216.github.io/Linglox-Guide/database.html</loc>
     </url>
 
     <url>
-        <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/badges.html</loc>
+        <loc>https://graysen1216.github.io/Linglox-Guide/badges.html</loc>
     </url>
 
     <url>
-        <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/mechanics.html</loc>
+        <loc>https://graysen1216.github.io/Linglox-Guide/mechanics.html</loc>
     </url>
 
     <url>
-        <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/dimensions.html</loc>
+        <loc>https://graysen1216.github.io/Linglox-Guide/dimensions.html</loc>
     </url>
 
     <url>
-        <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/submit.html</loc>
+        <loc>https://graysen1216.github.io/Linglox-Guide/submit.html</loc>
     </url>
 
     <url>
-    <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/prompt.html</loc>
-</url>
+        <loc>https://graysen1216.github.io/Linglox-Guide/prompt.html</loc>
+    </url>
 
-<url>
-    <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/mechanic-view.html</loc>
-</url>
+    <url>
+        <loc>https://graysen1216.github.io/Linglox-Guide/mechanic-view.html</loc>
+    </url>
 
-<url>
-    <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/badge-view.html</loc>
-</url>
+    <url>
+        <loc>https://graysen1216.github.io/Linglox-Guide/badge-view.html</loc>
+    </url>
 
-<url>
-    <loc>https://graysen1216.github.io/Linglox-Ultimate-Companion/dimension-view.html</loc>
-</url>
+    <url>
+        <loc>https://graysen1216.github.io/Linglox-Guide/dimension-view.html</loc>
+    </url>
+
 </urlset>
